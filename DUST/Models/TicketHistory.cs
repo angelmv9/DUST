@@ -39,8 +39,9 @@ namespace DUST.Models
         //Parents of TicketHistory
 
         // Allows navigation from the TicketHistory to the Ticket such history belongs to
+        // by using the TicketId
         public virtual Ticket ticket { get; set; }
-        // Allows navigation from the TicketHistory to its user/author
+        // Allows navigation from the TicketHistory to its user/author by using the UserId
         public virtual DUSTUser User { get; set; }
     }
 }
