@@ -11,6 +11,7 @@ namespace DUST.Models
 {
     public class TicketAttachment
     {
+        // Primary key
         public int Id { get; set; }
 
         // Foreign key
@@ -34,11 +35,11 @@ namespace DUST.Models
         [DisplayName("File Name")]
         public string FileName { get; set; }
 
-        public byte[] FileData { get; set; }
-
         [DisplayName("File Extension")]
         public string FileContentType { get; set; }
 
+        public byte[] FileData { get; set; }
+       
         /* Navigation properties */
 
         // Parents of TicketAttachment
@@ -46,7 +47,7 @@ namespace DUST.Models
         // Allows navigation from the TicketAttachment to the ticket such attachment
         // belongs to via the TicketId foreign key.
         // The keyword virtual lets EntityFramework do lazy loading
-        public virtual Ticket ticket { get; set; }
+        public virtual Ticket Ticket { get; set; }
 
         // Allows navigation from the TicketAttachment to its user/author
         // via the UserId foreign key.
