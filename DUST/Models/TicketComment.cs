@@ -8,7 +8,7 @@ namespace DUST.Models
         // Primary key
         public int Id { get; set; }
 
-        // Foreign key for DUSTUser, 
+        // Foreign key for DUSTUser 
         [DisplayName("Team Member")]
         public string UserId { get; set; }
 
