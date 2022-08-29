@@ -36,9 +36,9 @@ namespace DUST.Models
         public string FileName { get; set; }
 
         [DisplayName("File Extension")]
-        public string FileContentType { get; set; }
+        public string FileExtension { get; set; }
 
-        public byte[] FileData { get; set; }
+        public byte[] ByteArrayData { get; set; }
        
         /* Navigation properties */
 
