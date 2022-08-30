@@ -46,7 +46,7 @@ namespace DUST.Models
         // Parents of DUSTUser
         public virtual Company Company { get; set; }
 
-        // Children of DUSTUser
+        // Children of DUSTUser ** many-to-many relationship with Project
         public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
 
     }

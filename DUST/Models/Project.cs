@@ -54,7 +54,11 @@ namespace DUST.Models
         public virtual Company Company { get; set; }
 
         // Children of Project
+
+        // ** 1-to-many relationship with Ticket
         public virtual ICollection<Ticket> Tickets { get; set; }  = new HashSet<Ticket>();
+
+        // ** many-to-many relationship with DUSTUser
         public virtual ICollection<DUSTUser> Members { get; set; } = new HashSet<DUSTUser>();
 
         // Lookup tables
