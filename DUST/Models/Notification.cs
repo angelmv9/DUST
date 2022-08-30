@@ -15,7 +15,6 @@ namespace DUST.Models
         // Foreign Keys
 
         public int TicketId { get; set; }
-
         [Required]
         [DisplayName("Recipient")]
         public string RecipientId { get; set; }
