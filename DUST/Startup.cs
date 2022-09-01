@@ -1,5 +1,7 @@
 using DUST.Data;
 using DUST.Models;
+using DUST.Services;
+using DUST.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,16 +32,15 @@ namespace DUST
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-
             services.AddDatabaseDeveloperPageExceptionFilter();
-
             services.AddIdentity<DUSTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
-            services.AddRazorPages();
+            services.AddScoped<IDUSTRolesService, DUSTRolesService>();
 
+            services.AddRazorPages();
             services.AddControllersWithViews();
         }
 
