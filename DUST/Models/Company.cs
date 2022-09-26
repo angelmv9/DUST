@@ -21,5 +21,6 @@ namespace DUST.Models
         // Children of Company
         public virtual ICollection<DUSTUser> Members { get; set; } = new HashSet<DUSTUser>();
         public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
+        public virtual ICollection<Invite> Invites { get; set; } = new HashSet<Invite>();
     }
 }
