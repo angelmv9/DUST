@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace DUST.Services
 {
-    public class DUSTRolesService : IDUSTRolesService
+    public class RolesService : IRolesService
     {
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<DUSTUser> _userManager;
 
-        public DUSTRolesService(ApplicationDbContext context,
+        public RolesService(ApplicationDbContext context,
                                 RoleManager<IdentityRole> roleManager,
                                 UserManager<DUSTUser> userManager)
         {

@@ -38,7 +38,7 @@ namespace DUST
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<IDUSTRolesService, DUSTRolesService>();
+            services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<ICompanyInfoService, CompanyInfoService>();
 
             services.AddRazorPages();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DUST.Services.Interfaces
 {
-    public interface IDUSTRolesService
+    public interface IRolesService
     {
         public Task<bool> IsUserInRoleAsync(DUSTUser user, string roleName);
         public Task<IEnumerable<string>> GetUserRolesAsync(DUSTUser user);
