@@ -38,8 +38,10 @@ namespace DUST
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
+            // Custom Services
             services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<ICompanyInfoService, CompanyInfoService>();
+            services.AddScoped<IProjectService, ProjectService>();
 
             services.AddRazorPages();
             services.AddControllersWithViews();
