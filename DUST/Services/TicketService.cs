@@ -42,24 +42,114 @@ namespace DUST.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Ticket>> GetAllTicketsByCompanyAsync(int companyId)
+        public async Task<List<Ticket>> GetAllTicketsByCompanyAsync(int companyId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Ticket> tickets = await _context.Projects
+                                                     .Where(p => p.CompanyId == companyId)
+                                                     .SelectMany(p => p.Tickets)
+                                                        .Include(t => t.Comments)
+                                                        .Include(t => t.Attachments)
+                                                        .Include(t => t.Notifications)
+                                                        .Include(t => t.History)
+                                                        .Include(t => t.TicketType)
+                                                        .Include(t => t.TicketPriority)
+                                                        .Include(t => t.TicketStatus)
+                                                     .ToListAsync();
+                return tickets;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<List<Ticket>> GetAllTicketsByPriorityAsync(int companyId, string priorityName)
+        public async Task<List<Ticket>> GetAllTicketsByPriorityAsync(int companyId, string priorityName)
         {
-            throw new NotImplementedException();
+            // Because the return type of this method can be a nullable int, .Value must be used
+            // to safely stored the value into a variable of type int.
+            int priorityId = (await LookupTicketPriorityIdAsync(priorityName)).Value;
+            try
+            {
+                List<Ticket> tickets = await _context.Projects
+                                                     .Where(p => p.CompanyId == companyId)
+                                                     .SelectMany(p => p.Tickets)
+                                                        .Include(t => t.Comments)
+                                                        .Include(t => t.Attachments)
+                                                        .Include(t => t.Notifications)
+                                                        .Include(t => t.History)
+                                                        .Include(t => t.TicketType)
+                                                        .Include(t => t.TicketPriority)
+                                                        .Include(t => t.TicketStatus)
+                                                     .Where(t => t.TicketPriorityId == priorityId)
+                                                     .ToListAsync();
+                return tickets;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<List<Ticket>> GetAllTicketsByStatusAsync(int companyId, string statusName)
+        public async Task<List<Ticket>> GetAllTicketsByStatusAsync(int companyId, string statusName)
         {
-            throw new NotImplementedException();
+            // Because the return type of this method can be a nullable int, .Value must be used
+            // to safely stored the value into a variable of type int.
+            int statusId = (await LookupTicketStatusIdAsync(statusName)).Value;
+            try
+            {
+                List<Ticket> tickets = await _context.Projects
+                                                     .Where(p => p.CompanyId == companyId)
+                                                     .SelectMany(p => p.Tickets)
+                                                        .Include(t => t.Comments)
+                                                        .Include(t => t.Attachments)
+                                                        .Include(t => t.Notifications)
+                                                        .Include(t => t.History)
+                                                        .Include(t => t.TicketType)
+                                                        .Include(t => t.TicketPriority)
+                                                        .Include(t => t.TicketStatus)
+                                                     .Where(t => t.TicketPriorityId == statusId)
+                                                     .ToListAsync();
+                return tickets;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<List<Ticket>> GetAllTicketsByTypeAsync(int companyId, string typeName)
+        public async Task<List<Ticket>> GetAllTicketsByTypeAsync(int companyId, string typeName)
         {
-            throw new NotImplementedException();
+            // Because the return type of this method can be a nullable int, .Value must be used
+            // to safely stored the value into a variable of type int.
+            int typeId = (await LookupTicketStatusIdAsync(typeName)).Value;
+            try
+            {
+                List<Ticket> tickets = await _context.Projects
+                                                     .Where(p => p.CompanyId == companyId)
+                                                     .SelectMany(p => p.Tickets)
+                                                        .Include(t => t.Comments)
+                                                        .Include(t => t.Attachments)
+                                                        .Include(t => t.Notifications)
+                                                        .Include(t => t.History)
+                                                        .Include(t => t.TicketType)
+                                                        .Include(t => t.TicketPriority)
+                                                        .Include(t => t.TicketStatus)
+                                                     .Where(t => t.TicketPriorityId == typeId)
+                                                     .ToListAsync();
+                return tickets;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public Task<List<Ticket>> GetArchivedTicketsAsync(int companyId)
@@ -116,7 +206,7 @@ namespace DUST.Services
                 TicketPriority priority = await _context.TicketPriorities.FirstOrDefaultAsync(tp => tp.Name == priorityName);
                 return priority?.Id;
             } 
-            catch
+            catch (Exception)
             {
                 throw;
             }
@@ -129,7 +219,7 @@ namespace DUST.Services
                 TicketStatus status = await _context.TicketStatuses.FirstOrDefaultAsync(ts => ts.Name == statusName);
                 return status?.Id;
             }
-            catch
+            catch (Exception)
             {
                 throw;
             };
@@ -142,7 +232,7 @@ namespace DUST.Services
                 TicketType type = await _context.TicketTypes.FirstOrDefaultAsync(t => t.Name == typeName);
                 return type?.Id;
             }
-            catch
+            catch (Exception)
             {
                 throw;
             }
