@@ -15,7 +15,8 @@ namespace DUST.Services
         private readonly IRolesService _rolesService;
         private readonly IProjectService _projectService;
 
-        public TicketService(ApplicationDbContext context, IRolesService rolesService, IProjectService projectService)
+        public TicketService(ApplicationDbContext context, IRolesService rolesService,
+            IProjectService projectService)
         {
             _context = context;
             _rolesService = rolesService;
@@ -108,19 +109,43 @@ namespace DUST.Services
             throw new NotImplementedException();
         }
 
-        public Task<int?> LookupTicketPriorityIdAsync(string priorityName)
+        public async Task<int?> LookupTicketPriorityIdAsync(string priorityName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                TicketPriority priority = await _context.TicketPriorities.FirstOrDefaultAsync(tp => tp.Name == priorityName);
+                return priority?.Id;
+            } 
+            catch
+            {
+                throw;
+            }
         }
 
-        public Task<int?> LookupTicketStatusIdAsync(string statusName)
+        public async Task<int?> LookupTicketStatusIdAsync(string statusName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                TicketStatus status = await _context.TicketStatuses.FirstOrDefaultAsync(ts => ts.Name == statusName);
+                return status?.Id;
+            }
+            catch
+            {
+                throw;
+            };
         }
 
-        public Task<int?> LookupTicketTypeIdAsync(string typeName)
+        public async Task<int?> LookupTicketTypeIdAsync(string typeName)
         {
-            throw new NotImplementedException();
+            try
+            {
+                TicketType type = await _context.TicketTypes.FirstOrDefaultAsync(t => t.Name == typeName);
+                return type?.Id;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         // CRUD Update
