@@ -43,6 +43,7 @@ namespace DUST
             services.AddScoped<ICompanyInfoService, CompanyInfoService>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<ITicketService, TicketService>();
+            services.AddScoped<ITicketHistoryService, TicketHistoryService>();
 
             services.AddRazorPages();
             services.AddControllersWithViews();
