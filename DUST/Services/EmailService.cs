@@ -25,8 +25,6 @@ namespace DUST.Services
             _mailSettings = mailSettings.Value;
         }
 
-        public IOptions<MailSettings> MailSettings { get; }
-
         public async Task SendEmailAsync(string emailTo, string subject, string htmlMessage)
         {
             // Use configuration variables if present, else use default settings
