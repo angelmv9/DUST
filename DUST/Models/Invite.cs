@@ -32,8 +32,8 @@ namespace DUST.Models
         [DisplayName("Invitee Last Name")]
         public string InviteeLastName { get; set; }
         
-        // Based on how many days have passed since the invite was sent
-        public bool IsValid { get; set; }
+        // True if invite was used to create an account
+        public bool WasUsed { get; set; }
 
         [DisplayName("Date Sent")]
         [DataType(DataType.Date)]
