@@ -63,7 +63,7 @@ namespace DUST.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyId,ProjectId,InvitorId,InviteeId,InviteeEmail,InviteeFirstName,InviteeLastName,IsValid,InviteDate,JoinDate,CompanyToken")] Invite invite)
+        public async Task<IActionResult> Create([Bind("Id,CompanyId,ProjectId,InvitorId,InviteeId,InviteeEmail,InviteeFirstName,InviteeLastName,WasUsed,InviteDate,JoinDate,CompanyToken")] Invite invite)
         {
             if (ModelState.IsValid)
             {
@@ -103,7 +103,7 @@ namespace DUST.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyId,ProjectId,InvitorId,InviteeId,InviteeEmail,InviteeFirstName,InviteeLastName,IsValid,InviteDate,JoinDate,CompanyToken")] Invite invite)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyId,ProjectId,InvitorId,InviteeId,InviteeEmail,InviteeFirstName,InviteeLastName,WasUsed,InviteDate,JoinDate,CompanyToken")] Invite invite)
         {
             if (id != invite.Id)
             {
