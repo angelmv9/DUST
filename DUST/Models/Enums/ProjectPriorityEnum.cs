@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace DUST.Models.Enums
 {
-    public enum TicketStatus
+    public enum ProjectPriorityEnum
     {
-        New,
-        Development,
-        Testing,
-        Closed
+        Low,
+        Medium,
+        High,
+        Urgent
     }
 }

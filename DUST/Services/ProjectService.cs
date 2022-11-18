@@ -56,7 +56,7 @@ namespace DUST.Services
             }
 
             DUSTUser user = await _userManager.FindByIdAsync(userId);
-            result = await _rolesService.AddUserToRoleAsync(user, Roles.ProjectManager.ToString());
+            result = await _rolesService.AddUserToRoleAsync(user, RolesEnum.ProjectManager.ToString());
 
             return result;
         }
@@ -99,9 +99,9 @@ namespace DUST.Services
 
         public async Task<List<DUSTUser>> GetAllProjectMembersExceptPMAsync(int projectId)
         {
-            List<DUSTUser> developers = await GetProjectMembersByRoleAsync(projectId, Roles.Developer.ToString());
-            List<DUSTUser> submitters = await GetProjectMembersByRoleAsync(projectId, Roles.Submitter.ToString());
-            List<DUSTUser> admin = await GetProjectMembersByRoleAsync(projectId, Roles.Admin.ToString());
+            List<DUSTUser> developers = await GetProjectMembersByRoleAsync(projectId, RolesEnum.Developer.ToString());
+            List<DUSTUser> submitters = await GetProjectMembersByRoleAsync(projectId, RolesEnum.Submitter.ToString());
+            List<DUSTUser> admin = await GetProjectMembersByRoleAsync(projectId, RolesEnum.Admin.ToString());
 
             List<DUSTUser> membersExceptPM = developers.Concat(submitters).Concat(admin).ToList();
 
@@ -178,7 +178,7 @@ namespace DUST.Services
             Project project = await _context.Projects.Include(p => p.Members).FirstOrDefaultAsync(p => p.Id == projectId);
             foreach(DUSTUser member in project?.Members)
             {
-                if (await _rolesService.IsUserInRoleAsync(member,Roles.ProjectManager.ToString()))
+                if (await _rolesService.IsUserInRoleAsync(member,RolesEnum.ProjectManager.ToString()))
                 {
                     return member;
                 }

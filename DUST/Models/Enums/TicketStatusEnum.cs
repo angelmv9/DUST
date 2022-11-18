@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 
 namespace DUST.Models.Enums
 {
-    public enum Roles
+    public enum TicketStatusEnum
     {
-        Admin,
-        ProjectManager,
-        Developer,
-        Submitter,
-        DemoUser
+        New,
+        Development,
+        Testing,
+        Closed
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DUST.Models.Enums
 {
-    public enum ProjectPriority
+    public enum TicketPriorityEnum
     {
         Low,
         Medium,

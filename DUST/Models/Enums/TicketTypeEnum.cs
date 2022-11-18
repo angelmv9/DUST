@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DUST.Models.Enums
 {
-    public enum TicketType
+    public enum TicketTypeEnum
     {
         NewDevelopment,
         WorkTask,
