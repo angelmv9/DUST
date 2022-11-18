@@ -156,14 +156,14 @@ namespace DUST.Data.Migrations
                     b.Property<string>("InvitorId")
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsValid")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTimeOffset>("JoinDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("WasUsed")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -648,7 +648,7 @@ namespace DUST.Data.Migrations
             modelBuilder.Entity("DUST.Models.Invite", b =>
                 {
                     b.HasOne("DUST.Models.Company", "Company")
-                        .WithMany()
+                        .WithMany("Invites")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -884,6 +884,8 @@ namespace DUST.Data.Migrations
 
             modelBuilder.Entity("DUST.Models.Company", b =>
                 {
+                    b.Navigation("Invites");
+
                     b.Navigation("Members");
 
                     b.Navigation("Projects");
