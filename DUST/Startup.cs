@@ -32,13 +32,13 @@ namespace DUST
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(DataUtility.GetConnectionString(Configuration)));
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddIdentity<DUSTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
-
+            
             // Custom Services
             services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<ICompanyInfoService, CompanyInfoService>();
