@@ -11,9 +11,9 @@ namespace DUST.Services
     public class TicketHistoryService : ITicketHistoryService
     {
         private readonly ApplicationDbContext _context;
-        private readonly TicketService _ticketService;
+        private readonly ITicketService _ticketService;
 
-        public TicketHistoryService(ApplicationDbContext context, TicketService ticketService)
+        public TicketHistoryService(ApplicationDbContext context, ITicketService ticketService)
         {
             _context = context;
             _ticketService = ticketService;
