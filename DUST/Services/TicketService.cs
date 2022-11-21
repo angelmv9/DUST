@@ -5,6 +5,7 @@ using DUST.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -78,7 +79,7 @@ namespace DUST.Services
                
             catch (Exception ex)
             {
-                Console.WriteLine($"*** ERROR *** - Error Assigning the ticket. ---> {ex.Message}");
+                Debug.WriteLine($"*** ERROR *** - Error Assigning the ticket. ---> {ex.Message}");
                 throw;
             }
         }

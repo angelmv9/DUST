@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -45,7 +46,7 @@ namespace DUST.Services
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine($"Error removing current PM. - {ex.Message}");
+                    Debug.WriteLine($"Error removing current PM. - {ex.Message}");
                     return result;
                 }
             }
@@ -244,7 +245,7 @@ namespace DUST.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"*** ERROR *** -Error getting user projects. ---> {ex.Message}");
+                Debug.WriteLine($"*** ERROR *** -Error getting user projects. ---> {ex.Message}");
                 throw;
             }
         }
@@ -307,7 +308,7 @@ namespace DUST.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"*** ERROR *** - Removing user from project failed. ---> {ex.Message}");
+                Debug.WriteLine($"*** ERROR *** - Removing user from project failed. ---> {ex.Message}");
             }
         }
 
@@ -333,7 +334,7 @@ namespace DUST.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"*** ERROR *** -Error removing users from projects by role. ---> {ex.Message}");
+                Debug.WriteLine($"*** ERROR *** -Error removing users from projects by role. ---> {ex.Message}");
                 throw;
             }
         }
