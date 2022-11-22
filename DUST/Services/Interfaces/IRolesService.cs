@@ -1,4 +1,5 @@
 ﻿using DUST.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace DUST.Services.Interfaces
     public interface IRolesService
     {
         public Task<bool> IsUserInRoleAsync(DUSTUser user, string roleName);
+        public Task<List<IdentityRole>> GetRolesAsync();
         public Task<IEnumerable<string>> GetUserRolesAsync(DUSTUser user);
         public Task<bool> AddUserToRoleAsync(DUSTUser user, string roleName);
         public Task<bool> RemoveUserFromRoleAsync(DUSTUser user, string roleName);
