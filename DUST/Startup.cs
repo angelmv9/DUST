@@ -1,6 +1,7 @@
 using DUST.Data;
 using DUST.Models;
 using DUST.Services;
+using DUST.Services.Factories;
 using DUST.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +39,7 @@ namespace DUST
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddIdentity<DUSTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddClaimsPrincipalFactory<DUSTUserClaimsPrincipalFactory>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
             
