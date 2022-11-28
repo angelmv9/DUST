@@ -52,6 +52,7 @@ namespace DUST
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IInviteService, InviteService>();
             services.AddScoped<IFilesService, FilesService>();
+            services.AddScoped<ILookupService, LookupService>();
 
             services.AddScoped<IEmailSender, EmailService>();
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
