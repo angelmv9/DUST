@@ -86,9 +86,6 @@ namespace DUST.Data
 
         public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
         {
-            // If there are roles already, do nothing
-            if (roleManager.Roles.Any()) return;
-
             foreach (var role in Enum.GetNames(typeof(RolesEnum)))
             {
                 await roleManager.CreateAsync(new IdentityRole(role));
