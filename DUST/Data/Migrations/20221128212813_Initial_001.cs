@@ -159,8 +159,8 @@ namespace DUST.Data.Migrations
                     StartDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     Archived = table.Column<bool>(type: "boolean", nullable: false),
-                    FileName = table.Column<string>(type: "text", nullable: true),
-                    ByteArrayData = table.Column<byte[]>(type: "bytea", nullable: true),
+                    ImageFileName = table.Column<string>(type: "text", nullable: true),
+                    ImageFileData = table.Column<byte[]>(type: "bytea", nullable: true),
                     FileExtention = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>

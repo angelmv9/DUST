@@ -231,9 +231,6 @@ namespace DUST.Data.Migrations
                     b.Property<bool>("Archived")
                         .HasColumnType("boolean");
 
-                    b.Property<byte[]>("ByteArrayData")
-                        .HasColumnType("bytea");
-
                     b.Property<int?>("CompanyId")
                         .HasColumnType("integer");
 
@@ -246,7 +243,10 @@ namespace DUST.Data.Migrations
                     b.Property<string>("FileExtention")
                         .HasColumnType("text");
 
-                    b.Property<string>("FileName")
+                    b.Property<byte[]>("ImageFileData")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ImageFileName")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")

@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DUST.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221121160551_ModelUpdate")]
-    partial class ModelUpdate
+    [Migration("20221128212813_Initial_001")]
+    partial class Initial_001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -233,9 +233,6 @@ namespace DUST.Data.Migrations
                     b.Property<bool>("Archived")
                         .HasColumnType("boolean");
 
-                    b.Property<byte[]>("ByteArrayData")
-                        .HasColumnType("bytea");
-
                     b.Property<int?>("CompanyId")
                         .HasColumnType("integer");
 
@@ -248,7 +245,10 @@ namespace DUST.Data.Migrations
                     b.Property<string>("FileExtention")
                         .HasColumnType("text");
 
-                    b.Property<string>("FileName")
+                    b.Property<byte[]>("ImageFileData")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ImageFileName")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
