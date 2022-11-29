@@ -7,16 +7,34 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DUST.Data;
 using DUST.Models;
+using DUST.Extensions;
+using DUST.Models.ViewModels;
+using DUST.Services.Interfaces;
+using DUST.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DUST.Controllers
 {
+    [Authorize]
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IRolesService _rolesService;
+        private readonly ILookupService _lookupService;
+        private readonly IFilesService _fileService;
+        private readonly IProjectService _projectService;
 
-        public ProjectsController(ApplicationDbContext context)
+        public ProjectsController(ApplicationDbContext context, 
+            IRolesService rolesService, 
+            ILookupService lookupService, 
+            IFilesService fileService, 
+            IProjectService projectService)
         {
             _context = context;
+            _rolesService = rolesService;
+            _lookupService = lookupService;
+            _fileService = fileService;
+            _projectService = projectService;
         }
 
         // GET: Projects
@@ -47,11 +65,18 @@ namespace DUST.Controllers
         }
 
         // GET: Projects/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id");
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Id");
-            return View();
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            List<DUSTUser> projectManagers = await _rolesService.GetUsersInRoleAsync(RolesEnum.ProjectManager.ToString(), companyId);
+            List<ProjectPriority> projectPriorities = await _lookupService.GetProjectPrioritiesAsync();
+
+            AddProjectWithPMViewModel model = new();
+            model.PMList = new SelectList(projectManagers, "Id", "FullName");
+            model.PriorityList = new SelectList(projectPriorities, "Id", "Name");
+            
+            return View(model);
         }
 
         // POST: Projects/Create
@@ -59,17 +84,39 @@ namespace DUST.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyId,ProjectPriorityId,Name,Description,StartDate,EndDate,Archived,FileName,ByteArrayData,FileExtention")] Project project)
+        public async Task<IActionResult> Create(AddProjectWithPMViewModel model)
         {
-            if (ModelState.IsValid)
+            if (model != null)
             {
-                _context.Add(project);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                int companyId = User.Identity.GetCompanyId().Value;
+                try
+                {
+                    if (model.Project.ImageFormFile != null)
+                    {
+                        model.Project.ImageFileData = await _fileService.ConvertFileToByteArrayAsync(model.Project.ImageFormFile);
+                        model.Project.ImageFileName = model.Project.ImageFormFile.FileName;
+                        model.Project.FileExtention = model.Project.ImageFormFile.ContentType;
+                    }
+                    model.Project.CompanyId = companyId;
+
+                    await _projectService.AddNewProjectAsync(model.Project);
+
+                    if (!string.IsNullOrEmpty(model.PMId))
+                    {
+                        await _projectService.AddProjectManagerAsync(model.PMId, model.Project.Id);
+                    }
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                // TODO: redirect to All Projects
+                return RedirectToAction("Index");
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", project.CompanyId);
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Id", project.ProjectPriorityId);
-            return View(project);
+
+            return RedirectToAction("Create");
         }
 
         // GET: Projects/Edit/5
