@@ -29,21 +29,24 @@ namespace DUST.Models
         public string Description { get; set; }
 
         [DisplayName("Start Date")]
+        [DataType(DataType.Date)]
         public DateTimeOffset StartDate { get; set; }
 
         [DisplayName("End Date")]
+        [DataType(DataType.Date)]
         public DateTimeOffset EndDate { get; set; }
 
         public bool Archived { get; set; }
 
         [NotMapped]
         [DataType(DataType.Upload)]
-        public IFormFile FormFile { get; set; }
+        public IFormFile ImageFormFile { get; set; }
 
         [DisplayName("File Name")]
-        public string FileName { get; set; }
+        public string ImageFileName { get; set; }
 
-        public byte[] ByteArrayData { get; set; }
+        // The byte array data
+        public byte[] ImageFileData { get; set; }
 
         [DisplayName("File Extension")]
         public string FileExtention { get; set; }
