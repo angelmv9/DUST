@@ -120,7 +120,12 @@ namespace DUST.Services
             return membersExceptPM; 
         }
 
-        public async Task<List<Project>> GetAllProjectsByCompanyAsync (int companyId)
+        /// <summary>
+        /// Returns all projects in a company **except archived projects**
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <returns></returns>
+        public async Task<List<Project>> GetAllActiveProjectsByCompanyAsync (int companyId)
         {
             List<Project> projects = new();
 
@@ -152,7 +157,7 @@ namespace DUST.Services
 
         public async Task<List<Project>> GetAllProjectsByPriorityAsync(int companyId, string priorityName)
         {
-            List<Project> projects = await GetAllProjectsByCompanyAsync(companyId);
+            List<Project> projects = await GetAllActiveProjectsByCompanyAsync(companyId);
             int priorityId = await LookupProjectPriorityIdAsync(priorityName);
 
             return projects.Where(p => p.ProjectPriorityId == priorityId).ToList();
@@ -163,7 +168,7 @@ namespace DUST.Services
 
         public async Task<List<Project>> GetArchivedProjectsByCompanyAsync(int companyId)
         {
-            List<Project> projects = await GetAllProjectsByCompanyAsync(companyId);
+            List<Project> projects = await GetAllActiveProjectsByCompanyAsync(companyId);
 
             return projects.Where(p => p.Archived == true).ToList();
         }

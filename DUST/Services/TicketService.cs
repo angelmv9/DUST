@@ -353,17 +353,17 @@ namespace DUST.Services
             {
                 if (await _rolesService.IsUserInRoleAsync(user,RolesEnum.Admin.ToString()))
                 {
-                    tickets = (await _projectService.GetAllProjectsByCompanyAsync(companyId)).SelectMany(p => p.Tickets).ToList();
+                    tickets = (await _projectService.GetAllActiveProjectsByCompanyAsync(companyId)).SelectMany(p => p.Tickets).ToList();
                 }
                 else if (await _rolesService.IsUserInRoleAsync(user, RolesEnum.Developer.ToString()))
                 {
-                    tickets = (await _projectService.GetAllProjectsByCompanyAsync(companyId)).SelectMany(p => p.Tickets)
+                    tickets = (await _projectService.GetAllActiveProjectsByCompanyAsync(companyId)).SelectMany(p => p.Tickets)
                                                                                              .Where(t => t.DeveloperUserId == userId)
                                                                                              .ToList();
                 }
                 else if (await _rolesService.IsUserInRoleAsync(user, RolesEnum.Submitter.ToString()))
                 {
-                    tickets = (await _projectService.GetAllProjectsByCompanyAsync(companyId)).SelectMany(p => p.Tickets)
+                    tickets = (await _projectService.GetAllActiveProjectsByCompanyAsync(companyId)).SelectMany(p => p.Tickets)
                                                                                              .Where(t => t.OwnerUserId == userId)
                                                                                              .ToList();
                 }
