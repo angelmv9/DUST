@@ -27,6 +27,11 @@ namespace DUST.Services
             return result;
         }
 
+        /// <summary>
+        /// Returns all projects in a company including archived projects
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <returns></returns>
         public async Task<List<Project>> GetAllProjectsAsync(int companyId)
         {
             List<Project> result = new();
