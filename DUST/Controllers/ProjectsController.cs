@@ -26,13 +26,15 @@ namespace DUST.Controllers
         private readonly IFilesService _fileService;
         private readonly IProjectService _projectService;
         private readonly UserManager<DUSTUser> _userManager;
+        private readonly ICompanyInfoService _companyService;
 
         public ProjectsController(ApplicationDbContext context,
             IRolesService rolesService,
             ILookupService lookupService,
             IFilesService fileService,
             IProjectService projectService,
-            UserManager<DUSTUser> userManager)
+            UserManager<DUSTUser> userManager,
+            ICompanyInfoService companyService)
         {
             _context = context;
             _rolesService = rolesService;
@@ -40,6 +42,7 @@ namespace DUST.Controllers
             _fileService = fileService;
             _projectService = projectService;
             _userManager = userManager;
+            _companyService = companyService;
         }
 
         // GET: Projects
@@ -53,6 +56,23 @@ namespace DUST.Controllers
         {
             string userId = _userManager.GetUserId(User);
             List<Project> projects = await _projectService.GetUserProjectsAsync(userId);
+
+            return View(projects);
+        }
+
+        public async Task<IActionResult> AllProjects()
+        {
+            List<Project> projects = new();
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            if (User.IsInRole(nameof(RolesEnum.Admin)) || User.IsInRole(nameof(RolesEnum.ProjectManager)))
+            {
+                projects = await _companyService.GetAllProjectsAsync(companyId);
+            }
+            else
+            {
+                projects = await _projectService.GetAllActiveProjectsByCompanyAsync(companyId);
+            }
 
             return View(projects);
         }
