@@ -91,10 +91,22 @@ namespace DUST.Services
         // CRUD - Archive (Delete)
         public async Task ArchiveProjectAsync(Project project)
         {
-            project.Archived = true;
+            try
+            {
+                project.Archived = true;
+                await UpdateProjectAsync(project);
 
-            _context.Update(project);
-            await _context.SaveChangesAsync();
+                foreach (Ticket ticket in project.Tickets)
+                {
+                    ticket.ArchivedByProject = true;
+                    _context.Update(ticket);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<List<DUSTUser>> GetAllProjectMembersExceptPMAsync(int projectId)
@@ -334,6 +346,26 @@ namespace DUST.Services
             catch (Exception ex)
             {
                 Debug.WriteLine($"*** ERROR *** -Error removing users from projects by role. ---> {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task RestoreProjectAsync(Project project)
+        {
+            try
+            {
+                project.Archived = false;
+                await UpdateProjectAsync(project);
+
+                foreach (Ticket ticket in project.Tickets)
+                {
+                    ticket.ArchivedByProject = false;
+                    _context.Update(ticket);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }

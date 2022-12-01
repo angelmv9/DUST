@@ -29,6 +29,7 @@ namespace DUST.Services.Interfaces
         public Task RemoveProjectManagerAsync(int projectId);
         public Task RemoveUsersFromProjectByRoleAsync(int projectId, string role);
         public Task RemoveUserFromProjectAsync(string userId, int projectId);
+        public Task RestoreProjectAsync(Project project);
         public Task UpdateProjectAsync(Project project);
     }
 }
