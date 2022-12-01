@@ -13,6 +13,7 @@ using DUST.Services.Interfaces;
 using DUST.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 
 namespace DUST.Controllers
 {
@@ -24,18 +25,21 @@ namespace DUST.Controllers
         private readonly ILookupService _lookupService;
         private readonly IFilesService _fileService;
         private readonly IProjectService _projectService;
+        private readonly UserManager<DUSTUser> _userManager;
 
-        public ProjectsController(ApplicationDbContext context, 
-            IRolesService rolesService, 
-            ILookupService lookupService, 
-            IFilesService fileService, 
-            IProjectService projectService)
+        public ProjectsController(ApplicationDbContext context,
+            IRolesService rolesService,
+            ILookupService lookupService,
+            IFilesService fileService,
+            IProjectService projectService,
+            UserManager<DUSTUser> userManager)
         {
             _context = context;
             _rolesService = rolesService;
             _lookupService = lookupService;
             _fileService = fileService;
             _projectService = projectService;
+            _userManager = userManager;
         }
 
         // GET: Projects
@@ -43,6 +47,14 @@ namespace DUST.Controllers
         {
             var applicationDbContext = _context.Projects.Include(p => p.Company).Include(p => p.ProjectPriority);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> MyProjects()
+        {
+            string userId = _userManager.GetUserId(User);
+            List<Project> projects = await _projectService.GetUserProjectsAsync(userId);
+
+            return View(projects);
         }
 
         // GET: Projects/Details/5
