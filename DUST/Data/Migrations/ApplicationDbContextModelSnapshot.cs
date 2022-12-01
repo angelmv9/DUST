@@ -54,7 +54,7 @@ namespace DUST.Data.Migrations
                     b.Property<string>("AvatarFileName")
                         .HasColumnType("text");
 
-                    b.Property<int?>("CompanyId")
+                    b.Property<int>("CompanyId")
                         .HasColumnType("integer");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -643,7 +643,9 @@ namespace DUST.Data.Migrations
                 {
                     b.HasOne("DUST.Models.Company", "Company")
                         .WithMany("Members")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
                 });
