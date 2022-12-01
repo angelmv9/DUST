@@ -52,6 +52,9 @@ namespace DUST.Models
 
         public bool Archived { get; set; }
 
+        [DisplayName("Archived by Project")]
+        public bool ArchivedByProject { get; set; }
+
         /* Navigation Properties*/
 
         // ** Parents of Ticket **
