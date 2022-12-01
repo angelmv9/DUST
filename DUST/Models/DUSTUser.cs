@@ -12,7 +12,7 @@ namespace DUST.Models
     public class DUSTUser : IdentityUser
     {
         // Foreign Key
-        public int? CompanyId { get; set; }
+        public int CompanyId { get; set; }
 
         [Required]
         [StringLength(25, ErrorMessage = "{0} must be at least {2} and no more than {1} characters long", MinimumLength = 3)]
