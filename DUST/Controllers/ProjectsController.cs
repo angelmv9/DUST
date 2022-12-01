@@ -12,6 +12,7 @@ using DUST.Models.ViewModels;
 using DUST.Services.Interfaces;
 using DUST.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
 
 namespace DUST.Controllers
 {
@@ -64,6 +65,7 @@ namespace DUST.Controllers
             return View(project);
         }
 
+        #region Create
         // GET: Projects/Create
         public async Task<IActionResult> Create()
         {
@@ -75,7 +77,7 @@ namespace DUST.Controllers
             AddProjectWithPMViewModel model = new();
             model.PMList = new SelectList(projectManagers, "Id", "FullName");
             model.PriorityList = new SelectList(projectPriorities, "Id", "Name");
-            
+
             return View(model);
         }
 
@@ -103,13 +105,15 @@ namespace DUST.Controllers
 
                     if (!string.IsNullOrEmpty(model.PMId))
                     {
-                        await _projectService.AddProjectManagerAsync(model.PMId, model.Project.Id);
+                        bool isPMAdded = await _projectService.AddProjectManagerAsync(model.PMId, model.Project.Id);
+                        if (!isPMAdded)
+                        {
+                            Debug.WriteLine("Error adding a project manager while creating a project.");
+                        }
                     }
-
                 }
                 catch (Exception)
                 {
-
                     throw;
                 }
                 // TODO: redirect to All Projects
@@ -118,7 +122,9 @@ namespace DUST.Controllers
 
             return RedirectToAction("Create");
         }
+        #endregion
 
+        #region Edit
         // GET: Projects/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -127,14 +133,18 @@ namespace DUST.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects.FindAsync(id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", project.CompanyId);
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Id", project.ProjectPriorityId);
-            return View(project);
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            List<DUSTUser> projectManagers = await _rolesService.GetUsersInRoleAsync(RolesEnum.ProjectManager.ToString(), companyId);
+            List<ProjectPriority> projectPriorities = await _lookupService.GetProjectPrioritiesAsync();
+            DUSTUser PM = await _projectService.GetProjectManagerAsync(id.Value);
+
+            AddProjectWithPMViewModel model = new();
+            model.Project = await _projectService.GetProjectByIdAsync(companyId, id.Value);
+            model.PMList = new SelectList(projectManagers, "Id", "FullName", PM.Id);
+            model.PriorityList = new SelectList(projectPriorities, "Id", "Name", model.Project?.ProjectPriority?.Name);
+
+            return View(model);
         }
 
         // POST: Projects/Edit/5
@@ -142,38 +152,41 @@ namespace DUST.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyId,ProjectPriorityId,Name,Description,StartDate,EndDate,Archived,FileName,ByteArrayData,FileExtention")] Project project)
+        public async Task<IActionResult> Edit(AddProjectWithPMViewModel model)
         {
-            if (id != project.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
+            if (model != null)
             {
                 try
                 {
-                    _context.Update(project);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProjectExists(project.Id))
+                    if (model.Project.ImageFormFile != null)
                     {
-                        return NotFound();
+                        model.Project.ImageFileData = await _fileService.ConvertFileToByteArrayAsync(model.Project.ImageFormFile);
+                        model.Project.ImageFileName = model.Project.ImageFormFile.FileName;
+                        model.Project.FileExtention = model.Project.ImageFormFile.ContentType;
                     }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", project.CompanyId);
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Id", project.ProjectPriorityId);
-            return View(project);
-        }
 
+                    await _projectService.UpdateProjectAsync(model.Project);
+
+                    if (!string.IsNullOrEmpty(model.PMId))
+                    {
+                        bool isPMAdded = await _projectService.AddProjectManagerAsync(model.PMId, model.Project.Id);
+                        if (!isPMAdded)
+                        {
+                            Debug.WriteLine("Error adding a project manager while creating a project.");
+                        }
+                    }
+                    return RedirectToAction("Index");
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Edit");
+        }
+        #endregion
+
+        #region Delete
         // GET: Projects/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -203,7 +216,8 @@ namespace DUST.Controllers
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
+        } 
+        #endregion
 
         private bool ProjectExists(int id)
         {
