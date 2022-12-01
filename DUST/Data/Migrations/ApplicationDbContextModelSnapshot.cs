@@ -294,6 +294,9 @@ namespace DUST.Data.Migrations
                     b.Property<bool>("Archived")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("ArchivedByProject")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
 
