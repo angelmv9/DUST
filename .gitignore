@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/DUST/Data/Migrations/20221201150657_Ticket ArchiveByProject.cs
+/DUST/Data/Migrations/20221201150657_Ticket ArchiveByProject.Designer.cs
