@@ -34,8 +34,6 @@ namespace DUST.Services
 
         public async Task<bool> AddProjectManagerAsync(string userId, int projectId)
         {
-            bool result = false;
-
             DUSTUser currentPM = await GetProjectManagerAsync(projectId);
 
             if (currentPM != null)
@@ -47,19 +45,20 @@ namespace DUST.Services
                 catch(Exception ex)
                 {
                     Debug.WriteLine($"Error removing current PM. - {ex.Message}");
-                    return result;
+                    return false;
                 }
             }
 
-            if (! await IsUserOnProjectAsync(userId,projectId))
+            try
             {
-                bool userAdded = await AddUserToProjectAsync(userId, projectId);
+                await AddUserToProjectAsync(userId, projectId);
+                return true;
             }
-
-            DUSTUser user = await _userManager.FindByIdAsync(userId);
-            result = await _rolesService.AddUserToRoleAsync(user, RolesEnum.ProjectManager.ToString());
-
-            return result;
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error adding a new PM. - Error: {ex.Message}");
+                return false;
+            }
         }
 
         public async Task<bool> AddUserToProjectAsync(string userId, int projectId)
