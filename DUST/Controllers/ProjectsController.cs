@@ -45,6 +45,7 @@ namespace DUST.Controllers
             _companyService = companyService;
         }
 
+        #region Index Views
         // GET: Projects
         public async Task<IActionResult> Index()
         {
@@ -77,6 +78,19 @@ namespace DUST.Controllers
             return View(projects);
         }
 
+        public async Task<IActionResult> ArchivedProjects()
+        {
+            List<Project> archivedProjects = new();
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            archivedProjects = await _projectService.GetArchivedProjectsByCompanyAsync(companyId);
+ 
+            return View(archivedProjects);
+        }
+
+        #endregion
+
+        #region Details
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -96,6 +110,7 @@ namespace DUST.Controllers
 
             return View(project);
         }
+        #endregion
 
         #region Create
         // GET: Projects/Create
