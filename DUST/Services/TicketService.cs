@@ -50,7 +50,6 @@ namespace DUST.Services
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -279,7 +278,14 @@ namespace DUST.Services
         {
             try
             {
-                Ticket ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+                Ticket ticket = await _context.Tickets
+                                              .Include(t => t.DeveloperUser)
+                                              .Include(t => t.OwnerUser)
+                                              .Include(t => t.Project)
+                                              .Include(t => t.TicketPriority)
+                                              .Include(t => t.TicketType)
+                                              .Include(t => t.TicketStatus)
+                                              .FirstOrDefaultAsync(t => t.Id == ticketId);
                 return ticket;
             }
             catch (Exception)
