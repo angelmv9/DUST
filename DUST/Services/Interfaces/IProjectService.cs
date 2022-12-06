@@ -13,6 +13,11 @@ namespace DUST.Services.Interfaces
         public Task<bool> AddProjectManagerAsync(string userId, int projectId);
         public Task<bool> AddUserToProjectAsync(string userId, int projectId);
         public Task ArchiveProjectAsync(Project project);
+        /// <summary>
+        /// Returns all projects in a company **except archived projects**
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <returns></returns>
         public Task<List<Project>> GetAllActiveProjectsByCompanyAsync(int companyId);
         public Task<List<Project>> GetAllProjectsByPriorityAsync(int companyId, string priorityName);
         public Task<List<DUSTUser>> GetAllProjectMembersExceptPMAsync(int projectId);
