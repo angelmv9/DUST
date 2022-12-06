@@ -186,7 +186,7 @@ namespace DUST.Controllers
 
             AddProjectWithPMViewModel model = new();
             model.Project = await _projectService.GetProjectByIdAsync(companyId, id.Value);
-            model.PMList = new SelectList(projectManagers, "Id", "FullName", PM.Id);
+            model.PMList = new SelectList(projectManagers, "Id", "FullName", PM?.Id);
             model.PriorityList = new SelectList(projectPriorities, "Id", "Name", model.Project?.ProjectPriority?.Name);
 
             return View(model);
