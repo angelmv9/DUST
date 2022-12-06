@@ -22,12 +22,12 @@ namespace DUST.Controllers
         private readonly ILookupService _lookupService;
         private readonly ITicketService _ticketService;
 
-
+        #region Constructor
         public TicketsController(ApplicationDbContext context,
-            UserManager<DUSTUser> userManager,
-            IProjectService projectService,
-            ILookupService lookupService,
-            ITicketService ticketService)
+    UserManager<DUSTUser> userManager,
+    IProjectService projectService,
+    ILookupService lookupService,
+    ITicketService ticketService)
         {
             _context = context;
             _userManager = userManager;
@@ -35,6 +35,7 @@ namespace DUST.Controllers
             _lookupService = lookupService;
             _ticketService = ticketService;
         }
+        #endregion
 
         #region Index
         // GET: Tickets
@@ -145,17 +146,19 @@ namespace DUST.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets.FindAsync(id);
+            Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
             if (ticket == null)
             {
                 return NotFound();
             }
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
-            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
-            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Id", ticket.TicketPriorityId);
-            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Id", ticket.TicketStatusId);
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
+
+            List<TicketPriority> priorities = await _lookupService.GetTicketPrioritiesAsync();
+            List<TicketStatus> statuses = await _lookupService.GetTicketStatusesAsync();
+            List<TicketType> types = await _lookupService.GetTicketTypesAsync();
+            ViewData["TicketPriorityId"] = new SelectList(priorities, "Id", "Name", ticket.TicketPriorityId);
+            ViewData["TicketStatusId"] = new SelectList(statuses, "Id", "Name", ticket.TicketStatusId);
+            ViewData["TicketTypeId"] = new SelectList(types, "Id", "Name", ticket.TicketTypeId);
+
             return View(ticket);
         }
 
@@ -173,14 +176,15 @@ namespace DUST.Controllers
 
             if (ModelState.IsValid)
             {
+                DUSTUser user = await _userManager.GetUserAsync(User);
                 try
                 {
-                    _context.Update(ticket);
-                    await _context.SaveChangesAsync();
+                    ticket.Updated = DateTimeOffset.Now;
+                    await _ticketService.UpdateTicketAsync(ticket);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TicketExists(ticket.Id))
+                    if (!await TicketExists(ticket.Id))
                     {
                         return NotFound();
                     }
@@ -189,14 +193,19 @@ namespace DUST.Controllers
                         throw;
                     }
                 }
+                // TODO: Add Ticket History
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
-            ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
-            ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Id", ticket.TicketPriorityId);
-            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Id", ticket.TicketStatusId);
-            ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Id", ticket.TicketTypeId);
+
+            // If ModelState is not valid
+
+            List<TicketPriority> priorities = await _lookupService.GetTicketPrioritiesAsync();
+            List<TicketStatus> statuses = await _lookupService.GetTicketStatusesAsync();
+            List<TicketType> types = await _lookupService.GetTicketTypesAsync();
+            ViewData["TicketPriorityId"] = new SelectList(priorities, "Id", "Name", ticket.TicketPriorityId);
+            ViewData["TicketStatusId"] = new SelectList(statuses, "Id", "Name", ticket.TicketStatusId);
+            ViewData["TicketTypeId"] = new SelectList(types, "Id", "Name", ticket.TicketTypeId);
+
             return View(ticket);
         }
         #endregion
@@ -238,9 +247,10 @@ namespace DUST.Controllers
         }
         #endregion
 
-        private bool TicketExists(int id)
+        private async Task<bool> TicketExists(int id)
         {
-            return _context.Tickets.Any(e => e.Id == id);
+            int companyId = User.Identity.GetCompanyId().Value;
+            return (await _ticketService.GetAllTicketsByCompanyAsync(companyId)).Any(t => t.Id == id);
         }
     }
 }
