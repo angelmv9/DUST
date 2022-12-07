@@ -1,0 +1,110 @@
+﻿@model IEnumerable<DUST.Models.Ticket>
+
+@using DUST.Models.Enums
+@using Microsoft.AspNetCore.Identity
+@using DUST.Services.Interfaces
+
+@inject UserManager<DUSTUser> UserManager
+@inject IProjectService ProjectService
+
+@{
+    ViewData["Title"] = "Archived Tickets";
+    DUSTUser currentUser = await UserManager.GetUserAsync(User);
+}
+
+<h1>Archived Tickets</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Updated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Archived)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Project)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OwnerUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeveloperUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TicketType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TicketPriority)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TicketStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Updated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Archived)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Project.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OwnerUser.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeveloperUser.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                    @{
+                        bool isCurrentUserPM = (await ProjectService.GetProjectManagerAsync(item.ProjectId))?.Id == currentUser.Id;
+                    }
+
+                    @if (User.IsInRole(nameof(RolesEnum.Admin)) || isCurrentUserPM)
+                    {
+                        < span > | </ span >
+                        <a asp-action="Restore" asp-route-id="@item.Id">Restore</a>
+                        
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

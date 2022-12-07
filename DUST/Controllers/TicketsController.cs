@@ -71,6 +71,13 @@ namespace DUST.Controllers
             }
         }
 
+        // Get: ArchivedTickets
+        public async Task<IActionResult> ArchivedTickets()
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
+            List<Ticket> archivedTickets = await _ticketService.GetArchivedTicketsAsync(companyId);
+            return View(archivedTickets);
+        }
         #endregion
 
         #region Details
