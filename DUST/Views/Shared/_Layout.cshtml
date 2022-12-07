@@ -39,7 +39,10 @@
                                     <i class="fs-5 bi-file-earmark-ppt"></i><span class="ms-1 d-none d-sm-inline">Projects</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="Create">New project...</a></li>
+                                    @if (User.IsInRole(nameof(RolesEnum.Admin)) || User.IsInRole(nameof(RolesEnum.ProjectManager)))
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="Create">New project...</a></li>
+                                    }
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="Index">Index</a></li>
                                     @if (!User.IsInRole(nameof(RolesEnum.Admin)))
                                     {
@@ -65,7 +68,10 @@
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="MyTickets">My Tickets</a></li>
                                     }
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="AllTickets">All Tickets</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="ArchivedTickets">Archived Tickets</a></li>
+                                    @if (User.IsInRole(nameof(RolesEnum.Admin)) || User.IsInRole(nameof(RolesEnum.ProjectManager)))
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="ArchivedTickets">Archived Tickets</a></li>
+                                    }
                                 </ul>
                             </li>
                             <li>
