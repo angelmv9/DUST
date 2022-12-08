@@ -40,6 +40,19 @@ namespace DUST.Services
             }
         }
 
+        public async Task AddTicketCommentAsync(TicketComment ticketComment)
+        {
+            try
+            {
+                await _context.AddAsync(ticketComment);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         // CRUD Archive (delete)
         public async Task ArchiveTicketAsync(Ticket ticket)
         {
@@ -285,12 +298,14 @@ namespace DUST.Services
                                               .Include(t => t.TicketPriority)
                                               .Include(t => t.TicketType)
                                               .Include(t => t.TicketStatus)
+                                              .Include(t => t.Comments)
+                                              .Include(t => t.Attachments)
+                                              .Include(t => t.History)
                                               .FirstOrDefaultAsync(t => t.Id == ticketId);
                 return ticket;
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
