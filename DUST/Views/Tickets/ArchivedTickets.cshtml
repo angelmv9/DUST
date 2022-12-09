@@ -98,9 +98,8 @@
                     }
 
                     @if (User.IsInRole(nameof(RolesEnum.Admin)) || isCurrentUserPM)
-                    {
-                        < span > | </ span >
-                        <a asp-action="Restore" asp-route-id="@item.Id">Restore</a>
+                    {   <span>|</span>                    
+                        <a asp-action="Restore" asp-route-id="@item.Id"> Restore</a>
                         
                     }
                 </td>
