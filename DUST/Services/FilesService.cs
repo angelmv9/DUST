@@ -62,12 +62,12 @@ namespace DUST.Services
 
         public string GetFileIcon(string fileName)
         {
-            string fileIconPath = "~/img/contenttype/default.png";
+            string fileIconPath = "/img/contenttype/default.png";
 
             if (!string.IsNullOrWhiteSpace(fileName))
             {
                 string fileExtension = Path.GetExtension(fileName).Replace(".", "");
-                fileIconPath = $"~/img/contenttype/{fileExtension}.png";
+                fileIconPath = $"/img/contenttype/{fileExtension}.png";
                 return fileIconPath;
             }
             return fileIconPath;
