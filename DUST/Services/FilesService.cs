@@ -60,16 +60,17 @@ namespace DUST.Services
             return string.Format("{0:n1}{1}",fileSize,suffixes[counter]);
         }
 
-        public string GetFileIcon(string file)
+        public string GetFileIcon(string fileName)
         {
-            string fileExtension = "default";
+            string fileIconPath = "~/img/contenttype/default.png";
 
-            if (!string.IsNullOrWhiteSpace(file))
+            if (!string.IsNullOrWhiteSpace(fileName))
             {
-                fileExtension = Path.GetExtension(file).Replace(".", "");
-                return $"/img/png/{fileExtension}.png";
+                string fileExtension = Path.GetExtension(fileName).Replace(".", "");
+                fileIconPath = $"~/img/contenttype/{fileExtension}.png";
+                return fileIconPath;
             }
-            return fileExtension;
+            return fileIconPath;
         }
     }
 }

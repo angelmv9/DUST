@@ -12,6 +12,7 @@ using DUST.Extensions;
 using DUST.Models.Enums;
 using DUST.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
 
 namespace DUST.Controllers
 {
@@ -23,19 +24,21 @@ namespace DUST.Controllers
         private readonly IProjectService _projectService;
         private readonly ILookupService _lookupService;
         private readonly ITicketService _ticketService;
+        private readonly IFilesService _filesService;
 
         #region Constructor
         public TicketsController(ApplicationDbContext context,
     UserManager<DUSTUser> userManager,
     IProjectService projectService,
     ILookupService lookupService,
-    ITicketService ticketService)
+    ITicketService ticketService, IFilesService filesService)
         {
             _context = context;
             _userManager = userManager;
             _projectService = projectService;
             _lookupService = lookupService;
             _ticketService = ticketService;
+            _filesService = filesService;
         }
         #endregion
 
@@ -50,7 +53,7 @@ namespace DUST.Controllers
         // Get: MyTickets
         public async Task<IActionResult> MyTickets()
         {
-            DUSTUser currentUser = await _userManager.GetUserAsync(User); 
+            DUSTUser currentUser = await _userManager.GetUserAsync(User);
             List<Ticket> tickets = await _ticketService.GetTicketsByUserIdAsync(currentUser.Id, currentUser.CompanyId);
             return View(tickets);
         }
@@ -120,7 +123,7 @@ namespace DUST.Controllers
             List<TicketType> types = await _lookupService.GetTicketTypesAsync();
             ViewData["TicketPriorityId"] = new SelectList(priorities, "Id", "Name");
             ViewData["TicketTypeId"] = new SelectList(types, "Id", "Name");
-            
+
             return View();
         }
 
@@ -141,7 +144,7 @@ namespace DUST.Controllers
                 ticket.TicketStatusId = ticketStatus;
                 // TODO: Add Ticket History and Notification
                 await _ticketService.AddNewTicketAsync(ticket);
-               
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -236,6 +239,35 @@ namespace DUST.Controllers
         }
         #endregion
 
+        #region Add Ticket Attachment
+        //POST: Tickets/AddTicketAttachment/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddTicketAttachment([Bind("Id","TicketId","FileDescription","FormFile")] TicketAttachment ticketAttachment)
+        {
+            string statusMessage;
+
+            if (ModelState.IsValid && ticketAttachment.FormFile != null)
+            {
+                ticketAttachment.ByteArrayData = await _filesService.ConvertFileToByteArrayAsync(ticketAttachment.FormFile);
+                ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
+                ticketAttachment.FileExtension = ticketAttachment.FormFile.ContentType;
+
+                ticketAttachment.Created = DateTimeOffset.Now;
+                ticketAttachment.UserId = _userManager.GetUserId(User);
+                await _ticketService.AddTicketAttachmentAsync(ticketAttachment);
+
+                statusMessage = "Success: New attachment added to the Ticket";
+            }
+            else
+            {
+                statusMessage = "Error trying to upload file. Please try again";
+            }
+
+            return RedirectToAction("Details", new { id = ticketAttachment.TicketId, message = statusMessage});
+        }
+        #endregion
+
         #region Add Ticket Comment
         //Post: Tickets/AddTicketComment/5
         [HttpPost]
@@ -257,6 +289,19 @@ namespace DUST.Controllers
             }
 
             return RedirectToAction("Details", new { id = ticketComment.TicketId });
+        }
+        #endregion
+
+        #region Show File
+        public async Task<IActionResult> ShowFile(int id)
+        {
+            TicketAttachment ticketAttachment = await _ticketService.GetTicketAttachmentByIdAsync(id);
+            string fileName = ticketAttachment.FileName;
+            byte[] fileData = ticketAttachment.ByteArrayData;
+            string extension = Path.GetExtension(fileName).Replace(".", "");
+
+            Response.Headers.Add("Content-Disposition", $"inline; filename={fileName}");
+            return File(fileData, $"application/{extension}");
         }
         #endregion
 
