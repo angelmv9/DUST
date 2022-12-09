@@ -40,6 +40,19 @@ namespace DUST.Services
             }
         }
 
+        public async Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
+        {
+            try
+            {
+                await _context.AddAsync(ticketAttachment);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task AddTicketCommentAsync(TicketComment ticketComment)
         {
             try
@@ -282,6 +295,18 @@ namespace DUST.Services
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+
+        public async Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId)
+        {
+            try
+            {
+                return await _context.TicketAttachments.Include(ta => ta.User).FirstOrDefaultAsync(ta => ta.Id == ticketAttachmentId);
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }
