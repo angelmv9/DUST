@@ -54,6 +54,10 @@
                                     {
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="ArchivedProjects">Archived Projects</a></li>
                                     }
+                                    @if (User.IsInRole(nameof(RolesEnum.Admin)))
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="UnassignedProjects">Unassigned Projects</a></li>
+                                    }
                                 </ul>
                             </li>
                             <li class="dropdown">

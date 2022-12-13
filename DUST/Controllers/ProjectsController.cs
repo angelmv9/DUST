@@ -20,6 +20,7 @@ namespace DUST.Controllers
     [Authorize]
     public class ProjectsController : Controller
     {
+        #region Member variables
         private readonly ApplicationDbContext _context;
         private readonly IRolesService _rolesService;
         private readonly ILookupService _lookupService;
@@ -27,7 +28,9 @@ namespace DUST.Controllers
         private readonly IProjectService _projectService;
         private readonly UserManager<DUSTUser> _userManager;
         private readonly ICompanyInfoService _companyService;
+        #endregion
 
+        #region Constructor
         public ProjectsController(ApplicationDbContext context,
             IRolesService rolesService,
             ILookupService lookupService,
@@ -43,7 +46,8 @@ namespace DUST.Controllers
             _projectService = projectService;
             _userManager = userManager;
             _companyService = companyService;
-        }
+        } 
+        #endregion
 
         #region Index Views
         // GET: Projects
@@ -86,6 +90,15 @@ namespace DUST.Controllers
             archivedProjects = await _projectService.GetArchivedProjectsByCompanyAsync(companyId);
  
             return View(archivedProjects);
+        }
+
+        public async Task<IActionResult> UnassignedProjects()
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
+            List<Project> unassignedProjects = new();
+            unassignedProjects = await _projectService.GetUnassignedProjectsAsync(companyId);
+
+            return View(unassignedProjects);
         }
 
         #endregion
