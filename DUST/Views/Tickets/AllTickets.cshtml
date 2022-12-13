@@ -95,7 +95,7 @@
                     @Html.DisplayFor(modelItem => item.TicketStatus.Name)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Details" asp-route-ticketId="@item.Id">Details</a> |
 
                     @{
                         bool isCurrentUserPM = (await ProjectService.GetProjectManagerAsync(item.ProjectId))?.Id == currentUser.Id;
