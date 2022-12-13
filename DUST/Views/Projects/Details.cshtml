@@ -103,7 +103,7 @@
                                         @if (User.IsInRole(nameof(RolesEnum.Admin)) || (dustUser.Id == projectManager.Id))
                                         {
                                             <a class="btn btn-xs btn-outline-primary" style="font:small"
-                                               asp-controller="Projects" asp-action="AssignUsers" asp-route-id="@Model.Id">Manage Team</a>
+                                       asp-controller="Projects" asp-action="AssignMembers" asp-route-projectId="@Model.Id">Manage Team</a>
                                         }
                                     </div>
                                 </div>
@@ -163,12 +163,13 @@
                                                     {
                                                         <img class="rounded-circle" style="width:60px;height:60px;" src="~/img/defaultUserImage.png" />
                                                     }
-                                                    <div class="">
-                                                        <span class="">@member.FullName</span>
-                                                        <span class="">@((await UserManager.GetRolesAsync(member)).FirstOrDefault())</span>
-                                                    </div>
                                                 </div>
                                             </a>
+                                            <div class="">
+                                                <span class="">@member.FullName - </span>
+                                                <span class="" style="font-size:x-small">[@((await UserManager.GetRolesAsync(member)).FirstOrDefault())]</span>
+                                            </div>
+
                                         </li>
                                     }
                                 }

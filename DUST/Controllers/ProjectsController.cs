@@ -277,6 +277,48 @@ namespace DUST.Controllers
         }
         #endregion
 
+        #region Manage Team
+        //Get: Projects/ManageTeam/5
+        [HttpGet]
+        public async Task<IActionResult> AssignMembers(int projectId)
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
+            ProjectMembersViewModel model = new();
+            model.Project = await _projectService.GetProjectByIdAsync(companyId, projectId);
+
+            List<DUSTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(RolesEnum.Developer), companyId);
+            List<DUSTUser> submitters = await _rolesService.GetUsersInRoleAsync(nameof(RolesEnum.Submitter), companyId);
+            List<DUSTUser> companyMembers = developers.Concat(submitters).ToList();
+            List<string> projectMembers = model.Project.Members.Select(m => m.Id).ToList();
+
+            model.Users = new MultiSelectList(companyMembers, "Id", "FullName",projectMembers);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignMembers(ProjectMembersViewModel model)
+        {
+            if (model.SelectedUsersIds != null)
+            {
+                List<string> memberIds = (await _projectService.GetAllProjectMembersExceptPMAsync(model.Project.Id)).Select(m => m.Id).ToList();
+                foreach (string memberId in memberIds)
+                {
+                    await _projectService.RemoveUserFromProjectAsync(memberId, model.Project.Id);
+                }
+                foreach (string userId in model.SelectedUsersIds)
+                {
+                    await _projectService.AddUserToProjectAsync(userId, model.Project.Id);
+                }
+
+                return RedirectToAction("Details", new { id = model.Project.Id });
+            }
+
+            return RedirectToAction(nameof(AssignMembers), new {projectId = model.Project.Id});
+        }
+        #endregion
+
         #region Assign PM
         //Get: Projects/AssignPM/3
         [HttpGet]
