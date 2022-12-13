@@ -1,0 +1,97 @@
+﻿@model IEnumerable<DUST.Models.Ticket>
+
+@using DUST.Models.Enums
+@using DUST.Services.Interfaces
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<DUSTUser> UserManager
+@inject IProjectService ProjectService
+
+@{
+    DUSTUser currentUser = await UserManager.GetUserAsync(User);
+}
+
+<div class="col-md-12 col">
+    <div class="mt-5 bg-secondary">
+        <div class="card m-1 p-2">
+            <div class="header">
+                <h2>Unassigned Tickets</h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive" style="overflow-y:auto;height:600px;">
+                    <table class="table table-hover">
+                        <thead class="">
+                            <tr>
+                                <th>Title</th>
+                                <th>Developer</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ticket in Model.OrderByDescending(t => t.Created))
+                            {
+                                { 
+                                    DUSTUser projectManager = await ProjectService.GetProjectManagerAsync(ticket.ProjectId);
+                                }
+                                <tr>
+                                    <td><a asp-controller="Tickets" asp-action="Details" asp-route-ticketId="@ticket.Id" style="color:black"><strong>@ticket.Title</strong></a> </td>
+                                    <td>
+                                        @if (User.IsInRole(nameof(RolesEnum.Admin)))
+                                        {
+                                            <a class="btn btn-xs btn-info" asp-controller="Tickets" asp-action="AssignDeveloper" asp-route-ticketId="@ticket.Id">Assign Dev</a>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (ticket.TicketStatus.Name == nameof(TicketStatusEnum.New))
+                                        {
+                                            <span class="badge-success text-success">@ticket.TicketStatus.Name </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge-secondary">@ticket.TicketStatus.Name </span>
+                                        }
+                                        @if (User.IsInRole(nameof(RolesEnum.Admin)))
+                                        {
+                                            <div>
+                                                <a class="btn bt-sm btn-info" asp-controller="" asp-action="" asp-route-ticketId="@ticket.Id">Update Status</a>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (ticket.TicketPriority.Name == nameof(TicketPriorityEnum.Urgent))
+                                        {
+                                            <span class="badge-danger text-danger">@ticket.TicketPriority.Name</span>
+                                        }
+                                        else if (ticket.TicketPriority.Name == nameof(TicketPriorityEnum.High))
+                                        {
+                                            <span class="badge-warning text-warning">@ticket.TicketPriority.Name</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge-dark">@ticket.TicketPriority.Name</span>
+                                        }
+                                        @if (User.IsInRole(nameof(RolesEnum.Admin)))
+                                        {
+                                            <div>
+                                                <a class="btn btn-sm btn-info" asp-controller="" asp-action="" asp-route-ticketId="@ticket.Id">Update Priority</a>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>@ticket.Created.ToString("MM-dd-yyyy")</td>
+                                    <td>
+                                        <a class="btn btn-sm btn-outline-info" asp-controller="Tickets" asp-action="Details" asp-route-ticketId="@ticket.Id"><i class="fs-5 bi-justify"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

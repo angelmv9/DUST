@@ -1,0 +1,36 @@
+﻿@model DUST.Models.ViewModels.AssignDeveloperViewModel
+
+<div class="container">
+    <h2 Assign Developer for></h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>@Model.Ticket.Title</h3>
+                <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Ticket.ProjectId" style="font-size: small">@Model.Ticket.Project.Name</a>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <label class="control-label">Assign Developer</label>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-action="AssignedDeveloper">
+                        <input type="hidden" asp-for="Ticket.Id" />
+                        <p>Description: @Model.Ticket.Description</p>
+                        <div class="form-group">
+                            <label class="col-form-label">Select Developers</label>
+
+                            <select required asp-for="DeveloperId" asp-items="@Model.Developers" class="form-control">
+                                <option></option>
+                            </select>
+
+                        </div>
+                        <div class="form-group mt-3">
+                            <input type="submit" value="Assign" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <a asp-action="UnassignedTickets">Go Back to unassigned tickets</a>
+    </div>
+</div>

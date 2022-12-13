@@ -13,6 +13,7 @@ using DUST.Models.Enums;
 using DUST.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
+using DUST.Models.ViewModels;
 
 namespace DUST.Controllers
 {
@@ -81,18 +82,47 @@ namespace DUST.Controllers
             List<Ticket> archivedTickets = await _ticketService.GetArchivedTicketsAsync(companyId);
             return View(archivedTickets);
         }
-        #endregion
 
+        //Get: UnassignedTickets
+        [Authorize(Roles="Admin,ProjectManager")]
+        public async Task<IActionResult> UnassignedTickets()
+        {
+            string currentUserId = _userManager.GetUserId(User);
+            int companyId = User.Identity.GetCompanyId().Value;
+            List<Ticket> unassignedTickets = await _ticketService.GetUnassignedTicketsAsync(companyId);
+
+            if (User.IsInRole(nameof(RolesEnum.Admin)))
+            {
+                return View(unassignedTickets);
+            }
+            else
+            {
+                List<Ticket> pmTickets = new();
+                foreach (Ticket ticket in unassignedTickets)
+                {
+                    string projectManagerId = (await _projectService.GetProjectManagerAsync(ticket.ProjectId))?.Id;
+
+                    if (currentUserId == projectManagerId)
+                    {
+                        pmTickets.Add(ticket);
+                    }
+                }
+
+                return View(pmTickets);
+            }
+        }
+        #endregion
+      
         #region Details
         // GET: Tickets/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? ticketId)
         {
-            if (id == null)
+            if (ticketId == null)
             {
                 return NotFound();
             }
 
-            Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
+            Ticket ticket = await _ticketService.GetTicketByIdAsync(ticketId.Value);
             if (ticket == null)
             {
                 return NotFound();
@@ -289,6 +319,33 @@ namespace DUST.Controllers
             }
 
             return RedirectToAction("Details", new { id = ticketComment.TicketId });
+        }
+        #endregion
+
+        #region Assign Developer
+        [HttpGet]
+        public async Task<IActionResult> AssignDeveloper(int ticketId)
+        {
+            AssignDeveloperViewModel model = new();
+            model.Ticket = await _ticketService.GetTicketByIdAsync(ticketId);
+
+            List<DUSTUser> projectMembers = await _projectService.GetProjectMembersByRoleAsync(model.Ticket.ProjectId, nameof(RolesEnum.Developer));
+            model.Developers = new SelectList(projectMembers, "Id", "FullName");
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignDeveloper(AssignDeveloperViewModel model)
+        {
+            if (model.DeveloperId != null)
+            {
+                await _ticketService.AssignTicketAsync(model.Ticket.Id, model.DeveloperId);
+                return RedirectToAction(nameof(Details), new {id = model.Ticket.Id});
+            }
+
+            return RedirectToAction(nameof(AssignDeveloper), new {id = model.Ticket.Id});
         }
         #endregion
 
