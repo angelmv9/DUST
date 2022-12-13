@@ -329,8 +329,8 @@ namespace DUST.Controllers
             AssignDeveloperViewModel model = new();
             model.Ticket = await _ticketService.GetTicketByIdAsync(ticketId);
 
-            List<DUSTUser> projectMembers = await _projectService.GetProjectMembersByRoleAsync(model.Ticket.ProjectId, nameof(RolesEnum.Developer));
-            model.Developers = new SelectList(projectMembers, "Id", "FullName");
+            List<DUSTUser> developers = await _projectService.GetProjectMembersByRoleAsync(model.Ticket.ProjectId, nameof(RolesEnum.Developer));
+            model.Developers = new SelectList(developers, "Id", "FullName");
 
             return View(model);
         }
@@ -339,7 +339,7 @@ namespace DUST.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignDeveloper(AssignDeveloperViewModel model)
         {
-            if (model.DeveloperId != null)
+            if (!string.IsNullOrEmpty(model.DeveloperId))
             {
                 await _ticketService.AssignTicketAsync(model.Ticket.Id, model.DeveloperId);
                 return RedirectToAction(nameof(Details), new {id = model.Ticket.Id});
