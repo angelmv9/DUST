@@ -427,6 +427,21 @@ namespace DUST.Services
             }
         }
 
+        public async Task<List<Ticket>> GetUnassignedTicketsAsync(int companyId)
+        {
+            try
+            {
+                List<Ticket> allTickets = await GetAllTicketsByCompanyAsync(companyId);
+                List<Ticket> unassignedTickets = allTickets.Where(t => string.IsNullOrEmpty(t.DeveloperUserId)).ToList();
+
+                return unassignedTickets;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<int?> LookupTicketPriorityIdAsync(string priorityName)
         {
             try
