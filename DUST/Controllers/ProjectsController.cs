@@ -277,6 +277,36 @@ namespace DUST.Controllers
         }
         #endregion
 
+        #region Assign PM
+        //Get: Projects/AssignPM/3
+        [HttpGet]
+        public async Task<IActionResult> AssignPM(int projectId)
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
+            AssignPMViewModel model = new();
+            model.Project = await _projectService.GetProjectByIdAsync(companyId, projectId);
+
+            List<DUSTUser> PMs = await _rolesService.GetUsersInRoleAsync(nameof(RolesEnum.ProjectManager), companyId);
+            model.ProjectManagers = new SelectList(PMs, "Id", "FullName");
+
+            return View(model);
+        }
+
+        //Post: Projects/AssignPM/3
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignPM(AssignPMViewModel model)
+        {
+            if (!string.IsNullOrEmpty(model.PMId))
+            {
+                await _projectService.AddProjectManagerAsync(model.PMId, model.Project.Id);
+                return RedirectToAction(nameof(Details), new {id = model.Project.Id});         
+            }
+
+            return RedirectToAction(nameof(AssignPM), new { projectId = model.Project.Id });
+        }
+        #endregion
+
         #region Restore
         // GET: Projects/Restore/5
         public async Task<IActionResult> Restore(int? id)
