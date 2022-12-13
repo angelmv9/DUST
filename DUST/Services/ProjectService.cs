@@ -3,12 +3,14 @@ using DUST.Models;
 using DUST.Models.Enums;
 using DUST.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Project = DUST.Models.Project;
 
 namespace DUST.Services
 {
@@ -258,6 +260,33 @@ namespace DUST.Services
             throw new NotImplementedException();
         }
 
+        public async Task<List<Project>> GetUnassignedProjectsAsync(int companyId)
+        {
+            List<Project> allProjects = new();
+            List<Project> unassignedProjects = new();
+
+            try
+            {
+                // Includes archived projects
+                allProjects = await _context.Projects.Include(p => p.ProjectPriority).Where(p => p.CompanyId == companyId).ToListAsync();
+                foreach (Project project in allProjects)
+                {
+                    DUSTUser pm = await GetProjectManagerAsync(project.Id);
+                    if (pm == null)
+                    {
+                        unassignedProjects.Add(project);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return unassignedProjects;
+
+        }
+
         public async Task<List<Project>> GetUserProjectsAsync(string userId)
         {
             try
@@ -409,6 +438,6 @@ namespace DUST.Services
         {
             _context.Update(project);
             await _context.SaveChangesAsync();
-        }
+        }      
     }
 }

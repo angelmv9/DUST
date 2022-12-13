@@ -27,6 +27,7 @@ namespace DUST.Services.Interfaces
         public Task<List<DUSTUser>> GetProjectMembersByRoleAsync(int projectId, string role);
         public Task<Project> GetProjectByIdAsync(int companyId, int projectId);
         public Task<List<DUSTUser>> GetSubmittersOnProjectAsync(int projectId);
+        public Task<List<Project>> GetUnassignedProjectsAsync(int companyId);
         public Task<List<DUSTUser>> GetUsersNotOnProjectAsync(int companyId, int projectId);
         public Task<List<Project>> GetUserProjectsAsync(string userId);
         public Task<bool> IsUserOnProjectAsync(string userId, int projectId);
