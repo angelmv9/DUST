@@ -6,6 +6,7 @@
 @inject UserManager<DUSTUser> UserManager
 @inject IProjectService ProjectService
 @inject ITicketHistoryService HistoryService
+@inject ITicketService TicketService
 
 @{
     ViewData["Title"] = "Details";
@@ -18,8 +19,7 @@
 <div>
     <div class="container-fluid">
         <div class="row gy-2">
-            <!-- #region Project Description -->
-
+            <!--#region Project Description-->         
             <div class="col-md-12 col">
                 <div class="row col-cols-2 mt-5 bg-secondary">
                     <div class="card col m-1 p-2">
@@ -70,13 +70,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>          
+            <!--#endregion-->
 
-
-            <!-- #endregion -->
-
-            <!-- #region Project Manager -->
-
+            <!--#region Project Manager-->
             <div class="col-md-4 col mt-5 ">
                 <div class="bg-secondary">
                     <div class="card m-1 p-2">
@@ -118,7 +115,7 @@
                                         {
                                             <span>
                                                 <a class="btn btn-xs btn-outline-info"
-                                                   asp-controller="Projects" asp-action="AssignProjectManager" asp-route-id="@Model.Id">
+                                                   asp-controller="Projects" asp-action="AssignPM" asp-route-projectId="@Model.Id">
                                                     Assign ProjectManager
                                                 </a>
                                             </span>
@@ -130,12 +127,9 @@
                     </div>
                 </div>
             </div>
-
-
-            <!-- #endregion -->
+            <!--#endregion-->
 
             <!-- #region Project Team -->
-
             <div class="col-md-4 col mt-5 ">
                 <div class="bg-secondary">
                     <div class="card m-1 p-2">
@@ -180,12 +174,9 @@
                     </div>
                 </div>
             </div>
-
-
             <!-- #endregion -->
 
             <!-- #region Project Activity -->
-
             <div class="col-md-4 col mt-5 ">
                 <div class="bg-dark">
                     <div class="card m-1 p-2">
@@ -200,28 +191,39 @@
 
                            @foreach (TicketHistory history in ticketsHistories)
                            {
-                               <div class="">
-                                   <span class="date">@history.Created.ToString("dd MMM yyyy")</span>
-                                   <h6>@history.Description</h6>
-                                   <span>By: <a href="" title="@history.User.FullName">@history.User.FullName</a></span>
-                                   <div class="">
-                                       <p>The ticket <b>@history.Property</b> was edited</p>
-                                       <p>@($"Previous {history.Property}: {history.OldValue}")</p>
-                                       <p>@($"Current {history.Property}: {history.NewValue}")</p>
-                                   </div>
-                               </div>
+                                <div class="">
+                                    <span class="date" style="font-weight:bold">@history.Created.ToString("dd MMM yyyy")</span>
+                                    <h6>@history.Description</h6>
+                                    <span>By: <a href="" title="@history.User.FullName">@history.User.FullName</a></span>
+                                    <div class="">
+                                        @if (history.Property.Equals("TicketComment") || history.Property.Equals("TicketAttachment"))
+                                        {
+                                            <p>A <b>@history.Property</b> was added. </p>
+
+                                        }
+                                        else if (!history.Description.Contains("New ticket created"))
+                                        {
+                                            <p>The ticket <b>@history.Property</b> was edited</p>
+                                            <p>@($"Previous {history.Property}: ") <span class="text-muted">@history.OldValue</span></p>
+                                            <p>@($"Current {history.Property}: {history.NewValue}")</p>
+                                        }
+                                        else
+                                        {
+                                            <p>"@((await TicketService.GetTicketByIdAsync(history.TicketId)).Title)"</p>
+                                        }
+
+                                    </div>
+                                </div>
+                                <hr />
                            }
                         </div>
 
                     </div>
                 </div>
             </div>
-
-
             <!-- #endregion -->
 
             <!-- #region Tickets -->
-
             <div class="col-md-12 col">
                 <div class="mt-5 bg-secondary">
                     <div class="card m-1 p-2">
@@ -301,7 +303,7 @@
                                                 <a class="btn btn-sm btn-outline-info" asp-controller="Tickets" asp-action="Details" asp-route-ticketId="@ticket.Id"><i class="fs-5 bi-justify"></i></a>
                                                 @if (ticket.DeveloperUserId == dustUser.Id || ticket.OwnerUserId == dustUser.Id || dustUser.Id == projectManager?.Id || User.IsInRole(nameof(RolesEnum.Admin)))
                                                 {
-                                                    <a class="btn btn-sm btn-outline-secondary" asp-controller="Tickets" asp-action="Edit" asp-route-TicketId="@ticket.Id"><i class="fs-5 bi-pencil"></i></a>
+                                                    <a class="btn btn-sm btn-outline-secondary" asp-controller="Tickets" asp-action="Edit" asp-route-id="@ticket.Id"><i class="fs-5 bi-pencil"></i></a>
                                                 }
 
                                                 @if (User.IsInRole("Admin") || (dustUser.Id == projectManager?.Id))
@@ -320,8 +322,6 @@
 
                 </div>
             </div>
-
-
             <!-- #endregion -->
         </div>
     </div>

@@ -20,19 +20,24 @@ namespace DUST.Controllers
     [Authorize]
     public class TicketsController : Controller
     {
+        #region Member Variables
         private readonly ApplicationDbContext _context;
         private readonly UserManager<DUSTUser> _userManager;
         private readonly IProjectService _projectService;
         private readonly ILookupService _lookupService;
         private readonly ITicketService _ticketService;
         private readonly IFilesService _filesService;
+        private readonly ITicketHistoryService _historyService;
+        #endregion
 
         #region Constructor
         public TicketsController(ApplicationDbContext context,
-    UserManager<DUSTUser> userManager,
-    IProjectService projectService,
-    ILookupService lookupService,
-    ITicketService ticketService, IFilesService filesService)
+            UserManager<DUSTUser> userManager,
+            IProjectService projectService,
+            ILookupService lookupService,
+            ITicketService ticketService, 
+            IFilesService filesService,
+            ITicketHistoryService historyService)
         {
             _context = context;
             _userManager = userManager;
@@ -40,6 +45,7 @@ namespace DUST.Controllers
             _lookupService = lookupService;
             _ticketService = ticketService;
             _filesService = filesService;
+            _historyService = historyService;
         }
         #endregion
 
@@ -168,13 +174,23 @@ namespace DUST.Controllers
 
             if (ModelState.IsValid)
             {
-                ticket.Created = DateTimeOffset.Now;
-                ticket.OwnerUserId = ownerUser.Id;
-                int ticketStatus = (await _ticketService.LookupTicketStatusIdAsync(nameof(TicketStatusEnum.New))).Value;
-                ticket.TicketStatusId = ticketStatus;
-                // TODO: Add Ticket History and Notification
-                await _ticketService.AddNewTicketAsync(ticket);
+                try
+                {
+                    ticket.Created = DateTimeOffset.Now;
+                    ticket.OwnerUserId = ownerUser.Id;
+                    int ticketStatus = (await _ticketService.LookupTicketStatusIdAsync(nameof(TicketStatusEnum.New))).Value;
+                    ticket.TicketStatusId = ticketStatus;
+                    // TODO: Add Ticket History and Notification
+                    await _ticketService.AddNewTicketAsync(ticket);
 
+                    Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+                    await _historyService.AddHistoryAsync(null, newTicket, ownerUser.Id);
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
                 return RedirectToAction(nameof(Index));
             }
 
@@ -236,6 +252,8 @@ namespace DUST.Controllers
             if (ModelState.IsValid)
             {
                 DUSTUser user = await _userManager.GetUserAsync(User);
+                Ticket oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+
                 try
                 {
                     ticket.Updated = DateTimeOffset.Now;
@@ -252,7 +270,10 @@ namespace DUST.Controllers
                         throw;
                     }
                 }
-                // TODO: Add Ticket History
+
+                Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+                await _historyService.AddHistoryAsync(oldTicket, newTicket, user.Id);
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -279,13 +300,22 @@ namespace DUST.Controllers
 
             if (ModelState.IsValid && ticketAttachment.FormFile != null)
             {
-                ticketAttachment.ByteArrayData = await _filesService.ConvertFileToByteArrayAsync(ticketAttachment.FormFile);
-                ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
-                ticketAttachment.FileExtension = ticketAttachment.FormFile.ContentType;
+                try
+                {
+                    ticketAttachment.ByteArrayData = await _filesService.ConvertFileToByteArrayAsync(ticketAttachment.FormFile);
+                    ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
+                    ticketAttachment.FileExtension = ticketAttachment.FormFile.ContentType;
 
-                ticketAttachment.Created = DateTimeOffset.Now;
-                ticketAttachment.UserId = _userManager.GetUserId(User);
-                await _ticketService.AddTicketAttachmentAsync(ticketAttachment);
+                    ticketAttachment.Created = DateTimeOffset.Now;
+                    ticketAttachment.UserId = _userManager.GetUserId(User);
+                    await _ticketService.AddTicketAttachmentAsync(ticketAttachment);
+
+                    await _historyService.AddHistoryAsync(ticketAttachment.TicketId, nameof(TicketAttachment), ticketAttachment.UserId);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
 
                 statusMessage = "Success: New attachment added to the Ticket";
             }
@@ -294,7 +324,7 @@ namespace DUST.Controllers
                 statusMessage = "Error trying to upload file. Please try again";
             }
 
-            return RedirectToAction("Details", new { id = ticketAttachment.TicketId, message = statusMessage});
+            return RedirectToAction("Details", new { ticketId = ticketAttachment.TicketId, message = statusMessage});
         }
         #endregion
 
@@ -310,7 +340,9 @@ namespace DUST.Controllers
                 {
                     ticketComment.UserId = _userManager.GetUserId(User);
                     ticketComment.Created = DateTimeOffset.Now;
-                    await _ticketService.AddTicketCommentAsync(ticketComment);    
+                    await _ticketService.AddTicketCommentAsync(ticketComment);
+
+                    await _historyService.AddHistoryAsync(ticketComment.TicketId, nameof(TicketComment), ticketComment.UserId);
                 }
                 catch (Exception)
                 {
@@ -318,7 +350,7 @@ namespace DUST.Controllers
                 }
             }
 
-            return RedirectToAction("Details", new { id = ticketComment.TicketId });
+            return RedirectToAction("Details", new { ticketId = ticketComment.TicketId });
         }
         #endregion
 
@@ -341,11 +373,26 @@ namespace DUST.Controllers
         {
             if (!string.IsNullOrEmpty(model.DeveloperId))
             {
-                await _ticketService.AssignTicketAsync(model.Ticket.Id, model.DeveloperId);
-                return RedirectToAction(nameof(Details), new {id = model.Ticket.Id});
+                DUSTUser currentUser = await _userManager.GetUserAsync(User);
+                Ticket oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(model.Ticket.Id);
+
+                try
+                {
+                    await _ticketService.AssignTicketAsync(model.Ticket.Id, model.DeveloperId);
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+                Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(model.Ticket.Id);
+                await _historyService.AddHistoryAsync(oldTicket, newTicket, currentUser.Id);
+                
+                return RedirectToAction(nameof(Details), new {ticketId = model.Ticket.Id});
             }
 
-            return RedirectToAction(nameof(AssignDeveloper), new {id = model.Ticket.Id});
+            return RedirectToAction(nameof(AssignDeveloper), new {ticketId = model.Ticket.Id});
         }
         #endregion
 
