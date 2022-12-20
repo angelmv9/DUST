@@ -11,7 +11,7 @@
                     <label class="control-label">Assign Developer</label>
                 </div>
                 <div class="card-body">
-                    <form method="post" asp-action="AssignedDeveloper">
+                    <form method="post" asp-action="AssignDeveloper">
                         <input type="hidden" asp-for="Ticket.Id" />
                         <p>Description: @Model.Ticket.Description</p>
                         <div class="form-group">
