@@ -299,6 +299,26 @@ namespace DUST.Services
             }
         }
 
+        public async Task<Ticket> GetTicketAsNoTrackingAsync(int ticketId)
+        {
+            try
+            {
+                Ticket ticket = await _context.Tickets
+                                              .Include(t => t.DeveloperUser)
+                                              .Include(t => t.Project)
+                                              .Include(t => t.TicketPriority)
+                                              .Include(t => t.TicketType)
+                                              .Include(t => t.TicketStatus)
+                                              .AsNoTracking()
+                                              .FirstOrDefaultAsync(t => t.Id == ticketId);
+                return ticket;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId)
         {
             try
