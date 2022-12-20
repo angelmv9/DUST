@@ -14,6 +14,7 @@ using DUST.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
+using DUST.Services;
 
 namespace DUST.Controllers
 {
@@ -21,7 +22,6 @@ namespace DUST.Controllers
     public class ProjectsController : Controller
     {
         #region Member variables
-        private readonly ApplicationDbContext _context;
         private readonly IRolesService _rolesService;
         private readonly ILookupService _lookupService;
         private readonly IFilesService _fileService;
@@ -31,15 +31,13 @@ namespace DUST.Controllers
         #endregion
 
         #region Constructor
-        public ProjectsController(ApplicationDbContext context,
-            IRolesService rolesService,
+        public ProjectsController(IRolesService rolesService,
             ILookupService lookupService,
             IFilesService fileService,
             IProjectService projectService,
             UserManager<DUSTUser> userManager,
             ICompanyInfoService companyService)
         {
-            _context = context;
             _rolesService = rolesService;
             _lookupService = lookupService;
             _fileService = fileService;
@@ -50,13 +48,7 @@ namespace DUST.Controllers
         #endregion
 
         #region Index Views
-        // GET: Projects
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = _context.Projects.Include(p => p.Company).Include(p => p.ProjectPriority);
-            return View(await applicationDbContext.ToListAsync());
-        }
-
+        
         public async Task<IActionResult> MyProjects()
         {
             string userId = _userManager.GetUserId(User);
@@ -235,9 +227,16 @@ namespace DUST.Controllers
                     }
                     return RedirectToAction("Index");
                 }
-                catch (Exception)
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!await ProjectExists(model.Project.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
             return RedirectToAction("Edit");
@@ -382,9 +381,10 @@ namespace DUST.Controllers
         }
         #endregion
 
-        private bool ProjectExists(int id)
+        private async Task<bool> ProjectExists(int id)
         {
-            return _context.Projects.Any(e => e.Id == id);
+            int companyId = User.Identity.GetCompanyId().Value;
+            return (await _projectService.GetAllActiveProjectsByCompanyAsync(companyId)).Any(p => p.Id == id);
         }
     }
 }

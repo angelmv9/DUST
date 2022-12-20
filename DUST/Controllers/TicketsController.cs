@@ -21,7 +21,6 @@ namespace DUST.Controllers
     public class TicketsController : Controller
     {
         #region Member Variables
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<DUSTUser> _userManager;
         private readonly IProjectService _projectService;
         private readonly ILookupService _lookupService;
@@ -31,15 +30,13 @@ namespace DUST.Controllers
         #endregion
 
         #region Constructor
-        public TicketsController(ApplicationDbContext context,
-            UserManager<DUSTUser> userManager,
+        public TicketsController(UserManager<DUSTUser> userManager,
             IProjectService projectService,
             ILookupService lookupService,
             ITicketService ticketService, 
             IFilesService filesService,
             ITicketHistoryService historyService)
         {
-            _context = context;
             _userManager = userManager;
             _projectService = projectService;
             _lookupService = lookupService;
@@ -50,12 +47,6 @@ namespace DUST.Controllers
         #endregion
 
         #region Index Views
-        // GET: Tickets
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-            return View(await applicationDbContext.ToListAsync());
-        }
 
         // Get: MyTickets
         public async Task<IActionResult> MyTickets()
