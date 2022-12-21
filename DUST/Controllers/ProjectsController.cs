@@ -84,6 +84,7 @@ namespace DUST.Controllers
             return View(archivedProjects);
         }
 
+        [Authorize(Roles = nameof(RolesEnum.Admin))]
         public async Task<IActionResult> UnassignedProjects()
         {
             int companyId = User.Identity.GetCompanyId().Value;
@@ -117,6 +118,7 @@ namespace DUST.Controllers
 
         #region Create
         // GET: Projects/Create
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Create()
         {
             int companyId = User.Identity.GetCompanyId().Value;
@@ -134,6 +136,7 @@ namespace DUST.Controllers
         // POST: Projects/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddProjectWithPMViewModel model)
@@ -176,6 +179,7 @@ namespace DUST.Controllers
 
         #region Edit
         // GET: Projects/Edit/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -200,6 +204,7 @@ namespace DUST.Controllers
         // POST: Projects/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(AddProjectWithPMViewModel model)
@@ -245,6 +250,7 @@ namespace DUST.Controllers
 
         #region Archive
         // GET: Projects/Archive/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Archive(int? id)
         {
             if (id == null)
@@ -263,6 +269,7 @@ namespace DUST.Controllers
         }
 
         // POST: Projects/Archive/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost, ActionName("Archive")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ArchiveConfirmed(int id)
@@ -278,6 +285,7 @@ namespace DUST.Controllers
 
         #region Manage Team
         //Get: Projects/ManageTeam/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpGet]
         public async Task<IActionResult> AssignMembers(int projectId)
         {
@@ -295,6 +303,7 @@ namespace DUST.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignMembers(ProjectMembersViewModel model)
@@ -320,6 +329,7 @@ namespace DUST.Controllers
 
         #region Assign PM
         //Get: Projects/AssignPM/3
+        [Authorize(Roles = nameof(RolesEnum.Admin))]
         [HttpGet]
         public async Task<IActionResult> AssignPM(int projectId)
         {
@@ -334,6 +344,7 @@ namespace DUST.Controllers
         }
 
         //Post: Projects/AssignPM/3
+        [Authorize(Roles = nameof(RolesEnum.Admin))]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignPM(AssignPMViewModel model)
@@ -350,6 +361,7 @@ namespace DUST.Controllers
 
         #region Restore
         // GET: Projects/Restore/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Restore(int? id)
         {
             if (id == null)
@@ -368,6 +380,7 @@ namespace DUST.Controllers
         }
 
         // POST: Projects/Restore/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost, ActionName("Restore")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestoreConfirmed(int id)

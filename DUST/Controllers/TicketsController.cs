@@ -81,7 +81,7 @@ namespace DUST.Controllers
         }
 
         //Get: UnassignedTickets
-        [Authorize(Roles="Admin,ProjectManager")]
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> UnassignedTickets()
         {
             string currentUserId = _userManager.GetUserId(User);
@@ -346,6 +346,7 @@ namespace DUST.Controllers
         #endregion
 
         #region Assign Developer
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpGet]
         public async Task<IActionResult> AssignDeveloper(int ticketId)
         {
@@ -358,6 +359,7 @@ namespace DUST.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignDeveloper(AssignDeveloperViewModel model)
@@ -402,6 +404,7 @@ namespace DUST.Controllers
 
         #region Archive
         // GET: Tickets/Archive/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Archive(int? id)
         {
             if (id == null)
@@ -416,9 +419,10 @@ namespace DUST.Controllers
             }
 
             return View(ticket);
-        }      
+        }
 
         // POST: Tickets/Archive/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost, ActionName("Archive")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ArchiveConfirmed(int id)
@@ -432,6 +436,7 @@ namespace DUST.Controllers
 
         #region Restore
         // GET: Tickets/Restore/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Restore(int? id)
         {
             if (id == null)
@@ -449,6 +454,7 @@ namespace DUST.Controllers
         }
 
         // POST: Tickets/Restore/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost, ActionName("Restore")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestoreConfirmed(int id)
