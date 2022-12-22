@@ -1,0 +1,236 @@
+﻿@model DUST.Models.ViewModels.DashboardViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using DUST.Models.Enums
+@using DUST.Services.Interfaces
+
+@inject UserManager<DUSTUser> UserManager
+@inject IRolesService RolesService
+
+@{
+	ViewData["Title"] = "Dashboard";
+	DUSTUser currentUser = await UserManager.GetUserAsync(User);
+}
+
+<h1>Dashboard</h1>
+<a href="javascript:void(0);">
+	@if (currentUser?.AvatarByteData != null)
+	{
+		<img class="media-object" src="data:image/*;base64,@(Convert.ToBase64String(currentUser.AvatarByteData))" />
+	}
+	else
+	{
+		<img class="media-object" src="~/img/defaultUserImage.png" style="width:30px; height: 30px" />
+	}
+</a>
+<strong>@currentUser?.FullName</strong>
+<span class="text-muted" style="font-size:x-small;">
+	<strong>@currentUser.Company.Name</strong>
+</span>
+
+
+<div>
+	<div classxfont-weighteighteightgetainer-fluid">
+		<div class="row gy-2">
+			<div class="col-md-12 col">
+				<div class="row col-cols-4 mt-5 bg-secondary">
+					<div class="card col m-1 p-2">
+						<div class="card-body">
+							<h5>Chart 1</h5>
+							<p>[Projects]</p>
+						</div>
+					</div>
+					<div class="card col m-1 p-2">
+						<div class="card-body">
+							<h5>Chart 2</h5>
+							<p>[Projects]</p>
+						</div>
+					</div>
+					<div class="card col m-1 p-2">
+						<div class="card-body">
+							<h5>Chart 3</h5>
+							<p>[Tickets]</p>
+						</div>
+					</div>
+					<div class="card col m-1 p-2">
+						<div class="card-body">
+							<h5>Chart 4</h5>
+							<p>[Tickets]</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row gy-2">
+			<div class="cols mt-5 bg-secondary">
+				<div class="card col m-1 p-2">
+					<div class="card-body" style="height:380px">
+						<h5>Chart 5</h5>
+						<p>[Projects: Tickets vs Developers]</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<hr />
+	<div class="mt-5 ">
+		<div class="row">
+			@* Projects Table *@
+			<div class="col">
+				<div class="bg-secondary">
+					<div class="card m-1 p-2">
+						<div class="card-header">
+							<h2>Projects</h2>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive" style="overflow-y:auto;height:600px;">
+								<table class="table table-hover">
+									<thead class="">
+										<tr>
+											<th>Name</th>
+											<th>StartDate</th>
+											<th>EndDate</th>
+											<th>Priority</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var project in Model.Projects.OrderByDescending(t => t.EndDate))
+										{
+											<tr>
+												<td><a asp-controller="Project" asp-action="Details" asp-route-id="@project.Id" style="color:black"><strong>@project.Name</strong></a></td>
+												<td><span style="font-size:small">@project.StartDate.ToString("MM.dd.yyyy")</span></td>
+												<td><span style="font-size:small">@project.EndDate.ToString("MM.dd.yyyy")</span></td>
+												<td>
+													@if (project.ProjectPriority?.Name == nameof(ProjectPriorityEnum.Urgent))
+													{
+														<span class="badge bg-danger">@project.ProjectPriority?.Name</span>
+													}
+													else if (project.ProjectPriority?.Name == nameof(ProjectPriorityEnum.High))
+													{
+														<span class="badge bg-warning">@project.ProjectPriority?.Name</span>
+													}
+													else if (project.ProjectPriority?.Name == nameof(ProjectPriorityEnum.Medium))
+													{
+														<span class="badge bg-info">@project.ProjectPriority?.Name</span>
+													}
+													else
+													{
+														<span class="badge bg-secondary">@project.ProjectPriority?.Name</span>
+													}
+												</td>
+												<td><a class="btn btn-sm btn-outline-secondary" asp-controller="Project" asp-action="Details" asp-route-id="@project.Id">Details</a></td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+						<div class="card-footer">
+						</div>
+					</div>
+				</div>
+			</div>
+			@* Tickets Table *@
+			<div class="col">
+				<div class="bg-secondary">
+					<div class="card m-1 p-2">
+						<div class="card-header">
+							<h2>Tickets</h2>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive" style="overflow-y:auto;height:600px;">
+								<table class="table table-hover">
+									<thead class="">
+										<tr>
+											<th>Title</th>
+											<th>Developer</th>
+											<th>Status</th>
+											<th>Priority</th>
+											<th>Created</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var ticket in Model.Tickets.OrderByDescending(t => t.Created))
+										{
+											<tr>
+												<td><a asp-controller="Tickets" asp-action="Details" asp-route-ticketId="@ticket.Id" style="color:black"><strong>@ticket.Title</strong></a> </td>
+												<td>
+													@if (ticket.DeveloperUserId != null)
+													{
+														@ticket.DeveloperUser?.FullName
+													} else
+													{
+														<span class="badge bg-warning text-dark">Unassigned</span>
+													}
+												</td>
+												<td>
+													@if (ticket.TicketStatus.Name == nameof(TicketStatusEnum.New))
+													{
+														<span class="badge bg-success rounded-pill">@ticket.TicketStatus.Name </span>
+													}
+													else
+													{
+														<span class="badge bg-secondary rounded-pill">@ticket.TicketStatus.Name </span>
+													}
+												</td>
+												<td>
+													@if (ticket.TicketPriority.Name == nameof(TicketPriorityEnum.Urgent))
+													{
+														<span class="badge bg-danger">@ticket.TicketPriority.Name</span>
+													}
+													else if (ticket.TicketPriority.Name == nameof(TicketPriorityEnum.High))
+													{
+														<span class="badge bg-warnging">@ticket.TicketPriority.Name</span>
+													}
+													else if (ticket.TicketPriority.Name == nameof(TicketPriorityEnum.Medium))
+													{
+														<span class="badge bg-info">@ticket.TicketPriority.Name</span>
+													}
+													else
+													{
+														<span class="badge bg-secondary">@ticket.TicketPriority.Name</span>
+													}
+													
+												</td>
+												<td><span style="font-size:small">@ticket.Created.ToString("MM-dd-yyyy")</span></td>
+												<td>
+													<a class="btn btn-sm btn-outline-secondary" asp-controller="Tickets" asp-action="Details" asp-route-ticketId="@ticket.Id">Details</a>
+												</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+
+						</div>
+						<div class="card-footer">
+						</div>
+					</div>
+				</div>
+			</div>
+			@* Members *@
+			<div class="col-md-2 ">
+				<div class="bg-dark">
+					<div class="card m-1 p-2">
+						<div class="card-header">
+							<h2>Members</h2>
+							<hr />
+						</div>
+						<div class="card-body" style="overflow-y:auto;height:600px;background-color:antiquewhite">
+							@foreach (DUSTUser member in Model.Members)
+							{
+								<div>
+									<span class="date" style="font-weight:bold">@member.FullName</span>
+									<h6>@((await RolesService.GetUserRolesAsync(member)).FirstOrDefault())</h6>
+								</div>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
