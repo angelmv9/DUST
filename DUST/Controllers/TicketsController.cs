@@ -265,7 +265,7 @@ namespace DUST.Controllers
                 Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
                 await _historyService.AddHistoryAsync(oldTicket, newTicket, user.Id);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllTickets));
             }
 
             // If ModelState is not valid
