@@ -207,13 +207,9 @@ namespace DUST.Controllers
         // GET: Tickets/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+			Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
 
-            Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
-            if (ticket == null)
+			if (id == null || ticket == null || ticket.Archived || ticket.ArchivedByProject)
             {
                 return NotFound();
             }
