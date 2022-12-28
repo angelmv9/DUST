@@ -170,7 +170,7 @@ namespace DUST.Controllers
                     throw;
                 }
                 // TODO: redirect to All Projects
-                return RedirectToAction("Index");
+                return RedirectToAction("AllProjects");
             }
 
             return RedirectToAction("Create");
@@ -231,7 +231,7 @@ namespace DUST.Controllers
                             Debug.WriteLine("Error adding a project manager while creating a project.");
                         }
                     }
-                    return RedirectToAction("Index");
+                    return RedirectToAction("AllProjects");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -280,7 +280,7 @@ namespace DUST.Controllers
 
             await _projectService.ArchiveProjectAsync(project);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllProjects));
         }
         #endregion
 
@@ -391,7 +391,7 @@ namespace DUST.Controllers
 
             await _projectService.RestoreProjectAsync(project);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllProjects));
         }
         #endregion
 

@@ -182,7 +182,7 @@ namespace DUST.Controllers
                 {
                     throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllTickets));
             }
 
             // If ModelState isn't valid
@@ -426,7 +426,7 @@ namespace DUST.Controllers
             Ticket ticket = await _ticketService.GetTicketByIdAsync(id);
             await _ticketService.ArchiveTicketAsync(ticket);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllTickets));
         }
         #endregion
 
@@ -459,7 +459,7 @@ namespace DUST.Controllers
             ticket.Archived = false;
             await _ticketService.UpdateTicketAsync(ticket);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllTickets));
         }
         #endregion
 
