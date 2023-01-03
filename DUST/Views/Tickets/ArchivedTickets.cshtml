@@ -97,10 +97,9 @@
                         bool isCurrentUserPM = (await ProjectService.GetProjectManagerAsync(item.ProjectId))?.Id == currentUser.Id;
                     }
 
-                    @if (User.IsInRole(nameof(RolesEnum.Admin)) || isCurrentUserPM)
+                    @if ((User.IsInRole(nameof(RolesEnum.Admin)) || isCurrentUserPM) && !item.ArchivedByProject)
                     {   <span>|</span>                    
-                        <a asp-action="Restore" asp-route-id="@item.Id"> Restore</a>
-                        
+                        <a asp-action="Restore" asp-route-id="@item.Id"> Restore</a>                      
                     }
                 </td>
             </tr>

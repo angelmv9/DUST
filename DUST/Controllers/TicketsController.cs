@@ -68,7 +68,7 @@ namespace DUST.Controllers
             }
             else
             {
-                return View(tickets.Where(t => t.Archived == false));
+                return View(tickets.Where(t => t.Archived == false && t.ArchivedByProject == false));
             }
         }
 
