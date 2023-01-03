@@ -403,13 +403,10 @@ namespace DUST.Controllers
         [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Archive(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
-            if (ticket == null)
+            // Can't archive a ticket that is already archived 
+            // or the project it belongs to has been archived
+            if (id == null || ticket == null || ticket.Archived || ticket.ArchivedByProject)
             {
                 return NotFound();
             }
@@ -435,13 +432,12 @@ namespace DUST.Controllers
         [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Restore(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
-            if (ticket == null)
+
+            // Can't restore a ticket that hasn't been archived first.
+            // If archived by project, a single ticket cannot be restored.
+            if (id == null || ticket == null || !ticket.Archived || ticket.ArchivedByProject)
+
             {
                 return NotFound();
             }

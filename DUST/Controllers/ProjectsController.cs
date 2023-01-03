@@ -254,12 +254,14 @@ namespace DUST.Controllers
         [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Archive(int? id)
         {
-            if (id == null)
+            int companyId = User.Identity.GetCompanyId().Value;
+            bool isProjectArchived = (await _projectService.GetProjectByIdAsync(companyId, id.Value)).Archived;
+            // Can't access Projects/Archive/id if the project is already archived
+            if (id == null || isProjectArchived)
             {
                 return NotFound();
             }
 
-            int companyId = User.Identity.GetCompanyId().Value;
             var project = await _projectService.GetProjectByIdAsync(companyId, id.Value);
             if (project == null)
             {
@@ -365,12 +367,14 @@ namespace DUST.Controllers
         [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Restore(int? id)
         {
-            if (id == null)
+            int companyId = User.Identity.GetCompanyId().Value;
+            bool isProjectArchived = (await _projectService.GetProjectByIdAsync(companyId, id.Value)).Archived;
+            // Can't access Projects/Restore/id if the project isn't archived first
+            if (id == null || !isProjectArchived)
             {
                 return NotFound();
             }
 
-            int companyId = User.Identity.GetCompanyId().Value;
             var project = await _projectService.GetProjectByIdAsync(companyId, id.Value);
             if (project == null)
             {
