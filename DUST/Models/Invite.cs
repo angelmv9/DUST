@@ -16,7 +16,7 @@ namespace DUST.Models
 
         [DisplayName("Company")]
         public int CompanyId { get; set; }
-        [DisplayName("Project")]
+        [DisplayName("Select Project")]
         public int ProjectId { get; set; }
         [DisplayName("Invitor")]
         public string InvitorId { get; set; }
@@ -31,7 +31,9 @@ namespace DUST.Models
 
         [DisplayName("Invitee Last Name")]
         public string InviteeLastName { get; set; }
-        
+
+        public String Description { get; set; }
+
         // True if invite was used to create an account
         public bool WasUsed { get; set; }
 
