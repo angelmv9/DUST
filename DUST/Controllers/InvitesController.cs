@@ -7,16 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DUST.Data;
 using DUST.Models;
+using DUST.Services.Interfaces;
+using DUST.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DUST.Controllers
 {
+    [Authorize]
     public class InvitesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IProjectService _projectService;
 
-        public InvitesController(ApplicationDbContext context)
+        public InvitesController(ApplicationDbContext context, IProjectService projectService)
         {
             _context = context;
+            _projectService = projectService;
         }
 
         // GET: Invites
@@ -49,18 +55,20 @@ namespace DUST.Controllers
         }
 
         // GET: Invites/Create
-        public IActionResult Create()
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create()
         {
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id");
-            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
+            int companyId = User.Identity.GetCompanyId().Value;
+            List<Project> projects = await _projectService.GetAllActiveProjectsByCompanyAsync(companyId);
+            ViewData["ProjectId"] = new SelectList(projects, "Id", "Name");
+
             return View();
         }
 
         // POST: Invites/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CompanyId,ProjectId,InvitorId,InviteeId,InviteeEmail,InviteeFirstName,InviteeLastName,WasUsed,InviteDate,JoinDate,CompanyToken")] Invite invite)
