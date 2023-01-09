@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - DUST</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 </head>
 <body>
     <div class="container-fluid overflow-hidden">
@@ -79,6 +79,14 @@
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="UnassignedTickets">Unassigned Tickets</a></li>
                                     }
                                 </ul>
+                            </li>
+                            <li>
+                                @if (User.IsInRole(nameof(RolesEnum.Admin)))
+                                {
+                                    <a asp-controller="Invites" asp-action="Create" class="nav-link px-sm-0 px-2">
+                                        <i class="fs-5 bi bi-send-plus"></i><span class="ms-1 d-none d-sm-inline">Company Invite</span>
+                                    </a>
+                                }
                             </li>
                             <li>
                                 <a asp-area="" asp-controller="Notifications" asp-action="Index" class="nav-link px-sm-0 px-2">
