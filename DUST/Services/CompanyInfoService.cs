@@ -18,6 +18,25 @@ namespace DUST.Services
             _context = context;
         }
 
+        // CRUD - Add / Create
+        public async Task<bool> AddNewCompanyAsync(Company company)
+        {
+            if (company != null) {
+                try
+                {
+                    _context.Add(company);
+                    await _context.SaveChangesAsync();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            else { return false; }
+        }
+
         public async Task<List<DUSTUser>> GetAllMembersAsync(int companyId)
         {
             List<DUSTUser> result = new();
@@ -89,6 +108,20 @@ namespace DUST.Services
             return result;
 
             //Company result = _context.Companies.Find(companyId);
+        }
+
+        public async Task<int> GetCompanyIdByName(string companyName)
+        {
+            int? result = -1;
+            if (!string.IsNullOrEmpty(companyName))
+            {
+                result = (await _context.Companies.FirstOrDefaultAsync(c => c.Name == companyName))?.Id;
+                if (result.Value >= 0)
+                {
+                    return result.Value;
+                }
+            }
+            return result.Value;
         }
     }
 }

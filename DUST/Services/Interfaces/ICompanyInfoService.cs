@@ -8,10 +8,11 @@ namespace DUST.Services.Interfaces
 {
     public interface ICompanyInfoService
     {
+        public Task<bool> AddNewCompanyAsync(Company company);
         public Task<Company> GetCompanyInfoByIdAsync(int? companyId);
         public Task<List<DUSTUser>> GetAllMembersAsync(int companyId);
         public Task<List<Project>> GetAllProjectsAsync(int companyId);
         public Task<List<Ticket>> GetAllTicketsAsync(int companyId);
-
+        public Task<int> GetCompanyIdByName(string companyName);
     }
 }

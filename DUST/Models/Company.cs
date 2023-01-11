@@ -14,6 +14,7 @@ namespace DUST.Models
         [DisplayName("Company Name")]
         public string Name { get; set; }
 
+        [DisplayName("Company Description")]
         public string Description { get; set; }
 
         /* Navigation properties */
