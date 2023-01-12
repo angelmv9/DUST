@@ -20,7 +20,8 @@ namespace DUST.Services
 
         public async Task<bool> AcceptInviteAsync(Guid? token, string userId, int companyId)
         {
-            Invite invite = await _context.Invites.FirstOrDefaultAsync(i => i.CompanyToken == token);
+            Invite invite = await _context.Invites.Where(i => i.CompanyId == companyId)
+                                                  .FirstOrDefaultAsync(i => i.CompanyToken == token);
             if (invite == null)
             {
                 return false;
@@ -108,11 +109,12 @@ namespace DUST.Services
         }
 
         /// <summary>
-        /// Checks if token is not null and if the invite isn't older than 7 days
+        /// Checks that the token received matches a token in the database,
+        /// that the invite isn't older than 7 days and that it hasn't been used.
         /// </summary>
         /// <param name="token"></param>
         /// <returns>true if the invite hasn't expired. False otherwise.</returns>
-        public async Task<bool> ValidateInviteCodeAsync(Guid? token)
+        public async Task<bool> ValidateInviteAsync(Guid? token)
         {
             if (token == null)
             {
