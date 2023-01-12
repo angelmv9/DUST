@@ -1,0 +1,19 @@
+﻿
+@model DUST.Models.Invite
+
+<div class="card mx-auto my-auto" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Welcome to @Model.Company.Name, @Model.InviteeFirstName @Model.InviteeLastName!</h5>       
+        <p class="card-text">
+            @Model.Invitor.FullName has invited you to collaborate on the @Model.Project.Name project.
+        </p>
+        <p class="card-text">
+            Click the "JOIN" button below to register with the company and have access to our systems.
+        </p>
+        <a asp-area="Identity" 
+            asp-page="/Account/RegisterByInvite" 
+            asp-route-inviteId="@Model.Id"
+            asp-route-companyId="@Model.CompanyId"
+            class=""><i class="bi bi-box-arrow-in-right"></i> JOIN</a>
+    </div>
+</div>

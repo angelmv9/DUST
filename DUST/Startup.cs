@@ -1,5 +1,6 @@
 using DUST.Data;
 using DUST.Models;
+using DUST.Security;
 using DUST.Services;
 using DUST.Services.Factories;
 using DUST.Services.Interfaces;
@@ -56,6 +57,8 @@ namespace DUST
 
             services.AddScoped<IEmailSender, EmailService>();
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+
+            services.AddSingleton<DataProtectionPurposeStrings>();
 
             services.AddRazorPages();
             services.AddControllersWithViews();

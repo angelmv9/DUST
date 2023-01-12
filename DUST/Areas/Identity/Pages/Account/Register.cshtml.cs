@@ -28,6 +28,7 @@ namespace DUST.Areas.Identity.Pages.Account
         private readonly UserManager<DUSTUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IInviteService _inviteService;
         private readonly ICompanyInfoService _companyService;
 
         public RegisterModel(
@@ -35,12 +36,14 @@ namespace DUST.Areas.Identity.Pages.Account
             SignInManager<DUSTUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
+            IInviteService inviteService,
             ICompanyInfoService companyService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _inviteService = inviteService;
             _companyService = companyService;
         }
 
@@ -86,12 +89,27 @@ namespace DUST.Areas.Identity.Pages.Account
             [StringLength(100, ErrorMessage = "The {0} must have a maximum # of {1} characters long.")]
             [DisplayName("Company Description")]
             public string CompanyDescription { get; set; }
+
+            public int? InviteId { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string returnUrl = null, int? inviteId = null, int? companyId = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            if (inviteId != null && companyId != null)
+            {
+                Invite invite = await _inviteService.GetInviteAsync(inviteId.Value, companyId.Value);
+                Input = new InputModel
+                {
+                    FirstName = invite.InviteeFirstName,
+                    LastName = invite.InviteeLastName,
+                    Email = invite.InviteeEmail,
+                    CompanyName = invite.Company.Name,
+                    InviteId = invite.Id
+                };              
+            }
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -124,8 +142,17 @@ namespace DUST.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("User created a new account with password.");
 
-                        // When a user registers as a company, it will have a role of administrator for that company by default
+                        // When a user visits the site and Registers as a Company
+                        // or joins via an invite,
+                        // he'll have a role of administrator for that company by default.
                         await _userManager.AddToRoleAsync(user, RolesEnum.Admin.ToString());
+
+                        // If Registration is via Invite, make sure the invite can't be used again
+                        if (Input.InviteId != null)
+                        {
+                            Guid token = (await _inviteService.GetInviteAsync(Input.InviteId.Value, companyId)).CompanyToken;
+                            await _inviteService.AcceptInviteAsync(token, user.Id, companyId);
+                        }
 
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

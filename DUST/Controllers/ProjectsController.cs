@@ -169,7 +169,6 @@ namespace DUST.Controllers
                 {
                     throw;
                 }
-                // TODO: redirect to All Projects
                 return RedirectToAction("AllProjects");
             }
 
