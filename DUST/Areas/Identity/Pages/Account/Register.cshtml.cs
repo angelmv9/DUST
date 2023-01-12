@@ -30,6 +30,7 @@ namespace DUST.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly IInviteService _inviteService;
         private readonly ICompanyInfoService _companyService;
+        private readonly IProjectService _projectService;
 
         public RegisterModel(
             UserManager<DUSTUser> userManager,
@@ -37,7 +38,8 @@ namespace DUST.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             IInviteService inviteService,
-            ICompanyInfoService companyService)
+            ICompanyInfoService companyService,
+            IProjectService projectService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -45,6 +47,7 @@ namespace DUST.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _inviteService = inviteService;
             _companyService = companyService;
+            _projectService = projectService;
         }
 
         [BindProperty]
@@ -142,16 +145,24 @@ namespace DUST.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("User created a new account with password.");
 
-                        // When a user visits the site and Registers as a Company
-                        // or joins via an invite,
-                        // he'll have a role of administrator for that company by default.
-                        await _userManager.AddToRoleAsync(user, RolesEnum.Admin.ToString());
-
-                        // If Registration is via Invite, make sure the invite can't be used again
+                        // If Registration is via Invite: 
                         if (Input.InviteId != null)
                         {
-                            Guid token = (await _inviteService.GetInviteAsync(Input.InviteId.Value, companyId)).CompanyToken;
+                            Invite invite = await _inviteService.GetInviteAsync(Input.InviteId.Value, companyId);
+                            // Make sure the invite can't be used again
+                            Guid token = invite.CompanyToken;
                             await _inviteService.AcceptInviteAsync(token, user.Id, companyId);
+
+                            // Give the user a role of submitter.
+                            await _userManager.AddToRoleAsync(user, RolesEnum.Submitter.ToString());
+
+                            // Add the new user to the project he was invited to
+                            await _projectService.AddUserToProjectAsync(user.Id, invite.ProjectId);
+                        }
+                        else
+                        {
+                            // Regular Company registration, make the user an Admin
+                            await _userManager.AddToRoleAsync(user, RolesEnum.Admin.ToString());
                         }
 
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

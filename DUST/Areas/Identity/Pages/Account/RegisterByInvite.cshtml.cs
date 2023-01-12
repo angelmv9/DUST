@@ -23,8 +23,9 @@ namespace DUST.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IInviteService inviteService,
             IEmailSender emailSender,
-            ICompanyInfoService companyService
-            ) : base(userManager, signInManager, logger, emailSender, inviteService, companyService)
+            ICompanyInfoService companyService,
+            IProjectService projectService
+            ) : base(userManager, signInManager, logger, emailSender, inviteService, companyService, projectService)
         {}
     }
 }
