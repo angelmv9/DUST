@@ -58,8 +58,7 @@ namespace DUST.Areas.Identity.Pages.Account
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public class InputModel
-        {
-           
+        {          
             [Required]
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
@@ -92,27 +91,12 @@ namespace DUST.Areas.Identity.Pages.Account
             [StringLength(100, ErrorMessage = "The {0} must have a maximum # of {1} characters long.")]
             [DisplayName("Company Description")]
             public string CompanyDescription { get; set; }
-
-            public int? InviteId { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null, int? inviteId = null, int? companyId = null)
+        public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            if (inviteId != null && companyId != null)
-            {
-                Invite invite = await _inviteService.GetInviteAsync(inviteId.Value, companyId.Value);
-                Input = new InputModel
-                {
-                    FirstName = invite.InviteeFirstName,
-                    LastName = invite.InviteeLastName,
-                    Email = invite.InviteeEmail,
-                    CompanyName = invite.Company.Name,
-                    InviteId = invite.Id
-                };              
-            }
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -130,41 +114,21 @@ namespace DUST.Areas.Identity.Pages.Account
                 bool success = await _companyService.AddNewCompanyAsync(newCompany);
                 if (success)
                 {
-                    int companyId = await _companyService.GetCompanyIdByName(newCompany.Name);
-
                     var user = new DUSTUser
                     {
                         UserName = Input.Email,
                         Email = Input.Email,
                         FirstName = Input.FirstName,
                         LastName = Input.LastName,
-                        CompanyId = companyId
+                        CompanyId = newCompany.Id
                     };
                     var result = await _userManager.CreateAsync(user, Input.Password);
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User created a new account with password.");
 
-                        // If Registration is via Invite: 
-                        if (Input.InviteId != null)
-                        {
-                            Invite invite = await _inviteService.GetInviteAsync(Input.InviteId.Value, companyId);
-                            // Make sure the invite can't be used again
-                            Guid token = invite.CompanyToken;
-                            await _inviteService.AcceptInviteAsync(token, user.Id, companyId);
-
-                            // Give the user a role of submitter.
-                            await _userManager.AddToRoleAsync(user, RolesEnum.Submitter.ToString());
-
-                            // Add the new user to the project he was invited to
-                            await _projectService.AddUserToProjectAsync(user.Id, invite.ProjectId);
-                        }
-                        else
-                        {
-                            // Regular Company registration, make the user an Admin
-                            await _userManager.AddToRoleAsync(user, RolesEnum.Admin.ToString());
-                        }
-
+                        await _userManager.AddToRoleAsync(user, RolesEnum.Admin.ToString());
+                        
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                         var callbackUrl = Url.Page(
