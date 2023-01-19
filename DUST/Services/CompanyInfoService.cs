@@ -123,5 +123,23 @@ namespace DUST.Services
             }
             return result.Value;
         }
+
+        // CRUD: Delete
+        public async Task DeleteCompanyAsync(int companyId)
+        {
+            try
+            {
+                Company company = await _context.Companies.FirstOrDefaultAsync(c => c.Id == companyId);
+                if (company != null) {
+                    _context.Companies.Remove(company);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

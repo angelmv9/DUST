@@ -154,7 +154,8 @@ namespace DUST.Areas.Identity.Pages.Account
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
-
+                    // Delete newly created company if the new user wasn't successfully created
+                    await _companyService.DeleteCompanyAsync(newCompany.Id);
                 }
             }
 
