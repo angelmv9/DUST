@@ -15,7 +15,7 @@ namespace DUST.Models
         public int Id { get; set; }
 
         // Foreign Key
-        public int? CompanyId { get; set; }
+        public int CompanyId { get; set; }
 
         // Foreign Key
         [DisplayName("Project Priority")]
