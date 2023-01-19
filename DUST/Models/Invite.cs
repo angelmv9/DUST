@@ -24,15 +24,18 @@ namespace DUST.Models
         public string InviteeId { get; set; }
 
         [DisplayName("Invitee Email")]
+        [EmailAddress]
         public string InviteeEmail { get; set; }
 
         [DisplayName("Invitee First Name")]
+        [StringLength(20, ErrorMessage = "{0} must be at least {2} and no more than {1} characters long", MinimumLength = 2)]
         public string InviteeFirstName { get; set; }
 
         [DisplayName("Invitee Last Name")]
+        [StringLength(20, ErrorMessage = "{0} must be at least {2} and no more than {1} characters long", MinimumLength = 1)]
         public string InviteeLastName { get; set; }
 
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         // True if invite was used to create an account
         public bool WasUsed { get; set; }

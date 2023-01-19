@@ -18,7 +18,7 @@ namespace DUST.Services
             _context = context;
         }
 
-        public async Task<bool> AcceptInviteAsync(Guid? token, string userId, int companyId)
+        public async Task<bool> MarkInviteAsUsedAsync(Guid? token, string userId, int companyId)
         {
             Invite invite = await _context.Invites.Where(i => i.CompanyId == companyId)
                                                   .FirstOrDefaultAsync(i => i.CompanyToken == token);
