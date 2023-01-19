@@ -48,6 +48,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Companies\Create.cshtml" />
+    <Content Remove="Views\Companies\Delete.cshtml" />
+    <Content Remove="Views\Companies\Edit.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="2.14.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.17" />
