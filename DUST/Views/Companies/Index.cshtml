@@ -1,41 +1,79 @@
-﻿@model IEnumerable<DUST.Models.Company>
+﻿@model DUST.Models.Company
+
+@using DUST.Services.Interfaces
+@using DUST.Models.Enums
+
+@inject IProjectService ProjectService
+@inject ITicketService TicketService
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Company Details";
 }
 
-<h1>Index</h1>
+<h1>@Model.Name</h1>
+<p>@Model.Description</p>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<h2>Projects</h2>
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                Project Manager
+            </th>
+            <th>
+                Members
+            </th>
+            <th>
+                Active Tickets
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var project in (await ProjectService.GetAllActiveProjectsByCompanyAsync(Model.Id)))
+        {           
+            string pmName = (await ProjectService.GetProjectManagerAsync(project.Id))?.FullName;
+            int totalMembers = (await ProjectService.GetAllProjectMembersExceptPMAsync(project.Id)).Count;
+            int totalNewTickets = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.New.ToString(),project.CompanyId,project.Id)).Count;
+            int totalTestingTickets = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.Testing.ToString(), project.CompanyId, project.Id)).Count;
+            int totalActiveTickets = totalNewTickets + totalTestingTickets;
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => project.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => pmName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => totalMembers)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => totalActiveTickets)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => project.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => project.EndDate)
+                </td>
+                <td>
+                    <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id">View</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<h3>Company Members</h3>
+
+<h3>Invites</h3>
