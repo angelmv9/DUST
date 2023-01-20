@@ -45,7 +45,7 @@
                                         }
                                     </td>
                                     <td>
-                                        @if (ticket.TicketStatus.Name == nameof(TicketStatusEnum.New))
+                                        @if (ticket.TicketStatus.Name == nameof(TicketStatusEnum.Open))
                                         {
                                             <span class="badge-success text-success">@ticket.TicketStatus.Name </span>
                                         }

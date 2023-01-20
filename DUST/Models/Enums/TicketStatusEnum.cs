@@ -10,18 +10,22 @@ namespace DUST.Models.Enums
         /// <summary>
         /// Newly created ticket having never been assigned.
         /// </summary>
-        New,
+        Open,
         /// <summary>
         /// Ticket is assigned and currently being worked.
         /// </summary>
-        Development,
+        In_Progress,
         /// <summary>
         /// Ticket is assigned and it is being tested.
         /// </summary>
         Testing,
+        Retest,
+        Fixed,
         /// <summary>
         /// Ticket has been completed
         /// </summary>
-        Closed
+        Closed,
+
+        Cancelled
     }
 }

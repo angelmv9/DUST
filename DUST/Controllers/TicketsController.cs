@@ -169,7 +169,7 @@ namespace DUST.Controllers
                 {
                     ticket.Created = DateTimeOffset.Now;
                     ticket.OwnerUserId = ownerUser.Id;
-                    int ticketStatus = (await _ticketService.LookupTicketStatusIdAsync(nameof(TicketStatusEnum.New))).Value;
+                    int ticketStatus = (await _ticketService.LookupTicketStatusIdAsync(nameof(TicketStatusEnum.Open))).Value;
                     ticket.TicketStatusId = ticketStatus;
                     // TODO: Add Ticket History and Notification
                     await _ticketService.AddNewTicketAsync(ticket);

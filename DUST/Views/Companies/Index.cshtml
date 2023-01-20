@@ -30,7 +30,7 @@
         {           
             string pmName = (await ProjectService.GetProjectManagerAsync(project.Id))?.FullName;
             int totalMembers = (await ProjectService.GetAllProjectMembersExceptPMAsync(project.Id)).Count;
-            int totalNewTickets = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.New.ToString(),project.CompanyId,project.Id)).Count;
+            int totalNewTickets = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.Open.ToString(),project.CompanyId,project.Id)).Count;
             int totalTestingTickets = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.Testing.ToString(), project.CompanyId, project.Id)).Count;
             int totalActiveTickets = totalNewTickets + totalTestingTickets;
 

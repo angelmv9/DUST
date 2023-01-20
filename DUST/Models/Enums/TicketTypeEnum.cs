@@ -10,26 +10,26 @@ namespace DUST.Models.Enums
         /// <summary>
         /// Involves development of a new, uncoded solution.
         /// </summary>
-        NewDevelopment,
+        New_Feature,
         /// <summary>
         /// Involves development of the specific ticket description.
         /// </summary>
-        WorkTask,
+        Task,
         /// <summary>
         /// Involves unexpected development/maintenance on a previously designed feature/functionality.
         /// </summary>
-        Defect,
+        Bug,
         /// <summary>
         /// Involves modification development of a previously designed feature/functionality.
         /// </summary>
-        ChangeRequest,
+        Change_Request,
         /// <summary>
         /// Involves additional development on a previously designed feature or new functionality.
         /// </summary>
-        Enhancement,
+        Improvement,
         /// <summary>
         /// Involves no software development but may involve tasks such as configuations, or hardware setup.
         /// </summary>
-        GeneralTask
+        Test
     }
 }

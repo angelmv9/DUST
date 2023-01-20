@@ -264,7 +264,7 @@
 													}
 												</td>
 												<td>
-													@if (ticket.TicketStatus.Name == nameof(TicketStatusEnum.New))
+													@if (ticket.TicketStatus.Name == nameof(TicketStatusEnum.Open))
 													{
 														<span class="badge bg-success rounded-pill">@ticket.TicketStatus.Name </span>
 													}
@@ -451,16 +451,16 @@
 		var donutChartCanvas = $('#donutChart').get(0).getContext('2d');
 		var donutData = {
 			labels: [
-				'@nameof(TicketStatusEnum.Development)',
-				'@nameof(TicketStatusEnum.New)',
+				'@nameof(TicketStatusEnum.In_Progress)',
+				'@nameof(TicketStatusEnum.Open)',
 				'@nameof(TicketStatusEnum.Closed)',
 				'@nameof(TicketStatusEnum.Testing)'
 			],
 			datasets: [
 				{
 					data: [
-						@Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.Development)).Count(),
-						@Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.New)).Count(),
+						@Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.In_Progress)).Count(),
+						@Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.Open)).Count(),
 						@Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.Closed)).Count(),
 						@Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.Testing)).Count()
 					],

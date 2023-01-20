@@ -775,12 +775,12 @@ namespace DUST.Data
             {
                 IList<TicketType> ticketTypes = new List<TicketType>()
                 {
-                    new TicketType() {Name = TicketTypeEnum.NewDevelopment.ToString()},
-                    new TicketType() {Name = TicketTypeEnum.WorkTask.ToString()},
-                    new TicketType() {Name = TicketTypeEnum.Defect.ToString()},
-                    new TicketType() {Name = TicketTypeEnum.ChangeRequest.ToString()},
-                    new TicketType() {Name = TicketTypeEnum.Enhancement.ToString()},
-                    new TicketType() {Name = TicketTypeEnum.GeneralTask.ToString()},
+                    new TicketType() {Name = TicketTypeEnum.New_Feature.ToString()},
+                    new TicketType() {Name = TicketTypeEnum.Task.ToString()},
+                    new TicketType() {Name = TicketTypeEnum.Bug.ToString()},
+                    new TicketType() {Name = TicketTypeEnum.Change_Request.ToString()},
+                    new TicketType() {Name = TicketTypeEnum.Improvement.ToString()},
+                    new TicketType() {Name = TicketTypeEnum.Test.ToString()},
                 };
 
                 List<string> existingTicketTypes = context.TicketTypes.Select(t => t.Name).ToList();
@@ -802,8 +802,8 @@ namespace DUST.Data
             {
                 IList<TicketStatus> ticketStatutes = new List<TicketStatus>()
                 {
-                    new TicketStatus() { Name = TicketStatusEnum.New.ToString() },
-                    new TicketStatus() { Name = TicketStatusEnum.Development.ToString() },
+                    new TicketStatus() { Name = TicketStatusEnum.Open.ToString() },
+                    new TicketStatus() { Name = TicketStatusEnum.In_Progress.ToString() },
                     new TicketStatus() { Name = TicketStatusEnum.Testing.ToString() },
                     new TicketStatus() { Name = TicketStatusEnum.Closed.ToString() }
                 };
@@ -858,12 +858,12 @@ namespace DUST.Data
             int mortgageCalcId = context.Projects.FirstOrDefault(p => p.Name == "Build a Mortgage Calculator Web App").Id;
 
             // Get ticket type Ids
-            int typeNewId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.NewDevelopment.ToString()).Id;
-            int typeWorkTaskId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.WorkTask.ToString()).Id;
-            int typeDefectId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.Defect.ToString()).Id;
-            int typeChangeRequestId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.ChangeRequest.ToString()).Id;
-            int typeEnhancementId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.Enhancement.ToString()).Id;
-            int typeGeneralTaskId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.GeneralTask.ToString()).Id;
+            int typeNewId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.New_Feature.ToString()).Id;
+            int typeWorkTaskId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.Task.ToString()).Id;
+            int typeDefectId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.Bug.ToString()).Id;
+            int typeChangeRequestId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.Change_Request.ToString()).Id;
+            int typeEnhancementId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.Improvement.ToString()).Id;
+            int typeGeneralTaskId = context.TicketTypes.FirstOrDefault(t => t.Name == TicketTypeEnum.Test.ToString()).Id;
 
             // Get ticket priority Ids
             int priorityLowId = context.TicketPriorities.FirstOrDefault(t => t.Name == TicketPriorityEnum.Low.ToString()).Id;
@@ -872,8 +872,8 @@ namespace DUST.Data
             int priorityUrgentId = context.TicketPriorities.FirstOrDefault(t => t.Name == TicketPriorityEnum.Urgent.ToString()).Id;
 
             // Get ticket status Ids
-            int statusNewId = context.TicketStatuses.FirstOrDefault(t => t.Name == TicketStatusEnum.New.ToString()).Id;
-            int statusDevelopmentId = context.TicketStatuses.FirstOrDefault(t => t.Name == TicketStatusEnum.Development.ToString()).Id;
+            int statusNewId = context.TicketStatuses.FirstOrDefault(t => t.Name == TicketStatusEnum.Open.ToString()).Id;
+            int statusDevelopmentId = context.TicketStatuses.FirstOrDefault(t => t.Name == TicketStatusEnum.In_Progress.ToString()).Id;
             int statusTestingId = context.TicketStatuses.FirstOrDefault(t => t.Name == TicketStatusEnum.Testing.ToString()).Id;
             int statusClosedId = context.TicketStatuses.FirstOrDefault(t => t.Name == TicketStatusEnum.Closed.ToString()).Id;
 
