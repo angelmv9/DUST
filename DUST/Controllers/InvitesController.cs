@@ -19,6 +19,7 @@ using System.Text.Encodings.Web;
 
 namespace DUST.Controllers
 {
+    [Authorize]
     public class InvitesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -45,33 +46,36 @@ namespace DUST.Controllers
         }
 
         // GET: Invites
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = _context.Invites.Include(i => i.Company).Include(i => i.Invitee).Include(i => i.Invitor).Include(i => i.Project);
-            return View(await applicationDbContext.ToListAsync());
-        }
+        //[Authorize(Roles = "Admin")]
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.Invites.Include(i => i.Company).Include(i => i.Invitee).Include(i => i.Invitor).Include(i => i.Project);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}
 
         // GET: Invites/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //[Authorize(Roles = "Admin")]
 
-            var invite = await _context.Invites
-                .Include(i => i.Company)
-                .Include(i => i.Invitee)
-                .Include(i => i.Invitor)
-                .Include(i => i.Project)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (invite == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(invite);
-        }
+        //    var invite = await _context.Invites
+        //        .Include(i => i.Company)
+        //        .Include(i => i.Invitee)
+        //        .Include(i => i.Invitor)
+        //        .Include(i => i.Project)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (invite == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(invite);
+        //}
 
         // GET: Invites/Create
         [Authorize(Roles = "Admin")]
@@ -133,6 +137,7 @@ namespace DUST.Controllers
             return RedirectToAction("Create", new {message = "Something went wrong. Please try again"});
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ProcessInvite(string protectedToken, string protectedEmail, string protectedCompanyId)
         {
             // Decode token, email and companyId in order to validate invite & get invitor information
@@ -153,100 +158,104 @@ namespace DUST.Controllers
         }
 
         // GET: Invites/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //[Authorize(Roles = "Admin")]
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var invite = await _context.Invites.FindAsync(id);
-            if (invite == null)
-            {
-                return NotFound();
-            }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", invite.CompanyId);
-            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
-            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", invite.ProjectId);
-            return View(invite);
-        }
+        //    var invite = await _context.Invites.FindAsync(id);
+        //    if (invite == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", invite.CompanyId);
+        //    ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
+        //    ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
+        //    ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", invite.ProjectId);
+        //    return View(invite);
+        //}
 
         // POST: Invites/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyId,ProjectId,InvitorId,InviteeId,InviteeEmail,InviteeFirstName,InviteeLastName,WasUsed,InviteDate,JoinDate,CompanyToken")] Invite invite)
-        {
-            if (id != invite.Id)
-            {
-                return NotFound();
-            }
+        //[Authorize(Roles = "Admin")]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyId,ProjectId,InvitorId,InviteeId,InviteeEmail,InviteeFirstName,InviteeLastName,WasUsed,InviteDate,JoinDate,CompanyToken")] Invite invite)
+        //{
+        //    if (id != invite.Id)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(invite);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InviteExists(invite.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", invite.CompanyId);
-            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
-            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", invite.ProjectId);
-            return View(invite);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(invite);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!InviteExists(invite.Id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Id", invite.CompanyId);
+        //    ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
+        //    ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
+        //    ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", invite.ProjectId);
+        //    return View(invite);
+        //}
 
         // GET: Invites/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //[Authorize(Roles = "Admin")]
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var invite = await _context.Invites
-                .Include(i => i.Company)
-                .Include(i => i.Invitee)
-                .Include(i => i.Invitor)
-                .Include(i => i.Project)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (invite == null)
-            {
-                return NotFound();
-            }
+        //    var invite = await _context.Invites
+        //        .Include(i => i.Company)
+        //        .Include(i => i.Invitee)
+        //        .Include(i => i.Invitor)
+        //        .Include(i => i.Project)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (invite == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(invite);
-        }
+        //    return View(invite);
+        //}
 
         // POST: Invites/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var invite = await _context.Invites.FindAsync(id);
-            _context.Invites.Remove(invite);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //[Authorize(Roles = "Admin")]
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var invite = await _context.Invites.FindAsync(id);
+        //    _context.Invites.Remove(invite);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
-        private bool InviteExists(int id)
-        {
-            return _context.Invites.Any(e => e.Id == id);
-        }
+        //private bool InviteExists(int id)
+        //{
+        //    return _context.Invites.Any(e => e.Id == id);
+        //}
     }
 }

@@ -51,6 +51,10 @@
     <Content Remove="Views\Companies\Create.cshtml" />
     <Content Remove="Views\Companies\Delete.cshtml" />
     <Content Remove="Views\Companies\Edit.cshtml" />
+    <Content Remove="Views\Invites\Delete.cshtml" />
+    <Content Remove="Views\Invites\Details.cshtml" />
+    <Content Remove="Views\Invites\Edit.cshtml" />
+    <Content Remove="Views\Invites\Index.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
