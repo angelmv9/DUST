@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DUST.Data.Migrations
 {
-    public partial class Initial_001 : Migration
+    public partial class Initial_FRESH_DATA_001 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -114,7 +114,7 @@ namespace DUST.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    CompanyId = table.Column<int>(type: "integer", nullable: true),
+                    CompanyId = table.Column<int>(type: "integer", nullable: false),
                     FirstName = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
                     LastName = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
                     AvatarByteData = table.Column<byte[]>(type: "bytea", nullable: true),
@@ -143,7 +143,7 @@ namespace DUST.Data.Migrations
                         column: x => x.CompanyId,
                         principalTable: "Companies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -152,7 +152,7 @@ namespace DUST.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CompanyId = table.Column<int>(type: "integer", nullable: true),
+                    CompanyId = table.Column<int>(type: "integer", nullable: false),
                     ProjectPriorityId = table.Column<int>(type: "integer", nullable: true),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
@@ -171,7 +171,7 @@ namespace DUST.Data.Migrations
                         column: x => x.CompanyId,
                         principalTable: "Companies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Projects_ProjectPriorities_ProjectPriorityId",
                         column: x => x.ProjectPriorityId,
@@ -300,8 +300,9 @@ namespace DUST.Data.Migrations
                     InvitorId = table.Column<string>(type: "text", nullable: true),
                     InviteeId = table.Column<string>(type: "text", nullable: true),
                     InviteeEmail = table.Column<string>(type: "text", nullable: true),
-                    InviteeFirstName = table.Column<string>(type: "text", nullable: true),
-                    InviteeLastName = table.Column<string>(type: "text", nullable: true),
+                    InviteeFirstName = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    InviteeLastName = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     WasUsed = table.Column<bool>(type: "boolean", nullable: false),
                     InviteDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     JoinDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
@@ -348,11 +349,12 @@ namespace DUST.Data.Migrations
                     TicketStatusId = table.Column<int>(type: "integer", nullable: false),
                     OwnerUserId = table.Column<string>(type: "text", nullable: true),
                     DeveloperUserId = table.Column<string>(type: "text", nullable: true),
-                    Title = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     Updated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    Archived = table.Column<bool>(type: "boolean", nullable: false)
+                    Archived = table.Column<bool>(type: "boolean", nullable: false),
+                    ArchivedByProject = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {

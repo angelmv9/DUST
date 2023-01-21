@@ -329,8 +329,8 @@ namespace DUST.Data.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("Updated")
                         .HasColumnType("timestamp with time zone");

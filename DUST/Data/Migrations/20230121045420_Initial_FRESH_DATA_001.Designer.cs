@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DUST.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221128212813_Initial_001")]
-    partial class Initial_001
+    [Migration("20230121045420_Initial_FRESH_DATA_001")]
+    partial class Initial_FRESH_DATA_001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -56,7 +56,7 @@ namespace DUST.Data.Migrations
                     b.Property<string>("AvatarFileName")
                         .HasColumnType("text");
 
-                    b.Property<int?>("CompanyId")
+                    b.Property<int>("CompanyId")
                         .HasColumnType("integer");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -140,6 +140,9 @@ namespace DUST.Data.Migrations
                     b.Property<Guid>("CompanyToken")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<DateTimeOffset>("InviteDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -147,13 +150,15 @@ namespace DUST.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("InviteeFirstName")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("InviteeId")
                         .HasColumnType("text");
 
                     b.Property<string>("InviteeLastName")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("InvitorId")
                         .HasColumnType("text");
@@ -233,7 +238,7 @@ namespace DUST.Data.Migrations
                     b.Property<bool>("Archived")
                         .HasColumnType("boolean");
 
-                    b.Property<int?>("CompanyId")
+                    b.Property<int>("CompanyId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
@@ -296,6 +301,9 @@ namespace DUST.Data.Migrations
                     b.Property<bool>("Archived")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("ArchivedByProject")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
 
@@ -323,8 +331,8 @@ namespace DUST.Data.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("Updated")
                         .HasColumnType("timestamp with time zone");
@@ -642,7 +650,9 @@ namespace DUST.Data.Migrations
                 {
                     b.HasOne("DUST.Models.Company", "Company")
                         .WithMany("Members")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
                 });
@@ -709,7 +719,9 @@ namespace DUST.Data.Migrations
                 {
                     b.HasOne("DUST.Models.Company", "Company")
                         .WithMany("Projects")
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DUST.Models.ProjectPriority", "ProjectPriority")
                         .WithMany()
