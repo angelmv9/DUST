@@ -70,19 +70,24 @@ namespace DUST.Data
 
             /* Seed Data */
 
-            await SeedRolesAsync(roleManagerService);
+            await SeedRolesAsync(roleManagerService, dbContextService);
             await SeedDefaultCompaniesAsync(dbContextService);
             await SeedDefaultProjectPriorityAsync(dbContextService);
             await SeedDefautProjectsAsync(dbContextService);
-            await SeedDefaultUsersAsync(userManagerService, configuration);
+            await SeedDefaultUsersAsync(userManagerService, configuration, dbContextService);
             await SeedDefaultTicketTypeAsync(dbContextService);
             await SeedDefaultTicketStatusAsync(dbContextService);
             await SeedDefaultTicketPriorityAsync(dbContextService);
             await SeedDefaultTicketsAsync(dbContextService);
         }
 
-        public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+        public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
+            // If there are already roles, do nothing
+            if (context.Roles.Any())
+            {
+                return;
+            }
             foreach (var role in Enum.GetNames(typeof(RolesEnum)))
             {
                 await roleManager.CreateAsync(new IdentityRole(role));
@@ -91,6 +96,10 @@ namespace DUST.Data
 
         public static async Task SeedDefaultCompaniesAsync(ApplicationDbContext context)
         {
+            if (context.Companies.Any())
+            {
+                return;
+            }
             try
             {
                 IList<Company> defaultCompanies = new List<Company>() { 
@@ -118,6 +127,10 @@ namespace DUST.Data
 
         public static async Task SeedDefaultProjectPriorityAsync(ApplicationDbContext context)
         {
+            if (context.ProjectPriorities.Any())
+            {
+                return;
+            }
             try
             {
                 IList<ProjectPriority> projectPriorities = new List<ProjectPriority>();
@@ -140,6 +153,11 @@ namespace DUST.Data
 
         public static async Task SeedDefautProjectsAsync(ApplicationDbContext context)
         {
+            if (context.Projects.Any())
+            {
+                return;
+            }
+
             ProjectPriority low = context.ProjectPriorities.FirstOrDefault(p => p.Name == ProjectPriorityEnum.Low.ToString());
             ProjectPriority medium = context.ProjectPriorities.FirstOrDefault(p => p.Name == ProjectPriorityEnum.Medium.ToString());
             ProjectPriority high = context.ProjectPriorities.FirstOrDefault(p => p.Name == ProjectPriorityEnum.High.ToString());
@@ -227,8 +245,12 @@ namespace DUST.Data
             }
         }
 
-        public static async Task SeedDefaultUsersAsync(UserManager<DUSTUser> userManager, IConfiguration configuration)
+        public static async Task SeedDefaultUsersAsync(UserManager<DUSTUser> userManager, IConfiguration configuration, ApplicationDbContext context)
         {
+            if (context.Users.Any())
+            {
+                return;
+            }
             var globalPassword = Environment.GetEnvironmentVariable("GLOBAL_PASSWORD") ?? configuration["GlobalPassword"];
 
             #region Company 1: Together Bank
@@ -874,6 +896,10 @@ namespace DUST.Data
 
         public static async Task SeedDefaultTicketTypeAsync(ApplicationDbContext context)
         {
+            if (context.TicketTypes.Any())
+            {
+                return;
+            }
             try
             {
                 IList<TicketType> ticketTypes = new List<TicketType>()
@@ -901,6 +927,10 @@ namespace DUST.Data
 
         public static async Task SeedDefaultTicketStatusAsync(ApplicationDbContext context)
         {
+            if (context.TicketStatuses.Any())
+            {
+                return;
+            }
             try
             {
                 IList<TicketStatus> ticketStatutes = new List<TicketStatus>()
@@ -930,6 +960,10 @@ namespace DUST.Data
 
         public static async Task SeedDefaultTicketPriorityAsync(ApplicationDbContext context)
         {
+            if (context.TicketPriorities.Any())
+            {
+                return;
+            }
             try
             {
                 IList<TicketPriority> ticketPriorities = new List<TicketPriority>()
@@ -956,6 +990,10 @@ namespace DUST.Data
 
         public static async Task SeedDefaultTicketsAsync(ApplicationDbContext context)
         {
+            if (context.Tickets.Any())
+            {
+                return;
+            }
             // Get Project Ids
             int project1_1 = context.Projects.FirstOrDefault(p => p.Name == "Cross-platform spending forecast").Id;
             int project1_2 = context.Projects.FirstOrDefault(p => p.Name == "Update back-end systems to Blazor Server").Id;
