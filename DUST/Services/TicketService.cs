@@ -180,7 +180,7 @@ namespace DUST.Services
                                                         .Include(t => t.TicketType)
                                                         .Include(t => t.TicketPriority)
                                                         .Include(t => t.TicketStatus)
-                                                     .Where(t => t.TicketPriorityId == statusId)
+                                                     .Where(t => t.TicketStatusId == statusId)
                                                      .ToListAsync();
                 return tickets;
 
