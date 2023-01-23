@@ -229,17 +229,13 @@ namespace DUST.Data
 
         public static async Task SeedDefaultUsersAsync(UserManager<DUSTUser> userManager, IConfiguration configuration)
         {
-            var globalPassword = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GLOBAL_PASSWORD"))
-                                    ? configuration["GlobalPassword"]
-                                    : Environment.GetEnvironmentVariable("GLOBAL_PASSWORD");
+            var globalPassword = Environment.GetEnvironmentVariable("GLOBAL_PASSWORD") ?? configuration["GlobalPassword"];
 
             #region Company 1: Together Bank
 
             #region Admin-Demo
 
-            var admin1Email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ADMIN1_EMAIL"))
-                                    ? configuration["ADMIN1_EMAIL"]
-                                    : Environment.GetEnvironmentVariable("ADMIN1_EMAIL");
+            var admin1Email = Environment.GetEnvironmentVariable("ADMIN1_EMAIL") ?? configuration["ADMIN1_EMAIL"];
 
             var defaultAdmin1 = new DUSTUser
             {
@@ -285,9 +281,7 @@ namespace DUST.Data
 
             /* Project Manager 1 */
 
-            var pm1_1email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PM1_1_EMAIL"))
-                                   ? configuration["PM1_1_EMAIL"]
-                                   : Environment.GetEnvironmentVariable("PM1_1_EMAIL");
+            var pm1_1email = Environment.GetEnvironmentVariable("PM1_1_EMAIL") ?? configuration["PM1_1_EMAIL"];
 
             var pmUser1_1 = new DUSTUser
             {
@@ -318,9 +312,7 @@ namespace DUST.Data
 
             /* Project Manager 2 */
 
-            var pm1_2email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PM1_2_EMAIL"))
-                                   ? configuration["PM1_2_EMAIL"]
-                                   : Environment.GetEnvironmentVariable("PM1_2_EMAIL");
+            var pm1_2email = Environment.GetEnvironmentVariable("PM1_2_EMAIL") ?? configuration["PM1_2_EMAIL"];
 
             var pmUser1_2 = new DUSTUser
             {
@@ -351,9 +343,7 @@ namespace DUST.Data
 
             /* Project Manager 3 */
 
-            var pm1_3email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PM1_3_EMAIL"))
-                                   ? configuration["PM1_3_EMAIL"]
-                                   : Environment.GetEnvironmentVariable("PM1_3_EMAIL");
+            var pm1_3email = Environment.GetEnvironmentVariable("PM1_3_EMAIL") ?? configuration["PM1_3_EMAIL"];
 
             var pmUser1_3 = new DUSTUser
             {
@@ -386,9 +376,7 @@ namespace DUST.Data
             #region Developers, Demo
 
             /* Developer 1 - Demo */
-            var dev1_1email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEV1_1_EMAIL"))
-                                    ? configuration["DEV1_1_EMAIL"]
-                                    : Environment.GetEnvironmentVariable("DEV1_1_EMAIL");
+            var dev1_1email = Environment.GetEnvironmentVariable("DEV1_1_EMAIL") ?? configuration["DEV1_1_EMAIL"];
 
             var devUser1_1 = new DUSTUser
             {
@@ -419,9 +407,7 @@ namespace DUST.Data
             }
 
             /* Developer 2 */
-            var dev1_2email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEV1_2_EMAIL"))
-                        ? configuration["DEV1_2_EMAIL"]
-                        : Environment.GetEnvironmentVariable("DEV1_2_EMAIL");
+            var dev1_2email = Environment.GetEnvironmentVariable("DEV1_2_EMAIL") ?? configuration["DEV1_2_EMAIL"];
 
             var devUser1_2 = new DUSTUser
             {
@@ -451,9 +437,7 @@ namespace DUST.Data
             }
 
             /* Developer 3 */
-            var dev1_3email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEV1_3_EMAIL"))
-                                    ? configuration["DEV1_3_EMAIL"]
-                                    : Environment.GetEnvironmentVariable("DEV1_3_EMAIL");
+            var dev1_3email = Environment.GetEnvironmentVariable("DEV1_3_EMAIL") ?? configuration["DEV1_3_EMAIL"];
 
             var devUser1_3 = new DUSTUser
             {
@@ -483,9 +467,7 @@ namespace DUST.Data
             }
 
             /* Developer 4 */
-            var dev1_4email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEV1_4_EMAIL"))
-                        ? configuration["DEV1_4_EMAIL"]
-                        : Environment.GetEnvironmentVariable("DEV1_4_EMAIL");
+            var dev1_4email = Environment.GetEnvironmentVariable("DEV1_4_EMAIL") ?? configuration["DEV1_4_EMAIL"];
 
             var devUser1_4 = new DUSTUser
             {
@@ -515,9 +497,7 @@ namespace DUST.Data
             }
 
             /* Developer 5 */
-            var dev1_5email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEV1_5_EMAIL"))
-                                    ? configuration["DEV1_5_EMAIL"]
-                                    : Environment.GetEnvironmentVariable("DEV1_5_EMAIL");
+            var dev1_5email = Environment.GetEnvironmentVariable("DEV1_5_EMAIL") ?? configuration["DEV1_5_EMAIL"];
 
             var devUser1_5 = new DUSTUser
             {
@@ -551,9 +531,7 @@ namespace DUST.Data
             #region Submitters
 
             /* Submitter 1 */
-            var sub1_1email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SUB1_1_EMAIL"))
-                        ? configuration["SUB1_1_EMAIL"]
-                        : Environment.GetEnvironmentVariable("SUB1_1_EMAIL");
+            var sub1_1email = Environment.GetEnvironmentVariable("SUB1_1_EMAIL") ?? configuration["SUB1_1_EMAIL"];
 
             var subUser1_1 = new DUSTUser
             {
@@ -591,9 +569,7 @@ namespace DUST.Data
 
             #region Admin
 
-            var admin2Email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ADMIN2_EMAIL"))
-                                    ? configuration["ADMIN2_EMAIL"]
-                                    : Environment.GetEnvironmentVariable("ADMIN2_EMAIL");
+            var admin2Email = Environment.GetEnvironmentVariable("ADMIN2_EMAIL") ?? configuration["ADMIN2_EMAIL"];
 
             var defaultAdmin2 = new DUSTUser
             {
@@ -627,9 +603,7 @@ namespace DUST.Data
 
             /* Project Manager 1 - Demo */
 
-            var pm2_1email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PM2_1_EMAIL"))
-                                   ? configuration["PM2_1_EMAIL"]
-                                   : Environment.GetEnvironmentVariable("PM2_1_EMAIL");
+            var pm2_1email = Environment.GetEnvironmentVariable("PM2_1_EMAIL") ?? configuration["PM2_1_EMAIL"];
 
             var pmUser2_1 = new DUSTUser
             {
@@ -661,9 +635,7 @@ namespace DUST.Data
 
             /* Project Manager 2 */
 
-            var pm2_2email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PM2_2_EMAIL"))
-                                   ? configuration["PM2_2_EMAIL"]
-                                   : Environment.GetEnvironmentVariable("PM2_2_EMAIL");
+            var pm2_2email = Environment.GetEnvironmentVariable("PM2_2_EMAIL") ?? configuration["PM2_2_EMAIL"];
 
             var pmUser2_2 = new DUSTUser
             {
@@ -697,9 +669,7 @@ namespace DUST.Data
             #region Developers
 
             /* Developer 1 */
-            var dev2_1email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEV2_1_EMAIL"))
-                                    ? configuration["DEV2_1_EMAIL"]
-                                    : Environment.GetEnvironmentVariable("DEV2_1_EMAIL");
+            var dev2_1email = Environment.GetEnvironmentVariable("DEV2_1_EMAIL") ?? configuration["DEV2_1_EMAIL"];
 
             var devUser2_1 = new DUSTUser
             {
@@ -729,9 +699,7 @@ namespace DUST.Data
             }
 
             /* Developer 2 */
-            var dev2_2email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEV2_2_EMAIL"))
-                        ? configuration["DEV2_2_EMAIL"]
-                        : Environment.GetEnvironmentVariable("DEV2_2_EMAIL");
+            var dev2_2email = Environment.GetEnvironmentVariable("DEV2_2_EMAIL") ?? configuration["DEV2_2_EMAIL"];
 
             var devUser2_2 = new DUSTUser
             {
@@ -761,9 +729,7 @@ namespace DUST.Data
             }
 
             /* Developer 3 */
-            var dev2_3email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEV2_3_EMAIL"))
-                                    ? configuration["DEV2_3_EMAIL"]
-                                    : Environment.GetEnvironmentVariable("DEV2_3_EMAIL");
+            var dev2_3email = Environment.GetEnvironmentVariable("DEV2_3_EMAIL") ?? configuration["DEV2_3_EMAIL"];
 
             var devUser2_3 = new DUSTUser
             {
@@ -797,9 +763,7 @@ namespace DUST.Data
             #region Submitters
 
             /* Submitter 1 */
-            var sub2_1email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SUB2_1_EMAIL"))
-                        ? configuration["SUB2_1_EMAIL"]
-                        : Environment.GetEnvironmentVariable("SUB2_1_EMAIL");
+            var sub2_1email = Environment.GetEnvironmentVariable("SUB2_1_EMAIL") ?? configuration["SUB2_1_EMAIL"];
 
             var subUser2_1 = new DUSTUser
             {
@@ -837,12 +801,8 @@ namespace DUST.Data
 
             #region Admin
 
-            var myEmail = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ADMIN_ME_EMAIL"))
-                                    ? configuration["ADMIN_ME:EMAIL"]
-                                    : Environment.GetEnvironmentVariable("ADMIN_ME_EMAIL");
-            var myPassword = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ADMIN_ME_PASSWORD"))
-                                    ? configuration["ADMIN_ME:PASSWORD"]
-                                    : Environment.GetEnvironmentVariable("ADMIN_ME_PASSWORD");
+            var myEmail = Environment.GetEnvironmentVariable("ADMIN_ME_EMAIL") ?? configuration["ADMIN_ME:EMAIL"];
+            var myPassword = Environment.GetEnvironmentVariable("ADMIN_ME_PASSWORD") ?? configuration["ADMIN_ME:PASSWORD"];
 
             var superAdmin = new DUSTUser
             {
@@ -875,9 +835,7 @@ namespace DUST.Data
             #region Submitter - Demo
 
             /* Submitter 1 */
-            var sub3_1email = string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SUB3_1_EMAIL"))
-                        ? configuration["SUB3_1_EMAIL"]
-                        : Environment.GetEnvironmentVariable("SUB3_1_EMAIL");
+            var sub3_1email = Environment.GetEnvironmentVariable("SUB3_1_EMAIL") ?? configuration["SUB3_1_EMAIL"];
 
             var subUser3_1 = new DUSTUser
             {
