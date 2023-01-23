@@ -22,7 +22,18 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Name</th> <th>Project Manager</th> <th>Members</th> <th>Active Tickets</th> <th>Start Date</th> <th>End Date</th> <th></th>
+            <th>Name</th>
+            <th>Project Manager</th>
+            <th>Members</th>
+            <th>Open Tickets</th>
+            <th>Tickets In Progress</th>
+            <th>Tickets Being Tested</th>
+            <th>Tickets Sent to Retest</th>
+            <th>Tickets Fixed</th>
+            <th>Tickets Closed</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -30,9 +41,12 @@
         {           
             string pmName = (await ProjectService.GetProjectManagerAsync(project.Id))?.FullName;
             int totalMembers = (await ProjectService.GetAllProjectMembersExceptPMAsync(project.Id)).Count;
-            int totalNewTickets = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.Open.ToString(),project.CompanyId,project.Id)).Count;
-            int totalTestingTickets = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.Testing.ToString(), project.CompanyId, project.Id)).Count;
-            int totalActiveTickets = totalNewTickets + totalTestingTickets;
+            int open = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.Open.ToString(),project.CompanyId,project.Id)).Count;
+            int inProgress = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.In_Progress.ToString(), project.CompanyId, project.Id)).Count;
+            int testing = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.Testing.ToString(), project.CompanyId, project.Id)).Count;
+            int retest = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.Retest.ToString(), project.CompanyId, project.Id)).Count;
+            int fixedTickets = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.Fixed.ToString(), project.CompanyId, project.Id)).Count;
+            int closed = (await TicketService.GetProjectTicketsByStatusAsync(TicketStatusEnum.Closed.ToString(), project.CompanyId, project.Id)).Count;
 
             <tr>
                 <td>
@@ -45,7 +59,22 @@
                     @Html.DisplayFor(modelItem => totalMembers)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => totalActiveTickets)
+                    @Html.DisplayFor(modelItem => open)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => inProgress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => testing)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => retest)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => fixedTickets)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => closed)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => project.StartDate)
