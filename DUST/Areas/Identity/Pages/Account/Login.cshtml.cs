@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace DUST.Areas.Identity.Pages.Account
 {
@@ -21,14 +22,17 @@ namespace DUST.Areas.Identity.Pages.Account
         private readonly UserManager<DUSTUser> _userManager;
         private readonly SignInManager<DUSTUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IConfiguration _configuration;
 
-        public LoginModel(SignInManager<DUSTUser> signInManager, 
+        public LoginModel(SignInManager<DUSTUser> signInManager,
             ILogger<LoginModel> logger,
-            UserManager<DUSTUser> userManager)
+            UserManager<DUSTUser> userManager,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _configuration = configuration;
         }
 
         [BindProperty]
@@ -72,8 +76,12 @@ namespace DUST.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, string demoAccount = null)
         {
+            if (demoAccount != null)
+            {
+                setDemoCredentials(demoAccount);
+            }
             returnUrl ??= Url.Content("~/Home/Dashboard");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -106,6 +114,35 @@ namespace DUST.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private void setDemoCredentials(string demoAccount)
+        {
+            if (demoAccount == "adminBank")
+            {
+                Input.Email = Environment.GetEnvironmentVariable("ADMIN1_EMAIL") ?? _configuration["ADMIN1_EMAIL"];
+                Input.Password = Environment.GetEnvironmentVariable("GLOBAL_PASSWORD") ?? _configuration["GlobalPassword"];
+            }
+            else if (demoAccount == "devBank")
+            {
+                Input.Email = Environment.GetEnvironmentVariable("DEV1_1_EMAIL") ?? _configuration["DEV1_1_EMAIL"];
+                Input.Password = Environment.GetEnvironmentVariable("GLOBAL_PASSWORD") ?? _configuration["GlobalPassword"];
+            }
+            else if (demoAccount == "pmInc")
+            {
+                Input.Email = Environment.GetEnvironmentVariable("PM2_1_EMAIL") ?? _configuration["PM2_1_EMAIL"];
+                Input.Password = Environment.GetEnvironmentVariable("GLOBAL_PASSWORD") ?? _configuration["GlobalPassword"];
+            }
+            else if (demoAccount == "subBoard")
+            {
+                Input.Email = Environment.GetEnvironmentVariable("SUB3_1_EMAIL") ?? _configuration["SUB3_1_EMAIL"];
+                Input.Password = Environment.GetEnvironmentVariable("GLOBAL_PASSWORD") ?? _configuration["GlobalPassword"];
+            }
+            else
+            {
+                Input.Email = null;
+                Input.Password = null;
+            }
         }
     }
 }
