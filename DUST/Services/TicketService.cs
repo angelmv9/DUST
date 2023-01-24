@@ -91,7 +91,7 @@ namespace DUST.Services
                     try
                     {
                         ticket.DeveloperUserId = userId;
-                        ticket.TicketStatusId = (await LookupTicketStatusIdAsync("Development")).Value;
+                        ticket.TicketStatusId = (await LookupTicketStatusIdAsync(TicketStatusEnum.In_Progress.ToString())).Value;
                         await _context.SaveChangesAsync();
                     }
                     catch (Exception)
