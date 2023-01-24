@@ -13,6 +13,8 @@ namespace DUST.Services.Interfaces
         public Task<List<DUSTUser>> GetAllMembersAsync(int companyId);
         public Task<List<Project>> GetAllProjectsAsync(int companyId);
         public Task<List<Ticket>> GetAllTicketsAsync(int companyId);
+
+        public DUSTUser GetMemberProfile(string userId, int companyId);
         public Task<int> GetCompanyIdByName(string companyName);
 
         public Task DeleteCompanyAsync(int companyId);

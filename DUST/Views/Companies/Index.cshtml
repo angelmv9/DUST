@@ -110,7 +110,7 @@
                                 <td>
                                     <div class="row">
                                         <div class="col-2">
-                                            <a href="javascript:void(0);">
+                                            <a asp-controller="Companies" asp-action="MemberProfile" asp-route-userId="@member.Id">
                                                 @if (member?.AvatarByteData != null)
                                                 {
                                                     <img class="media-object rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
@@ -149,7 +149,7 @@
                                 <td>
                                     <div class="row">
                                         <div class="col-2">
-                                            <a href="javascript:void(0);">
+                                            <a asp-controller="Companies" asp-action="MemberProfile" asp-route-userId="@member.Id">
                                                 @if (member?.AvatarByteData != null)
                                                 {
                                                     <img class="media-object rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
@@ -188,7 +188,7 @@
                                 <td>
                                     <div class="row">
                                         <div class="col-2">
-                                            <a href="javascript:void(0);">
+                                            <a asp-controller="Companies" asp-action="MemberProfile" asp-route-userId="@member.Id">
                                                 @if (member?.AvatarByteData != null)
                                                 {
                                                     <img class="media-object rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
@@ -227,7 +227,7 @@
                                 <td>
                                     <div class="row">
                                         <div class="col-2">
-                                            <a href="javascript:void(0);">
+                                            <a asp-controller="Companies" asp-action="MemberProfile" asp-route-userId="@member.Id">
                                                 @if (member?.AvatarByteData != null)
                                                 {
                                                     <img class="media-object rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />

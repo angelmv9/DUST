@@ -141,5 +141,24 @@ namespace DUST.Services
                 throw;
             }
         }
+
+        public  DUSTUser GetMemberProfile(string userId, int companyId)
+        {
+            DUSTUser user = new();
+                try
+                {   
+                    if (userId != null)
+                    {
+                        user = _context.Users.Include(u => u.Projects)
+                                             .Where(u => u.CompanyId == companyId && u.Id == userId)
+                                             .FirstOrDefault();
+                    } 
+                    return user;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+        }
     }
 }

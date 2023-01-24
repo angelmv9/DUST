@@ -30,5 +30,13 @@ namespace DUST.Controllers
 
             return View(await _companyService.GetCompanyInfoByIdAsync(companyId));
         }
+
+        public IActionResult MemberProfile(string userId)
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
+            DUSTUser user = _companyService.GetMemberProfile(userId, companyId);
+
+            return View(user);
+        }
     }       
 }

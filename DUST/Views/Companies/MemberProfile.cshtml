@@ -1,0 +1,66 @@
+﻿@model DUST.Models.DUSTUser
+
+@using DUST.Services.Interfaces
+
+@inject IRolesService RolesService
+
+@{
+    ViewData["Title"] = "Member Profile";
+}
+
+<div>
+    @if (Model?.AvatarByteData != null)
+    {
+        <img class="media-object rounded-circle" style="width:50px; height: 50px" src="data:image/*;base64,@(Convert.ToBase64String(Model.AvatarByteData))" />
+    }
+    else
+    {
+        <img class="media-object rounded-circle" src="~/img/defaultUserImage.png" style="width:50px; height: 50px" />
+    }
+</div>
+
+<div>
+    @Model.FullName
+</div>
+
+<div>
+    @{
+        List<string> roles = (await RolesService.GetUserRolesAsync(Model)).ToList();
+        string role = null;
+        if (roles.Count() == 2)
+        {
+            role = roles[0] + ", " + roles[1];
+        } else
+        {
+            role = roles.First();
+        }
+    }
+    @role
+</div>
+
+<div>
+    @Model.Email
+</div>
+
+<div class="container">
+    <div class="row">
+        @foreach (var project in Model.Projects)
+        {
+            <div class="card" style="width: 18rem;">
+                @if (project.ImageFileData != null)
+                {
+                    <img src="data:image/*;base64,@(Convert.ToBase64String(project.ImageFileData))" class="card-img-top">
+                } else
+                {
+                    <img src="~/img/defaultProjectImage.jpg" class="card-img-top">
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@project.Name</h5>
+                    <p class="card-text">@project.Description</p>
+                    <a asp-controller="Projects" asp-action="Details" asp-route-Id="@project.Id" class="btn btn-primary mt-2">Project Details</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
