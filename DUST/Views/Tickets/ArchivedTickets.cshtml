@@ -21,16 +21,10 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Created)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Updated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Archived)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Project)
@@ -61,25 +55,23 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Created)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Updated)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Archived)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Project.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OwnerUser.Id)
+                    @{
+
+                        var owner = item.OwnerUserId == null ? "SEEDED" : item.OwnerUser.FullName;
+                    }
+                    @owner
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DeveloperUser.Id)
+                    @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.TicketType.Name)
@@ -91,7 +83,7 @@
                     @Html.DisplayFor(modelItem => item.TicketStatus.Name)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="Details" asp-route-ticketId="@item.Id">Details</a>
 
                     @{
                         bool isCurrentUserPM = (await ProjectService.GetProjectManagerAsync(item.ProjectId))?.Id == currentUser.Id;
