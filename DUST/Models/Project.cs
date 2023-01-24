@@ -65,6 +65,7 @@ namespace DUST.Models
         public virtual ICollection<DUSTUser> Members { get; set; } = new HashSet<DUSTUser>();
 
         // Lookup tables
+        [DisplayName("Project Priority")]
         public virtual ProjectPriority ProjectPriority { get; set; }
     }
 }
