@@ -108,7 +108,23 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => member.FullName)
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <a href="javascript:void(0);">
+                                                @if (member?.AvatarByteData != null)
+                                                {
+                                                    <img class="media-object rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
+                                                }
+                                                else
+                                                {
+                                                    <img class="media-object rounded-circle" src="~/img/defaultUserImage.png" style="width:30px; height: 30px" />
+                                                }
+                                            </a>
+
+                                        </div>
+                                        <div class="col">@Html.DisplayFor(modelItem => member.FullName)</div>
+
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -131,7 +147,23 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => member.FullName)
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <a href="javascript:void(0);">
+                                                @if (member?.AvatarByteData != null)
+                                                {
+                                                    <img class="media-object rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
+                                                }
+                                                else
+                                                {
+                                                    <img class="media-object rounded-circle" src="~/img/defaultUserImage.png" style="width:30px; height: 30px" />
+                                                }
+                                            </a>
+
+                                        </div>
+                                        <div class="col">@Html.DisplayFor(modelItem => member.FullName)</div>
+
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -154,7 +186,23 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => member.FullName)
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <a href="javascript:void(0);">
+                                                @if (member?.AvatarByteData != null)
+                                                {
+                                                    <img class="media-object rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
+                                                }
+                                                else
+                                                {
+                                                    <img class="media-object rounded-circle" src="~/img/defaultUserImage.png" style="width:30px; height: 30px" />
+                                                }
+                                            </a>
+
+                                        </div>
+                                        <div class="col">@Html.DisplayFor(modelItem => member.FullName)</div>
+
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -177,7 +225,23 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => member.FullName)
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <a href="javascript:void(0);">
+                                                @if (member?.AvatarByteData != null)
+                                                {
+                                                    <img class="media-object rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
+                                                }
+                                                else
+                                                {
+                                                    <img class="media-object rounded-circle" src="~/img/defaultUserImage.png" style="width:30px; height: 30px" />
+                                                }
+                                            </a>
+
+                                        </div>
+                                        <div class="col">@Html.DisplayFor(modelItem => member.FullName)</div>
+
+                                    </div>
                                 </td>
                             </tr>
                         }
