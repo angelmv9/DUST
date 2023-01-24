@@ -21,9 +21,6 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.StartDate)
             </th>
             <th>
@@ -31,18 +28,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Archived)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageFileName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageFileData)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FileExtention)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Company)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ProjectPriority)
@@ -58,9 +43,6 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.StartDate)
                 </td>
                 <td>
@@ -68,21 +50,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Archived)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ImageFileName)
-                </td>
-                <td>
-                    @if (item.ImageFileData != null)
-                    {
-                        <img style="width:60px;height:auto" src="data:image/*;base64,@(Convert.ToBase64String(item.ImageFileData))" />
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FileExtention)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Company.Id)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ProjectPriority.Name)
