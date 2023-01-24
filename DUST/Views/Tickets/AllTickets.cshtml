@@ -25,16 +25,10 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Created)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Updated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Archived)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Project)
@@ -54,6 +48,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.TicketStatus)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Archived)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -65,25 +62,23 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Created)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Updated)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Archived)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Project.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OwnerUser.Id)
+                    @{
+
+                        var owner = item.OwnerUserId == null ? "SEEDED" : item.OwnerUser.FullName;
+                    }
+                    @owner
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DeveloperUser.Id)
+                    @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.TicketType.Name)
@@ -93,6 +88,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Archived)
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-ticketId="@item.Id">Details</a> |
@@ -105,7 +103,7 @@
                          isCurrentUserPM ||
                          item.DeveloperUserId == currentUser.Id ||
                          item.OwnerUserId == currentUser.Id) &&
-                         !item.ArchivedByProject)
+                         !item.ArchivedByProject && !item.Archived)
                     {
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     }

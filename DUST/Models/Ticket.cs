@@ -65,10 +65,12 @@ namespace DUST.Models
 
         // Allows navigation from the Ticket to the creator of the ticket via
         // the OwnerUserId foreign key
+        [DisplayName("Owner")]
         public virtual DUSTUser OwnerUser { get; set; }
 
         // Allows navigation from the Ticket to the developer assigned to the ticket via
         // the DeveloperUserId foreign key
+        [DisplayName("Developer")]
         public virtual DUSTUser DeveloperUser { get; set; }
 
         // ** Children of Ticket. ** 1-to-many relationship
@@ -78,8 +80,11 @@ namespace DUST.Models
         public virtual ICollection<TicketHistory> History { get; set; } = new HashSet<TicketHistory>();
 
         // ** Lookup tables **
+        [DisplayName("Type")]
         public virtual TicketType TicketType { get; set; }
+        [DisplayName("Priority")]
         public virtual TicketPriority TicketPriority { get; set; }
+        [DisplayName("Status")]
         public virtual TicketStatus TicketStatus { get; set; }
     }
 }
