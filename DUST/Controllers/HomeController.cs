@@ -5,6 +5,7 @@ using DUST.Models.Enums;
 using DUST.Models.ViewModels;
 using DUST.Services;
 using DUST.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -34,6 +35,7 @@ namespace DUST.Controllers
             return View();
         }
 
+		[Authorize]
         public async Task<IActionResult> Dashboard()
         {
             int companyId = User.Identity.GetCompanyId().Value;
@@ -46,6 +48,7 @@ namespace DUST.Controllers
 
             return View(model);
         }
+
 
 		[HttpPost]
 		public async Task<JsonResult> GglProjectTickets()
@@ -147,15 +150,10 @@ namespace DUST.Controllers
 			return Json(plotlyData);
 		}
 
-		public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }
