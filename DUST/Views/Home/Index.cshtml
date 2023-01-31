@@ -1,8 +1,125 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    @{
+        ViewData["Title"] = "Home Page";
+    }
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+
+    <link rel="apple-touch-icon" sizes="180x180" href="~/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicons/favicon.ico">
+    <meta name="msapplication-TileImage" content="~/favicons/mstile-150x150.png">
+    <meta name="msapplication-TileImage" content="~/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="~/css/simplebar.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link href="~/css/theme-rtl.min.css" type="text/css" id="style-rtl" rel="stylesheet" />
+    <link href="~/css/theme.min.css" type="text/css" id="style-default" rel="stylesheet" />
+    <link href="~/css/user-rtl.min.css" type="text/css" id="user-style-rtl" rel="stylesheet" />
+    <link href="~/css/user.min.css" type="text/css" id="user-style-default" rel="stylesheet" />
+</head>
+
+<body>
+
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main style="--phoenix-scroll-margin-top: 1.2rem;">
+        <section class="bg-white pb-8" id="home" style=" width:100vw; height: 100vh; display: flex; justify-content: center; align-items: center">
+            <div class="container-small hero-header-container">
+                <div class="row align-items-center">
+                    <div class="col-12 col-lg-auto order-0 order-md-1 text-end order-1">
+                        <div class="position-relative p-5 p-md-7 d-lg-none">
+                            <div class="bg-holder" style="background-image: url('/img/bg-23.png');background-size:contain;">
+                            </div>
+                            <!--/.bg-holder-->
+
+                            <div class="position-relative"><img class="w-100 shadow-lg d-dark-none rounded-2" src="~/img/bg-31.png" alt="hero-header" /><img class="w-100 shadow-lg d-light-none rounded-2" src="~/img/bg-30.png" alt="hero-header" /></div>
+                        </div>
+                        <div class="hero-image-container position-absolute top-0 bottom-0 end-0 d-none d-lg-block">
+                            <div class="position-relative h-100 w-100">
+                                <div class="position-absolute h-100 top-0 d-flex align-items-center end-0 hero-image-container-bg"><img class="pt-7 pt-md-0 w-100" src="~/img/bg-1-2.png" alt="hero-header" /></div>
+                                <div class="position-absolute h-100 top-0 d-flex align-items-center end-0"><img class="pt-7 pt-md-0 w-100 shadow-lg d-dark-none rounded-2" src="~/img/bg-28.png" alt="hero-header" /><img class="pt-7 pt-md-0 w-100 shadow-lg d-light-none rounded-2" src="~/img/bg-29.png" alt="hero-header" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 text-lg-start text-center pt-8 pb-6 order-0 position-relative">
+                        <h1 class="fs-5 fs-lg-6 fs-md-7 fs-lg-6 fs-xl-7 fs fw-black mb-4"><span class="text-primary me-3">DUST</span><br />A Modern Bug Tracker</h1>
+                        <p class="mb-5">Defects & User Stories Tracker (DUST) is a multi-tenant, code-first ASP.NET Core 5 MVC web app that implements role-based authorization.</p><a class="btn btn-lg btn-primary rounded-pill me-3" asp-area="Identity" asp-page="/Account/Register" role="button">Sign up</a><a class="btn btn-link me-2 fs-0 p-0 text-decoration-none" asp-area="Identity" asp-page="/Account/Login" role="button">Check Demo<span class="fa-solid fa-angle-right ms-2 fs--1"></span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+
+    @section Scripts {
+        <script src="~/js/imagesloaded.pkgd.min.js"></script>
+        <script src="~/js/simplebar.min.js"></script>
+        <script src="~/js/config.js"></script>
+
+        <script>
+            var phoenixIsRTL = JSON.parse(localStorage.getItem('phoenixIsRTL'));
+            if (phoenixIsRTL) {
+                var linkDefault = document.getElementById('style-default');
+                var userLinkDefault = document.getElementById('user-style-default');
+                linkDefault.setAttribute('disabled', true);
+                userLinkDefault.setAttribute('disabled', true);
+                document.querySelector('html').setAttribute('dir', 'rtl');
+            } else {
+                var linkRTL = document.getElementById('style-rtl');
+                var userLinkRTL = document.getElementById('user-style-rtl');
+                linkRTL.setAttribute('disabled', true);
+                userLinkRTL.setAttribute('disabled', true);
+            }
+        </script>
+
+
+        <script src="~/js/popper.min.js"></script>
+        <script src="~/js/bootstrap.min.js"></script>
+        <script src="~/js/anchor.min.js"></script>
+        <script src="~/js/is.min.js"></script>
+        <script src="~/js/all.min.js"></script>
+        <script src="~/js/lodash.min.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+        <script src="~/js/list.min.js"></script>
+        <script src="~/js/feather.min.js"></script>
+        <script src="~/js/dayjs.min.js"></script>
+        <script src="~/js/phoenix.js"></script>
+        <script src="~/js/isotope.pkgd.min.js"></script>
+        <script src="~/js/packery-mode.pkgd.min.js"></script>
+        <script src="~/js/bigpicture.js"></script>
+        <script src="~/js/countup.umd.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARdVcREeBK44lIWnv5-iPijKqvlSAVwbw&callback=initMap" async></script>
+        <script src="https://smtpjs.com/v3/smtp.js"></script>
+    }
+
+</body>
+
+</html>
