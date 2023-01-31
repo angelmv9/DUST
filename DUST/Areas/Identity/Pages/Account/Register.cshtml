@@ -60,7 +60,6 @@
                     <div class="bg-holder" style="background-image:url(/img/pexels-fauxels-3183150.jpg);">
                     </div>
                     <!--/.bg-holder-->
-
                 </div>
                 <div class="col-lg-6">
                     <div class="row flex-center h-100 g-0 px-4 px-sm-0">
@@ -100,7 +99,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" asp-for="Input.CompanyDescription"></label>
-                                    <input class="form-control" asp-for="Input.CompanyDescription" type="text" placeholder="optional" />
+                                    <textarea class="form-control" asp-for="Input.CompanyDescription" placeholder="optional"></textarea>
                                     <span asp-validation-for="Input.CompanyDescription" class="text-danger"></span>
                                 </div>
                                 <div class="row g-3 mb-3">
