@@ -56,7 +56,7 @@
         <div class="container-fluid px-0">
             <div class="row vh-100 flex-cente g-0">
                 <div class="col-lg-6 position-relative d-none d-lg-block">
-                    <div class="bg-holder" style="background-image:url(/img/pexels-fauxels-3183150.jpg);">
+                    <div class="bg-holder" style="background-image:url(/img/pexels-eli-sommer-3992776.jpg);">
                     </div>
                     <!--/.bg-holder-->
                 </div>
@@ -72,7 +72,7 @@
                                 <h3 class="text-1000">Sign In</h3>
                                 <p class="text-700">Get access to your account</p>
                             </div>
-                            <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <form id="account" method="post">
                                 <div asp-validation-summary="All" class="text-danger"></div>
                                 <div class="mb-3 text-start">
                                     <label class="form-label" asp-for="Input.Email"></label>
@@ -120,9 +120,9 @@
     <!--    JavaScripts-->
     <!-- ===============================================-->
     @section Scripts {
-        <script src="../../../vendors/imagesloaded/imagesloaded.pkgd.min.js"></script>
-        <script src="../../../vendors/simplebar/simplebar.min.js"></script>
-        <script src="../../../assets/js/config.js"></script>
+        <script src="~/js/imagesloaded.pkgd.min.js"></script>
+        <script src="~/js/simplebar.min.js"></script>
+        <script src="~/js/config.js"></script>
 
         <script>
             var phoenixIsRTL = JSON.parse(localStorage.getItem('phoenixIsRTL'));

@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Identity\Pages\Account\ExternalLogin.cshtml.cs" />
     <Compile Remove="Controllers\ProjectPrioritiesController.cs" />
     <Compile Remove="Controllers\TicketAttachmentsController.cs" />
     <Compile Remove="Controllers\TicketCommentsController.cs" />
@@ -48,6 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Identity\Pages\Account\ExternalLogin.cshtml" />
     <Content Remove="Views\Companies\Create.cshtml" />
     <Content Remove="Views\Companies\Delete.cshtml" />
     <Content Remove="Views\Companies\Edit.cshtml" />
