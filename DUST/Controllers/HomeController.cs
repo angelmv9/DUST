@@ -6,6 +6,7 @@ using DUST.Models.ViewModels;
 using DUST.Services;
 using DUST.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -22,16 +23,25 @@ namespace DUST.Controllers
         private readonly ICompanyInfoService _companyService;
         private readonly IProjectService _projectService;
         private readonly ILogger<HomeController> _logger;
+		private readonly SignInManager<DUSTUser> _signInManager;
 
-		public HomeController(ILogger<HomeController> logger, ICompanyInfoService companyService, IProjectService projectService)
+		public HomeController(ILogger<HomeController> logger,
+			ICompanyInfoService companyService,
+			IProjectService projectService,
+			SignInManager<DUSTUser> signInManager)
 		{
 			_logger = logger;
 			_companyService = companyService;
 			_projectService = projectService;
+			_signInManager = signInManager;
 		}
 
 		public IActionResult Index()
         {
+			if(_signInManager.IsSignedIn(User))
+			{
+				return RedirectToAction("Dashboard", "Home");
+			}
             return View();
         }
 
