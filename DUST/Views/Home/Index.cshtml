@@ -11,34 +11,8 @@
     <!--    Document Title-->
     <!-- ===============================================-->
     @{
-        ViewData["Title"] = "Home Page";
+        ViewData["Title"] = "Welcome";
     }
-
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-
-    <link rel="apple-touch-icon" sizes="180x180" href="~/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="~/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="~/favicons/favicon-16x16.png">
-    <link rel="shortcut icon" type="image/x-icon" href="~/favicons/favicon.ico">
-    <meta name="msapplication-TileImage" content="~/favicons/mstile-150x150.png">
-    <meta name="msapplication-TileImage" content="~/favicons/mstile-150x150.png">
-    <meta name="theme-color" content="#ffffff">
-
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
-    <link href="~/css/simplebar.min.css" rel="stylesheet" />
-
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <link href="~/css/theme-rtl.min.css" type="text/css" id="style-rtl" rel="stylesheet" />
-    <link href="~/css/theme.min.css" type="text/css" id="style-default" rel="stylesheet" />
-    <link href="~/css/user-rtl.min.css" type="text/css" id="user-style-rtl" rel="stylesheet" />
-    <link href="~/css/user.min.css" type="text/css" id="user-style-default" rel="stylesheet" />
 </head>
 
 <body>
@@ -73,52 +47,6 @@
             </div>
         </section>
     </main>
-
-
-    <!-- ===============================================-->
-    <!--    JavaScripts-->
-    <!-- ===============================================-->
-
-    @section Scripts {
-        <script src="~/js/imagesloaded.pkgd.min.js"></script>
-        <script src="~/js/simplebar.min.js"></script>
-        <script src="~/js/config.js"></script>
-
-        <script>
-            var phoenixIsRTL = JSON.parse(localStorage.getItem('phoenixIsRTL'));
-            if (phoenixIsRTL) {
-                var linkDefault = document.getElementById('style-default');
-                var userLinkDefault = document.getElementById('user-style-default');
-                linkDefault.setAttribute('disabled', true);
-                userLinkDefault.setAttribute('disabled', true);
-                document.querySelector('html').setAttribute('dir', 'rtl');
-            } else {
-                var linkRTL = document.getElementById('style-rtl');
-                var userLinkRTL = document.getElementById('user-style-rtl');
-                linkRTL.setAttribute('disabled', true);
-                userLinkRTL.setAttribute('disabled', true);
-            }
-        </script>
-
-
-        <script src="~/js/popper.min.js"></script>
-        <script src="~/js/bootstrap.min.js"></script>
-        <script src="~/js/anchor.min.js"></script>
-        <script src="~/js/is.min.js"></script>
-        <script src="~/js/all.min.js"></script>
-        <script src="~/js/lodash.min.js"></script>
-        <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
-        <script src="~/js/list.min.js"></script>
-        <script src="~/js/feather.min.js"></script>
-        <script src="~/js/dayjs.min.js"></script>
-        <script src="~/js/phoenix.js"></script>
-        <script src="~/js/isotope.pkgd.min.js"></script>
-        <script src="~/js/packery-mode.pkgd.min.js"></script>
-        <script src="~/js/bigpicture.js"></script>
-        <script src="~/js/countup.umd.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARdVcREeBK44lIWnv5-iPijKqvlSAVwbw&callback=initMap" async></script>
-        <script src="https://smtpjs.com/v3/smtp.js"></script>
-    }
 
 </body>
 

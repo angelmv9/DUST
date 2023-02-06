@@ -2,41 +2,75 @@
 @inject SignInManager<DUSTUser> SignInManager
 @inject UserManager<DUSTUser> UserManager
 @{
-    DUSTUser dustUser = await UserManager.GetUserAsync(User);
+    DUSTUser currentUser = await UserManager.GetUserAsync(User);
 }
 
-@*<div class="dropdown py-sm-4 ms-auto ms-sm-0 flex-shrink-1">
-
-    @if (SignInManager.IsSignedIn(User))
-    {
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" alt="" width="28" height="28" class="rounded-circle">
-            <span class="d-none d-sm-inline mx-1">@dustUser.FirstName</span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a></li>
-            <li>
-                <hr class="dropdown-divider">
+<nav class="navbar navbar-top navbar-expand" id="navbarDefault">
+    <div class="collapse navbar-collapse justify-content-between">
+        <div class="navbar-logo">
+            <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+            <a class="navbar-brand me-1 me-sm-3" asp-controller="Home" asp-action="Index">
+                <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center">
+                        <img src="~/img/logo.png" alt="phoenix" width="27" />
+                        <p class="logo-text ms-2 d-none d-sm-block">DUST</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <ul class="navbar-nav navbar-nav-icons flex-row">
+            <li class="nav-item">
+                <div class="theme-control-toggle fa-icon-wait px-2">
+                    <input class="form-check-input ms-0 theme-control-toggle-input" type="checkbox" data-theme-control="phoenixTheme" value="dark" id="themeControlToggle"/>
+                    <label class="mb-0 theme-control-toggle-label theme-control-toggle-light" for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left" title="Switch theme"><span class="icon" data-feather="moon"></span></label>
+                    <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark" for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left" title="Switch theme"><span class="icon" data-feather="sun"></span></label>
+                </div>
             </li>
-            <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit();">Sign out</a></li>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link lh-1 pe-0" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+                        <div class="avatar avatar-l ">
+                            @if (currentUser?.AvatarByteData != null)
+                            {
+                                <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(currentUser.AvatarByteData))" />
+                            }
+                            else
+                            {
+                                <img class="rounded-circle" src="~/img/avatar.png" alt="" />
+                            }
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border border-300" aria-labelledby="navbarDropdownUser">
+                        <div class="card position-relative border-0">
+                            <div class="card-body p-0">
+                                <div class="text-center pt-4 pb-3">
+                                    <div class="avatar avatar-xl ">
+                                        @if (currentUser?.AvatarByteData != null)
+                                        {
+                                            <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(currentUser.AvatarByteData))" />
+                                        }
+                                        else
+                                        {
+                                            <img class="rounded-circle" src="~/img/avatar.png" alt="" />
+                                        }
+                                    </div>
+                                    <h6 class="mt-2 text-black">@currentUser.FullName</h6>
+                                </div>
+                            </div>
+                            <div class="overflow-auto scrollbar" style="height: 10rem;">
+                                <ul class="nav d-flex flex-column mb-2 pb-1">
+                                    <li class="nav-item"><a class="nav-link px-3" asp-area="Identity" asp-page="/Account/Manage/Index"> <span class="me-2 text-900" data-feather="user"></span><span>Manage Profile</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="card-footer p-0 border-top">                              
+                                <div class="px-3 py-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="javascript:document.getElementById('logoutForm').submit();"> <span class="me-2" data-feather="log-out"> </span>Sign out</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            }
         </ul>
-
-    }
-    else
-    {
-        <a asp-area="Identity" asp-page="/Account/Login" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" alt="" width="28" height="28" class="rounded-circle">
-            <span class="d-none d-sm-inline mx-1">Log In</span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Register Company</a></li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Sign In</a></li>
-        </ul>
-    }
-</div>
-<form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-</form>
-*@
+    </div>
+    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout"></form>
+</nav>
