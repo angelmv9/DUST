@@ -43,114 +43,191 @@
     <link href="~/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
 </head>
 <body>
-    @if (SignInManager.IsSignedIn(User))
-    {
-        <partial name="_LoginPartial" /> 
-    }
-    
-    @RenderBody()
-    
-@*        <div class="row vh-100 overflow-auto">
-            <div class="col-12 col-sm-3 col-xl-2 px-sm-2 px-0 bg-dark d-flex sticky-top">
-                <div class="d-flex flex-sm-column flex-row flex-grow-1 align-items-center align-items-sm-start px-3 pt-2 text-white">
-                    <a href="/" class="d-flex align-items-center pb-sm-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                        <span class="fs-5"><span class="d-none d-sm-inline">DUST</span></span>
-                    </a>
+    <main class="main" id="top">
+        <div class="container-fluid px-0">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <nav class="navbar navbar-vertical navbar-expand-lg">                  
+                    <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
+                        <!-- scrollbar removed-->
+                        <div class="navbar-vertical-content">
+                            <ul class="navbar-nav flex-column" id="navbarVerticalNav">
+                                <!-- Home -->
+                                <li class="nav-item">
+                                    <!-- parent pages-->
+                                    <div class="nav-item-wrapper">
+                                        <a class="nav-link label-1" asp-controller="Home" asp-action="Dashboard" role="button" aria-controls="home">
+                                            <div class="d-flex align-items-center">
+                                                <span class="nav-link-icon"><span data-feather="home"></span></span><span class="nav-link-text">Home</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </li>
+                                <!-- Company -->
+                                <li class="nav-item">
+                                    <div class="nav-item-wrapper">
+                                        <a class="nav-link label-1" asp-controller="Companies" asp-action="Index" role="button" aria-controls="company">
+                                            <div class="d-flex align-items-center">
+                                                <span class="nav-link-icon"><span data-feather="briefcase"></span></span><span class="nav-link-text">Company</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </li>
+                                <!-- Projects -->
+                                <li class="nav-item">
+                                    <!-- parent pages-->
+                                    <div class="nav-item-wrapper">
+                                        <a class="nav-link dropdown-indicator label-1" href="#projects" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="projects">
+                                            <div class="d-flex align-items-center">
+                                                <div class="dropdown-indicator-icon">
+                                                    <span class="fas fa-caret-right"></span>
+                                                </div>
+                                                <span class="nav-link-icon"><span data-feather="clipboard"></span></span><span class="nav-link-text">Projects</span>
+                                            </div>
+                                        </a>
+                                        <div class="parent-wrapper label-1">
+                                            <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="projects">
+                                                <li class="collapsed-nav-item-title d-none">Projects</li>
+                                                @if (User.IsInRole(nameof(RolesEnum.Admin)) || User.IsInRole(nameof(RolesEnum.ProjectManager)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" asp-controller="Projects" asp-action="Create" data-bs-toggle="" aria-expanded="false">
+                                                            <div class="d-flex align-items-center"><span class="nav-link-text">Create new</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (!User.IsInRole(nameof(RolesEnum.Admin)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" asp-controller="Projects" asp-action="MyProjects" data-bs-toggle="" aria-expanded="false">
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="nav-link-text">My Projects</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                <li class="nav-item">
+                                                    <a class="nav-link" asp-controller="Projects" asp-action="AllProjects" data-bs-toggle="" aria-expanded="false">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="nav-link-text">All Projects</span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                @if (User.IsInRole(nameof(RolesEnum.Admin)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" asp-controller="Projects" asp-action="UnassignedProjects" data-bs-toggle="" aria-expanded="false">
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="nav-link-text">Unassigned Projects</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (User.IsInRole(nameof(RolesEnum.Admin)) || User.IsInRole(nameof(RolesEnum.ProjectManager)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" asp-controller="Projects" asp-action="ArchivedProjects" data-bs-toggle="" aria-expanded="false">
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="nav-link-text">Archived Projects</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                                <!-- Tickets -->
+                                <li class="nav-item">
+                                    <!-- parent pages-->
+                                    <div class="nav-item-wrapper">
+                                        <a class="nav-link dropdown-indicator label-1" href="#tickets" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="tickets">
+                                            <div class="d-flex align-items-center">
+                                                <div class="dropdown-indicator-icon">
+                                                    <span class="fas fa-caret-right"></span>
+                                                </div>
+                                                <span class="nav-link-icon"><span data-feather="file-text"></span></span><span class="nav-link-text">Tickets</span>
+                                            </div>
+                                        </a>
+                                        <div class="parent-wrapper label-1">
+                                            <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="tickets">
+                                                <li class="collapsed-nav-item-title d-none">Tickets</li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" asp-controller="Tickets" asp-action="Create" data-bs-toggle="" aria-expanded="false">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="nav-link-text">Create new</span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                @if (!User.IsInRole(nameof(RolesEnum.Admin)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" asp-controller="Tickets" asp-action="MyTickets" data-bs-toggle="" aria-expanded="false">
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="nav-link-text">My Tickets</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                <li class="nav-item">
+                                                    <a class="nav-link" asp-controller="Tickets" asp-action="AllTickets" data-bs-toggle="" aria-expanded="false">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="nav-link-text">All Tickets</span>
+                                                        </div>
+                                                    </a>
+                                                </li>
+                                                @if (User.IsInRole(nameof(RolesEnum.Admin)) || User.IsInRole(nameof(RolesEnum.ProjectManager)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" asp-controller="Tickets" asp-action="UnassignedTickets" data-bs-toggle="" aria-expanded="false">
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="nav-link-text">Unassigned Tickets</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" asp-controller="Tickets" asp-action="ArchivedTickets" data-bs-toggle="" aria-expanded="false">
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="nav-link-text">Archived Tickets</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>                                                       
+                        </div>
+                    </div>
+                    <div class="navbar-vertical-footer">
+                        <button class="btn navbar-vertical-toggle border-0 fw-semi-bold w-100 white-space-nowrap d-flex align-items-center"><span class="uil uil-left-arrow-to-left fs-0"></span><span class="uil uil-arrow-from-right fs-0"></span><span class="navbar-vertical-footer-text ms-2">Collapsed View</span></button>
+                    </div>
+                </nav>
 
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <ul class="nav nav-pills flex-sm-column flex-row flex-nowrap flex-shrink-1 flex-sm-grow-0 flex-grow-1 mb-sm-auto mb-0 justify-content-center align-items-center align-items-sm-start" id="menu">
-                            <li class="nav-item">
-                                <a asp-area="" asp-controller="Home" asp-action="Dashboard" class="nav-link px-sm-0 px-2">
-                                    <i class="fs-5 bi-house"></i><span class="ms-1 d-none d-sm-inline">Home</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a asp-area="" asp-controller="Companies" asp-action="Index" class="nav-link px-sm-0 px-2">
-                                    <i class="fs-5 bi-building"></i><span class="ms-1 d-none d-sm-inline">Company</span>
-                                </a>
-                            </li>
-                            <li class="dropdown">
-                                <a asp-area="" asp-controller="Projects" asp-action="Index" class="nav-link dropdown-toggle px-sm-0 px-2" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fs-5 bi-file-earmark-ppt"></i><span class="ms-1 d-none d-sm-inline">Projects</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown">
-                                    @if (User.IsInRole(nameof(RolesEnum.Admin)) || User.IsInRole(nameof(RolesEnum.ProjectManager)))
-                                    {
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="Create">New project...</a></li>
-                                    }
-                                    @if (!User.IsInRole(nameof(RolesEnum.Admin)))
-                                    {
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="MyProjects">My Projects</a></li>
+                <partial name="_LoginPartial" />
+            }
 
-                                    }
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="AllProjects">All Projects</a></li>
-                                    @if (User.IsInRole(nameof(RolesEnum.Admin)) || User.IsInRole(nameof(RolesEnum.ProjectManager)))
-                                    {
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="ArchivedProjects">Archived Projects</a></li>
-                                    }
-                                    @if (User.IsInRole(nameof(RolesEnum.Admin)))
-                                    {
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Projects" asp-action="UnassignedProjects">Unassigned Projects</a></li>
-                                    }
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a asp-area="" asp-controller="Tickets" asp-action="Index" class="nav-link dropdown-toggle px-sm-0 px-2" id="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fs-5 bi-file-earmark-font"></i><span class="ms-1 d-none d-sm-inline">Tickets</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="Create">New ticket...</a></li>
-                                    @if (!User.IsInRole(nameof(RolesEnum.Admin)))
-                                    {
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="MyTickets">My Tickets</a></li>
-                                    }
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="AllTickets">All Tickets</a></li>
-                                    @if (User.IsInRole(nameof(RolesEnum.Admin)) || User.IsInRole(nameof(RolesEnum.ProjectManager)))
-                                    {
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="ArchivedTickets">Archived Tickets</a></li>
-                                    }
-                                    @if (User.IsInRole(nameof(RolesEnum.Admin)) || User.IsInRole(nameof(RolesEnum.ProjectManager)))
-                                    {
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Tickets" asp-action="UnassignedTickets">Unassigned Tickets</a></li>
-                                    }
-                                </ul>
-                            </li>
-                            <li>
-                                @if (User.IsInRole(nameof(RolesEnum.Admin)))
-                                {
-                                    <a asp-controller="Invites" asp-action="Create" class="nav-link px-sm-0 px-2">
-                                        <i class="fs-5 bi bi-send-plus"></i><span class="ms-1 d-none d-sm-inline">Company Invite</span>
-                                    </a>
-                                }
-                            </li>
-                            <li>
-                                <a asp-area="" asp-controller="Notifications" asp-action="Index" class="nav-link px-sm-0 px-2">
-                                    <i class="fs-5 bi-mailbox2"></i><span class="ms-1 d-none d-sm-inline">Notifications</span>
-                                </a>
-                            </li>
-                        </ul>
-                    }
-                </div>
-            </div>
-            <div class="col d-flex flex-column h-100">
-                <main class="row">
-                    @RenderBody()
-                </main>
-                <footer class="row bg-light py-4 mt-auto">
-                    <div class="container">
-                        &copy; 2022 - DUST - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            
+            @RenderBody()
+
+
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <footer class="footer position-absolute">
+                    <div class="row g-0 justify-content-between align-items-center h-100">
+                        <div class="col-12 col-sm-auto text-center">
+                            <p class="mb-0 mt-2 mt-sm-0 text-900">DUST: A Modern BugTracker<span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span><br class="d-sm-none" />2023 &copy;<a class="mx-1" href="https://themewagon.com">DUST</a></p>
+                        </div>
+                        <div class="col-12 col-sm-auto text-center">
+                            <p class="mb-0 text-600">v1.0.0</p>
+                        </div>
                     </div>
                 </footer>
-            </div>
+            }           
         </div>
-*@
-
-
-@*    <h5><span class="fas fa-palette me-2 fs-0"></span>Theme Customizer</h5>
-*@  
-    
-
+    </main>
 
     <script src="~/js/imagesloaded.pkgd.min.js"></script>
     <script src="~/js/simplebar.min.js"></script>
@@ -171,6 +248,13 @@
             userLinkRTL.setAttribute('disabled', true);
         }
     </script>
+
+     <script>
+        var navbarStyle = localStorage.getItem("phoenixNavbarStyle");
+        if (navbarStyle && navbarStyle !== 'transparent') {
+            document.querySelector('body').classList.add(`navbar-${navbarStyle}`);
+        }
+     </script>
 
     <script>
         var navbarStyle = localStorage.getItem("phoenixNavbarStyle");
