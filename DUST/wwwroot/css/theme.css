@@ -24829,7 +24829,7 @@ html:not(.navbar-vertical-collapsed) .navbar-vertical.navbar-expand-xs .navbar-v
 }
 @media (min-width: 992px) {
   .navbar-vertical.navbar-expand-lg {
-    width: 15.875rem;
+    width: 15.0rem;
     border-right: 1px solid var(--phoenix-navbar-vertical-border-color);
     margin: 0;
     -webkit-transition: width 0.2s ease;
