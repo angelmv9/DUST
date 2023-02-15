@@ -30,7 +30,7 @@
             <div class="col-xl-9">
                 <form class="row g-3 mb-6" asp-action="Create" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="col-12 mb-5">
+                    <div class="col-12 mb-4">
                         <h4 class="mb-3">Project Title</h4>        
                         <input class="form-control" asp-for="Project.Name" placeholder="Write title here..." />
                         <span asp-validation-for="Project.Name" class="text-danger"></span>
@@ -43,11 +43,11 @@
                         <textarea class="tinymce" style="display: none;" asp-for="Project.Description" data-tinymce='{"height":"15rem","placeholder":"Write a description here..."}'></textarea>
                     </div>*@
 
-                    <div class="col-12 mb-5">
+                    <div class="col-12 mb-4">
                         <h4 class="mb-3">Project Description</h4>
                         <textarea class="form-control" asp-for="Project.Description" placeholder="Optional description here..." style="height: 100px"></textarea>
                     </div>
-                    <div class="col-sm-6 mb-5">
+                    <div class="col-sm-6 mb-4">
                         <div class="flatpickr-input-container">
                             <h4 class="mb-3">Start Date</h4>
                             <div class="form-floating">
@@ -57,7 +57,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 mb-5">
+                    <div class="col-sm-6 mb-4">
                         <div class="flatpickr-input-container">
                             <h4 class="mb-3">End Date</h4>
                             <div class="form-floating">
@@ -67,7 +67,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 mb-5">
+                    <div class="col-12 mb-4">
                         <h4 class="mb-3">Project Image</h4>
                         <div class="dropzone dropzone-multiple p-0" id="my-awesome-dropzone" data-dropzone="data-dropzone">
                             <div class="fallback">
@@ -89,16 +89,15 @@
 
                     @if (User.IsInRole(RolesEnum.Admin.ToString()))
                     {
-                        <div class="col-12 mb-5">
+                        <div class="col-12 mb-4">
                             <h4 class="mb-3">Select a Project Manager</h4>
                             <select class="form-select" asp-items="@Model.PMList" asp-for="PMId">
                                 <option></option>
-                                <option value="1">Data Privacy One</option>                                  
                             </select>                            
                         </div>
                     }
 
-                    <div class="col-12 mb-5">
+                    <div class="col-12 mb-4">
                         <h4 class="mb-3">Select a Project Priority</h4>
                         <select class="form-select" asp-items="@Model.PriorityList" asp-for="Project.ProjectPriorityId">
                             <option></option>
