@@ -181,10 +181,15 @@ namespace DUST.Controllers
         [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Edit(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
 			int companyId = User.Identity.GetCompanyId().Value;
 			bool isProjectArchived = (await _projectService.GetProjectByIdAsync(companyId, id.Value)).Archived;
 
-			if (id == null || isProjectArchived)
+			if (isProjectArchived)
             {
                 return NotFound();
             }
