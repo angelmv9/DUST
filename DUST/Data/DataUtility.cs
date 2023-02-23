@@ -11,6 +11,7 @@ using DUST.Models;
 using Microsoft.EntityFrameworkCore;
 using DUST.Models.Enums;
 using System.Diagnostics;
+using System.IO;
 
 namespace DUST.Data
 {
@@ -266,6 +267,7 @@ namespace DUST.Data
                 FirstName = "Ermin",
                 LastName = "Cranke",
                 EmailConfirmed = true,
+                AvatarByteData =  File.ReadAllBytes("wwwroot/img/team/11.png"),
                 CompanyId = company1Id
             };
 
@@ -312,6 +314,7 @@ namespace DUST.Data
                 FirstName = "Jeth",
                 LastName = "Pierse",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/1.png"),
                 CompanyId = company1Id
             };
 
@@ -343,6 +346,7 @@ namespace DUST.Data
                 FirstName = "Gaile",
                 LastName = "Petofi",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/2.png"),
                 CompanyId = company1Id
             };
 
@@ -374,6 +378,7 @@ namespace DUST.Data
                 FirstName = "Caria",
                 LastName = "Strodder",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/9.png"),
                 CompanyId = company1Id
             };
 
@@ -407,6 +412,7 @@ namespace DUST.Data
                 FirstName = "Ham",
                 LastName = "Stegers",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/12.png"),
                 CompanyId = company1Id
             };
 
@@ -438,6 +444,7 @@ namespace DUST.Data
                 FirstName = "Sandro",
                 LastName = "Suarez",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/15.png"),
                 CompanyId = company1Id
             };
 
@@ -468,6 +475,7 @@ namespace DUST.Data
                 FirstName = "Eric",
                 LastName = "Parmiter",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/21.png"),
                 CompanyId = company1Id
             };
 
@@ -498,6 +506,7 @@ namespace DUST.Data
                 FirstName = "Meng",
                 LastName = "Cunegonde",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/23.png"),
                 CompanyId = company1Id
             };
 
@@ -528,6 +537,7 @@ namespace DUST.Data
                 FirstName = "Bjorn",
                 LastName = "Owlner",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/22.png"),
                 CompanyId = company1Id
             };
 
@@ -562,6 +572,7 @@ namespace DUST.Data
                 FirstName = "Marie",
                 LastName = "Saunier",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/8.png"),
                 CompanyId = company1Id
             };
 
@@ -600,6 +611,7 @@ namespace DUST.Data
                 FirstName = "Worth",
                 LastName = "Buff",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/58.png"),
                 CompanyId = company2Id
             };
 
@@ -634,6 +646,7 @@ namespace DUST.Data
                 FirstName = "Kaile",
                 LastName = "Luck",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/59.png"),
                 CompanyId = company2Id
             };
 
@@ -666,6 +679,7 @@ namespace DUST.Data
                 FirstName = "Roanna",
                 LastName = "Upstell",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/60.png"),
                 CompanyId = company2Id
             };
 
@@ -700,6 +714,7 @@ namespace DUST.Data
                 FirstName = "Melia",
                 LastName = "Bartol",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/63.png"),
                 CompanyId = company2Id
             };
 
@@ -730,6 +745,7 @@ namespace DUST.Data
                 FirstName = "Gillian",
                 LastName = "Vassay",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/64.png"),
                 CompanyId = company2Id
             };
 
@@ -760,6 +776,7 @@ namespace DUST.Data
                 FirstName = "Torin",
                 LastName = "O'Gormally",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/24.png"),
                 CompanyId = company2Id
             };
 
@@ -794,6 +811,7 @@ namespace DUST.Data
                 FirstName = "Devan",
                 LastName = "Lowson",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/30.png"),
                 CompanyId = company2Id
             };
 
@@ -833,6 +851,7 @@ namespace DUST.Data
                 FirstName = "Angel",
                 LastName = "M",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/me.png"),
                 CompanyId = company3Id
             };
 
@@ -863,9 +882,10 @@ namespace DUST.Data
             {
                 UserName = sub3_1email,
                 Email = sub3_1email,
-                FirstName = "Breena",
+                FirstName = "Josh",
                 LastName = "Wisniewski",
                 EmailConfirmed = true,
+                AvatarByteData = File.ReadAllBytes("wwwroot/img/team/62.png"),
                 CompanyId = company3Id
             };
 
