@@ -32,7 +32,7 @@
 
     <div class="content">
         <div class="mb-9">
-            <div id="projectSummary" data-list='{"valueNames":["title","developer","created","updated","project","type",priority","status","archived",owner"],"page":6,"pagination":true}'>
+            <div id="ticketSummary" data-list='{"valueNames":["title","developer","created","updated","project","type",priority","status","archived",owner"],"page":6,"pagination":true}'>
                 <div class="row mb-4 gx-6 gy-3 align-items-center">
                     <div class="col-auto">
                         <h2 class="mb-0">Tickets</h2>
@@ -85,7 +85,7 @@
                                 <th class="sort align-middle text-end" scope="col" style="width:5%;"></th>
                             </tr>
                         </thead>
-                        <tbody class="list" id="project-list-table-body">
+                        <tbody class="list" id="ticket-list-table-body">
                             @foreach (var ticket in Model)
                             {
                                 <tr class="position-static">
