@@ -116,6 +116,7 @@ namespace DUST.Services
                 List<Ticket> tickets = await _context.Projects
                                                      .Where(p => p.CompanyId == companyId)
                                                      .SelectMany(p => p.Tickets)
+                                                        .Include(t => t.Project)
                                                         .Include(t => t.DeveloperUser)
                                                         .Include(t => t.OwnerUser)
                                                         .Include(t => t.Comments)
@@ -369,6 +370,27 @@ namespace DUST.Services
                 }
 
                 return developer;               
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<DUSTUser> GetTicketOwnerAsync(int ticketId, int companyId)
+        {
+            DUSTUser owner = new();
+            try
+            {
+                Ticket ticket = (await GetAllTicketsByCompanyAsync(companyId)).FirstOrDefault(t => t.Id == ticketId);
+
+                if (ticket?.OwnerUserId != null)
+                {
+                    owner = ticket.OwnerUser;
+                }
+
+                return owner;
             }
             catch (Exception)
             {

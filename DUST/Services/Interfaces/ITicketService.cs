@@ -23,6 +23,8 @@ namespace DUST.Services.Interfaces
         public Task<List<Ticket>> GetAllTicketsByStatusAsync(int companyId, string statusName);
         public Task<List<Ticket>> GetAllTicketsByTypeAsync(int companyId, string typeName);
         public Task<DUSTUser> GetTicketDeveloperAsync(int ticketId, int companyId);
+        public Task<DUSTUser> GetTicketOwnerAsync(int ticketId, int companyId);
+
         public Task<Ticket> GetTicketAsNoTrackingAsync(int ticketId);
         public Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId);
         public Task<List<Ticket>> GetTicketsByRoleAsync(string role, string userId, int companyId);
