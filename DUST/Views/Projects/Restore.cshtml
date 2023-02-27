@@ -1,51 +1,64 @@
 ﻿@model DUST.Models.Project
+@using DUST.Services.Interfaces
+
+@inject IProjectService ProjectService
 
 @{
     ViewData["Title"] = "Restore";
 }
 
-<h1>Restore</h1>
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
 
-<h3>Are you sure you want to restore this project?</h3>
-<div>
-    <h4>Project</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProjectPriority)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProjectPriority.Name)
-        </dd class>
-    </dl>
-    
-    <form asp-action="Restore">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Restore" class="btn btn-success" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
-</div>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>@ViewData["Title"]</title>
+
+</head>
+
+<body>
+
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main" id="top">
+        <div class="container-fluid px-0">
+            <div class="container">
+                <div class="row flex-center min-vh-100 py-5">
+                    <div class="col-sm-10 col-md-8 col-lg-5 col-xxl-4">
+                        <div class="d-flex flex-center align-items-center fw-bolder fs-5 d-inline-block mb-4">
+                            <span class="fas fa-trash-can-arrow-up"></span>
+                        </div>
+                        <div class="px-xxl-7">
+                            <div class=" mb-1">
+                                <h4 class="text-1000 mb-5">Are you sure you want to restore this project?</h4>
+                                <p class="text-700"><b>Name: </b> @Model.Name</p>
+                                <p class="text-700"><b>Priority: </b> @Model.ProjectPriority.Name</p>
+                                @{
+                                    DUSTUser PM = (await ProjectService.GetProjectManagerAsync(Model.Id));
+                                    string PMname = PM?.FullName;
+                                }
+                                <p class="text-700"><b>Project Manager: </b> @PMname</p>
+                                <form class="d-flex align-items-center my-5" asp-action="Restore">
+                                    <input type="hidden" asp-for="Id" />
+                                    <a class="fs--1 fw-bold" asp-action="AllProjects">Back to All Projects</a>
+                                    <button class="btn btn-success ms-4" type="submit">Restore<span class="fas fa-trash-can-arrow-up ms-2"></span></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+
+</body>

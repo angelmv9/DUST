@@ -4,79 +4,60 @@
     ViewData["Title"] = "Restore";
 }
 
-<h1>Restore</h1>
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
 
-<h3>Are you sure you want to Restore this ticket?</h3>
-<div>
-    <h4>Ticket</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Created)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Updated)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Updated)
-        </dd>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Project)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Project.Name)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OwnerUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OwnerUser.FullName)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeveloperUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeveloperUser.FullName)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TicketType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TicketType.Name)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TicketPriority)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TicketPriority.Name)
-        </dd class>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TicketStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TicketStatus.Name)
-        </dd class>
-    </dl>
-    
-    <form asp-action="Restore">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Restore" class="btn btn-success" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
-</div>
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>@ViewData["Title"]</title>
+
+</head>
+
+<body>
+
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main" id="top">
+        <div class="container-fluid px-0">
+            <div class="container">
+                <div class="row flex-center min-vh-100 py-5">
+                    <div class="col-sm-10 col-md-8 col-lg-5 col-xxl-4">
+                        <div class="d-flex flex-center align-items-center fw-bolder fs-5 d-inline-block mb-4">
+                            <span class="fas fa-trash-can-arrow-up"></span>
+                        </div>
+                        <div class="px-xxl-7">
+                            <div class=" mb-1">
+                                <h4 class="text-1000 mb-5">Are you sure you want to restore this ticket?</h4>
+                                <p class="text-700"><b>Title: </b> @Model.Title</p>
+                                <p class="text-700"><b>Status: </b> @Model.TicketStatus.Name</p>
+                                @{
+                                    var developer = Model.DeveloperUser?.FullName ?? "NONE ASSIGNED";
+                                    var owner = Model.OwnerUser?.FullName ?? "SEEDED";
+                                }
+                                <p class="text-700"><b>Developer: </b> @developer</p>
+                                <p class="text-700"><b>Owner: </b> @owner</p>
+                                <form class="d-flex align-items-center mb-5" asp-action="Restore">
+                                    <input type="hidden" asp-for="Id" />
+                                    <a class="fs--1 fw-bold" asp-action="AllTickets">Back to All Tickets</a>
+                                    <button class="btn btn-success ms-4" type="submit">Restore<span class="fas fa-trash-can-arrow-up ms-2"></span></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+
+</body>
+
