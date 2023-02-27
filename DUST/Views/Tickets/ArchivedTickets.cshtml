@@ -12,89 +12,251 @@
     DUSTUser currentUser = await UserManager.GetUserAsync(User);
 }
 
-<h1>Archived Tickets</h1>
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Updated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Project)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OwnerUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeveloperUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketPriority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketStatus)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Created)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Updated)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Project.Name)
-                </td>
-                <td>
-                    @{
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 
-                        var owner = item.OwnerUserId == null ? "SEEDED" : item.OwnerUser.FullName;
-                    }
-                    @owner
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketType.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-ticketId="@item.Id">Details</a>
 
-                    @{
-                        bool isCurrentUserPM = (await ProjectService.GetProjectManagerAsync(item.ProjectId))?.Id == currentUser.Id;
-                    }
+<body>
 
-                    @if ((User.IsInRole(nameof(RolesEnum.Admin)) || isCurrentUserPM) && !item.ArchivedByProject)
-                    {   <span>|</span>                    
-                        <a asp-action="Restore" asp-route-id="@item.Id"> Restore</a>                      
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+
+    <div class="content">
+        <div class="mb-9">
+            <div id="ticketSummary" data-list='{"valueNames":["title","developer","created","updated","project","type",priority","status","archived",owner"],"page":6,"pagination":true}'>
+                <div class="row mb-4 gx-6 gy-3 align-items-center">
+                    <div class="col-auto">
+                        <h2 class="mb-0">Archived Tickets</h2>
+                    </div>
+                </div>
+                <div class="row g-3 justify-content-end align-items-end mb-4">
+                    <div class="col-12 col-sm-auto">
+                        <div class="d-flex align-items-center">
+                            <div class="search-box">
+                                <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
+                                    <input class="form-control search-input search" type="search" placeholder="Search tickets" aria-label="Search" />
+                                    <span class="fas fa-search search-box-icon"></span>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive scrollbar">
+                    <table class="table fs--1 mb-0 border-top border-200">
+                        <thead>
+                            <tr>
+                                <th class="sort white-space-nowrap align-middle ps-0" scope="col" data-sort="title" style="width:25%;">
+                                    @Html.DisplayNameFor(model => model.Title).ToUpper()
+                                </th>
+                                <th class="sort align-middle" scope="col" data-sort="type" style="width:5%;">
+                                    TYPE
+                                </th>
+                                <th class="sort align-middle ps-3" scope="col" data-sort="developer" style="width:10%;">
+                                    DEVELOPER
+                                </th>
+                                <th class="sort align-middle ps-3" scope="col" data-sort="owner" style="width:10%;">
+                                    OWNER
+                                </th>
+                                <th class="sort align-middle ps-3" scope="col" data-sort="created" style="width:5%;">
+                                    @Html.DisplayNameFor(model => model.Created).ToUpper()
+                                </th>
+                                <th class="sort align-middle ps-3" scope="col" data-sort="updated" style="width:5%;">
+                                    @Html.DisplayNameFor(model => model.Updated).ToUpper()
+                                </th>
+                                <th class="sort align-middle ps-3" scope="col" data-sort="project" style="width:10%;">
+                                    PROJECT
+                                </th>
+                                <th class="sort align-middle text-end" scope="col" data-sort="status" style="width:5%;">
+                                    STATUS
+                                </th>
+                                <th class="sort align-middle text-end" scope="col" data-sort="priority" style="width:5%;">
+                                    PRIORITY
+                                </th>
+                                <th class="sort align-middle text-end" scope="col" style="width:5%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="list" id="ticket-list-table-body">
+                            @foreach (var ticket in Model)
+                            {
+                                <tr class="position-static">
+                                    @* Title *@
+                                    <td class="align-middle white-space-nowrap time title ps-0 py-4">
+                                        <a class="text-decoration-none fw-bold fs-0" asp-action="Details" asp-route-ticketId="@ticket.Id">@Html.DisplayFor(modelItem => ticket.Title)</a>
+                                    </td>
+                                    @* Type *@
+                                    <td class="align-middle white-space-nowrap type">
+                                        @if (ticket.TicketType?.Name == nameof(TicketTypeEnum.New_Feature))
+                                        {
+                                            <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-success">NEW FEATURE</span>
+                                        }
+                                        else if (ticket.TicketType?.Name == nameof(TicketTypeEnum.Task))
+                                        {
+                                            <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-secondary">TASK</span>
+                                        }
+                                        else if (ticket.TicketType?.Name == nameof(TicketTypeEnum.Bug))
+                                        {
+                                            <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-danger">BUG<span class="ms-1 fas fa-bug" style="height:12.8px;width:12.8px;"></span></span>
+                                        }
+                                        else if (ticket.TicketType?.Name == nameof(TicketTypeEnum.Change_Request))
+                                        {
+                                            <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-secondary">CHANGE REQUEST</span>
+                                        }
+                                        else if (ticket.TicketType?.Name == nameof(TicketTypeEnum.Improvement))
+                                        {
+                                            <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-warning">IMPROVEMENT</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-phoenix fs--2 rounded-pill badge-phoenix-info">TEST</span>
+                                        }
+                                    </td>
+                                    @* Developer *@
+                                    <td class="align-middle white-space-nowrap developer ps-3 py-4">
+                                        <a class="d-flex align-items-center" href="#!">
+                                            <div class="avatar avatar-s">
+                                                <div class="avatar avatar-s  rounded-circle">
+                                                    @if (ticket.DeveloperUser != null)
+                                                    {
+                                                        @if (ticket.DeveloperUser.AvatarByteData != null)
+                                                        {
+                                                            <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(ticket.DeveloperUser.AvatarByteData))" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img class="rounded-circle" src="~/img/defaultUserImage.png" />
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                            <p class="mb-0 ms-1 fs--1 text-900">@ticket.DeveloperUser?.FullName</p>
+                                        </a>
+                                    </td>
+                                    @* Owner *@
+                                    <td class="align-middle white-space-nowrap owner ps-3 py-4">
+                                        <a class="d-flex align-items-center" href="#!">
+                                            <div class="avatar avatar-s">
+                                                <div class="avatar avatar-s  rounded-circle">
+                                                    @if (ticket.OwnerUser != null)
+                                                    {
+                                                        @if (ticket.OwnerUser.AvatarByteData != null)
+                                                        {
+                                                            <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(ticket.OwnerUser.AvatarByteData))" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img class="rounded-circle" src="~/img/defaultUserImage.png" />
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <img class="rounded-circle" src="~/img/defaultUserImage.png" />
+                                                    }
+                                                </div>
+                                            </div>
+                                            @{
+                                                var owner = ticket.OwnerUserId == null ? "SEEDED" : ticket.OwnerUser.FullName;
+                                            }
+                                            <p class="mb-0 ms-1 fs--1 text-900">@owner</p>
+                                        </a>
+                                    </td>
+                                    @* Created *@
+                                    <td class="align-middle white-space-nowrap created ps-3 py-4">
+                                        <p class="mb-0 fs--1 text-900">@Html.DisplayFor(modelItem => ticket.Created)</p>
+                                    </td>
+                                    @* Updated *@
+                                    <td class="align-middle white-space-nowrap updated ps-3 py-4">
+                                        <p class="mb-0 fs--1 text-900">@Html.DisplayFor(modelItem => ticket.Updated)</p>
+                                    </td>
+                                    @* Project *@
+                                    <td class="align-middle white-space-nowrap project ps-3 py-4">
+                                        <a class="mb-0 fw-bold fs--1 text-900" asp-controller="Projects" asp-action="Details" asp-route-id="@ticket.Project.Id">@ticket.Project.Name</a>
+                                    </td>
+                                    @* Status *@
+                                    <td class="align-middle white-space-nowrap text-end status">
+                                        @if (ticket.TicketStatus?.Name == nameof(TicketStatusEnum.Fixed))
+                                        {
+                                            <span class="badge bg-warning fs--2">FIXED<span class="ms-1" data-feather="check" style="height:12.8px;width:12.8px;"></span></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning fs--2">@ticket.TicketStatus.Name.ToUpper()</span>
+                                        }
+
+                                    </td>
+                                    @* Priority *@
+                                    <td class="align-middle white-space-nowrap text-end priority">
+                                        @if (ticket.TicketPriority?.Name == nameof(TicketPriorityEnum.Urgent))
+                                        {
+                                            <span class="badge badge-phoenix fs--2 badge-phoenix-danger">URGENT<span class="ms-1" data-feather="alert-octagon" style="height:12.8px;width:12.8px;"></span></span>
+                                        }
+                                        else if (ticket.TicketPriority?.Name == nameof(TicketPriorityEnum.High))
+                                        {
+                                            <span class="badge badge-phoenix fs--2 badge-phoenix-warning">HIGH</span>
+                                        }
+                                        else if (ticket.TicketPriority?.Name == nameof(TicketPriorityEnum.Medium))
+                                        {
+                                            <span class="badge badge-phoenix fs--2 badge-phoenix-primary">MEDIUM</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-phoenix fs--2 badge-phoenix-secondary">LOW</span>
+                                        }
+                                    </td>
+                                    @* Menu *@
+                                    <td class="align-middle text-end white-space-nowrap pe-0 action">
+                                        <div class="font-sans-serif btn-reveal-trigger position-static">
+                                            <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs--2" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--2"></span></button>
+                                            @{
+                                                bool isUserProjectPM = (await ProjectService.GetProjectManagerAsync(ticket.Project.Id))?.Id == currentUser.Id;
+                                            }
+                                            <div class="dropdown-menu dropdown-menu-end py-2">
+                                                <a class="dropdown-item" asp-action="Details" asp-route-ticketId="@ticket.Id">View</a>
+                                                @if ((User.IsInRole(nameof(RolesEnum.Admin)) ||
+                                                    isUserProjectPM ||
+                                                    ticket.DeveloperUserId == currentUser.Id ||
+                                                    ticket.OwnerUserId == currentUser.Id) &&
+                                                    !ticket.ArchivedByProject && !ticket.Archived)
+                                                {
+                                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@ticket.Id">Edit</a>
+                                                }
+                                                @if ((User.IsInRole(nameof(RolesEnum.Admin)) || isUserProjectPM) && !ticket.ArchivedByProject)
+                                                {
+                                                    <div class="dropdown-divider">
+                                                    </div>
+                                                    <a class="dropdown-item text-success" asp-action="Restore" asp-route-id="@ticket.Id">Restore</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex flex-wrap align-items-center justify-content-between py-3 pe-0 fs--1 border-bottom border-200">
+                    <div class="d-flex">
+                        <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900" data-list-info="data-list-info"></p><a class="fw-semi-bold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">View Less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
+                    </div>
+                    <div class="d-flex">
+                        <button class="page-link" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
+                        <ul class="mb-0 pagination"></ul>
+                        <button class="page-link pe-0" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+</body>
+
+</html>
