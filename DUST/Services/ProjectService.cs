@@ -438,6 +438,6 @@ namespace DUST.Services
         {
             _context.Update(project);
             await _context.SaveChangesAsync();
-        }      
+        }
     }
 }
