@@ -57,7 +57,7 @@ namespace DUST.Services
                         OldValue = oldTicket.Title,
                         NewValue = newTicket.Title,
                         Created = DateTimeOffset.Now,
-                        Description = $"New ticket title: {newTicket.Title}"
+                        Description = $"New ticket title"
                     };
                     await _context.TicketHistories.AddAsync(history);
                 }
@@ -71,7 +71,7 @@ namespace DUST.Services
                         OldValue = oldTicket.Description,
                         NewValue = newTicket.Description,
                         Created = DateTimeOffset.Now,
-                        Description = $"New ticket description: {newTicket.Description}"
+                        Description = $"New ticket description"
                     };
                     await _context.TicketHistories.AddAsync(history);
                 }
@@ -86,7 +86,7 @@ namespace DUST.Services
                         OldValue = oldTicket.TicketPriority.Name,
                         NewValue = newTicket.TicketPriority.Name,
                         Created = DateTimeOffset.Now,
-                        Description = $"New ticket priority: {newTicket.TicketPriority.Name}"
+                        Description = $"New ticket priority"
                     };
                     await _context.TicketHistories.AddAsync(history);
                 }
@@ -101,7 +101,7 @@ namespace DUST.Services
                         OldValue = oldTicket.TicketStatus.Name,
                         NewValue = newTicket.TicketStatus.Name,
                         Created = DateTimeOffset.Now,
-                        Description = $"New ticket status: {newTicket.TicketStatus.Name}"
+                        Description = $"New ticket status"
                     };
                     await _context.TicketHistories.AddAsync(history);
                 }
@@ -116,7 +116,7 @@ namespace DUST.Services
                         OldValue = oldTicket.TicketType.Name,
                         NewValue = newTicket.TicketType.Name,
                         Created = DateTimeOffset.Now,
-                        Description = $"New ticket type: {newTicket.TicketType.Name}"
+                        Description = $"New ticket type"
                     };
                     await _context.TicketHistories.AddAsync(history);
                 }
@@ -131,7 +131,7 @@ namespace DUST.Services
                         OldValue = oldTicket.DeveloperUser?.FullName ?? "Not Assigned",
                         NewValue = newTicket.DeveloperUser?.FullName,
                         Created = DateTimeOffset.Now,
-                        Description = $"New ticket developer: {newTicket.DeveloperUser.FullName}"
+                        Description = $"New ticket developer(s)"
                     };
                     await _context.TicketHistories.AddAsync(history);
                 }
@@ -143,7 +143,6 @@ namespace DUST.Services
                 {
                     throw;
                 }
-
             }
         }
 
@@ -153,7 +152,7 @@ namespace DUST.Services
             {
                 Ticket ticket = await _context.Tickets.FindAsync(ticketId);
                 string description = model.ToLower().Replace("ticket", "");
-                description = $"New {description} added to ticket: {ticket.Title}";
+                description = $"New ticket {description}";
 
                 TicketHistory history = new()
                 {
