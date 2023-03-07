@@ -370,3 +370,4 @@ DUST/Data/Migrations/20230121045420_Initial_FRESH_DATA_001.Designer.cs
 DUST/Data/Migrations/20230223185017_InitialMigration_001.cs
 DUST/Data/Migrations/20230223185017_InitialMigration_001.Designer.cs
 DUST/Data/Migrations/20230121045420_Initial_FRESH_DATA_001.cs
+*.DS_Store

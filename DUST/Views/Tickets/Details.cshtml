@@ -14,220 +14,378 @@
 
     DUSTUser currentUser = await UserManager.GetUserAsync(User);
     DUSTUser projectManager = await ProjectService.GetProjectManagerAsync(Model.ProjectId);
-}
-<h1>Ticket Details</h1>
-@if (!string.IsNullOrEmpty(Model.DeveloperUserId))
-{
-    <a href="javascript:void(0);">
-        @if (Model.DeveloperUser?.AvatarByteData != null)
-        {
-            <img class="media-object" src="data:image/*;base64,@(Convert.ToBase64String(Model.DeveloperUser.AvatarByteData))" />
-        }
-        else
-        {
-            <img class="media-object" src="~/img/defaultUserImage.png" style="width:30px; height: 30px" />
-        }
-    </a>
+    bool isUserProjectPM = projectManager?.Id == currentUser.Id;
 
-    <span class="text-muted" style="font-size:x-small;">
-        Developer: <strong> @Model.DeveloperUser.FullName</strong>
-    </span>
+    // Progress bar and status calculations
+    var start = Model.Project.StartDate.DateTime;
+    var end = Model.Project.EndDate.DateTime;
+    var today = DateTime.Now;
+    var percent = today >= end ? 100 : today < start ? 0 : Math.Round((today.Subtract(start)) / (end.Subtract(start)) * 100);
 }
 
-<div>
-    <div classxfont-weighteighteightgetainer-fluid">
-        <div class="row gy-2">
-            <!--#region Ticket Details -->
-            <div class="col-md-12 col">
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
 
-                <div class="row col-cols-2 mt-5 bg-secondary">
-                    <div class="card col m-1 p-2">
-                        <div class="card-body">
-                            <h5>@Model.Title</h5>
-                            <p>@Model.Description</p>
-                            <div class="progress-container progress-info m-b-25">
-                                <span class="progress-badge" style="font-size:small">Project: @Model.Project.Name</span>
-                                <div class="progress">
-                                    @{
-                                        var start = Model.Project.StartDate.DateTime;
-                                        var end = Model.Project.EndDate.DateTime;
-                                        var today = DateTime.Now;
-                                        var percent = today >= end ? 100 :
-                                                      today < start ? 0 :
-                                                      Math.Round((today.Subtract(start)) / (end.Subtract(start)) * 100);
-                                    }
-                                    @*Project's progress, not ticket's*@
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: @percent%;">
-                                        <span class="progress-value">@percent%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card col m-1 p-2">
-                        <div class="card-body">
-                            <ul class="list-unstyled">
-                                <li><strong>Date Entered:</strong> <span class="">  @Model.Created.ToString("dd MMM, yyyy")</</span></li>
-                                <li><strong>Project Deadline:</strong> <span class="">  @Model.Project.EndDate.ToString("dd MMM, yyyy")</</span></li>
-                                <li><strong>Type:</strong> <span class="">  @Model.TicketType.Name</span></li>
-                                <li><strong>Priority:</strong> <span class="">  @Model.TicketPriority.Name</span></li>
-                                <li><strong>Status:</strong> <span class="">  @Model.TicketStatus.Name</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- #endregion -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 
-            <!-- #region Ticket Comments and Attachments -->
-            <div class="col-md-8 col col-cols-2 mt-5 ">
 
-                <!-- #region Comments -->
-                <div class="col">
-                    <div class="bg-secondary">
-                        <div class="card m-1 p-2">
-                            <div class="card-header">
-                                <h2>Comments</h2>
-                            </div>
-                            <div class="card-body" style="overflow-y:auto;height:600px;">
+<body>
 
-                                <form asp-controller="Tickets" asp-action="AddTicketComment" method="post" class="form-horizontal form-bordered">
-                                    <input type="hidden" asp-for="Id" name="TicketId"/>
-                                    <div class="form-group">
-                                        <textarea required asp-for="@(new TicketComment().Comment)" rows="6" class="form-control" placeholder="Add a comment *"></textarea>
-                                        <button class="btn btn-sm btn-primary mt-2">Submit</button>
-                                    </div>
-                                </form>
-                                <hr />
-                                <h6>Comments</h6>
-                                <ul class="right_chat list-unstyled mb-0">
-                                    @foreach(TicketComment comment in Model.Comments)
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <div class="content px-0 pt-9">
+        @* Left Panel *@
+        <div class="row g-0">
+            <div class="col-12 col-xxl-8 px-0 bg-soft">
+                <div class="px-4 px-lg-6 pt-6 pb-9">
+                    @* Ticket Name, dropdown menu & type badge*@
+                    <div class="mb-5">
+                        <div class="d-flex justify-content-between">
+                            <h2 class="text-black fw-bolder mb-2">@Model.Title</h2>
+                            @* dropdown menu*@
+                            <div class="font-sans-serif btn-reveal-trigger">
+                                <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                <div class="dropdown-menu dropdown-menu-end py-2">
+                                    @if ((User.IsInRole(nameof(RolesEnum.Admin)) ||
+                                        isUserProjectPM ||
+                                        Model.DeveloperUserId == currentUser.Id ||
+                                        Model.OwnerUserId == currentUser.Id) &&
+                                        !Model.ArchivedByProject && !Model.Archived)
                                     {
-                                        <li class="online mb-4">
-                                            <div class="media">
-                                                <a href="javascript:void(0);">
-                                                    @if (currentUser?.AvatarByteData != null)
-                                                    {
-                                                        <img class="media-object" src="data:image/*;base64,@(Convert.ToBase64String(currentUser.AvatarByteData))" />
-                                                    } 
-                                                    else
-                                                    {
-                                                        <img class="media-object" src="~/img/defaultUserImage.png" style="width:30px; height: 30px" />
-                                                    }
-                                                </a>
-                                                <div class="media-body">
-                                                    <span class="text-muted" style="font-size:x-small;">
-                                                        @comment.User.FullName
-                                                        <small class="float-right">@@ @comment.Created.ToString("MM.dd.yyyy h:ss tt")</small>
-                                                    </span>
-                                                </div>
-                                                <span class="message text-primary">@Html.Raw(comment.Comment)</span>
-                                            </div>
-                                        </li>
+                                        <a class="dropdown-item" asp-controller="Tickets" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
                                     }
-                                </ul>
+                                    @if (User.IsInRole(nameof(RolesEnum.Admin)) || isUserProjectPM)
+                                    {
+                                        <div class="dropdown-divider">
+                                        </div>
+                                        @if (!Model.Archived && !Model.ArchivedByProject)
+                                        {
+                                            <a class="dropdown-item text-danger" asp-controller="Tickets" asp-action="Archive" asp-route-id="@Model.Id">Archive</a>
+                                        }
+                                        @if (Model.Archived && !Model.ArchivedByProject)
+                                        {
+                                            <a class="dropdown-item text-success" asp-controller="Tickets" asp-action="Restore" asp-route-id="@Model.Id">Restore</a>
+                                        }
+                                    }
+                                </div>
                             </div>
-                            <div class="card-footer">
+                        </div>
+                        @* Ticket type *@
+                        @if (Model.TicketType?.Name == nameof(TicketTypeEnum.New_Feature))
+                        {
+                            <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-success">NEW FEATURE</span>
+                        }
+                        else if (Model.TicketType?.Name == nameof(TicketTypeEnum.Task))
+                        {
+                            <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-secondary">TASK</span>
+                        }
+                        else if (Model.TicketType?.Name == nameof(TicketTypeEnum.Bug))
+                        {
+                            <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-danger">BUG<span class="ms-1 fas fa-bug" style="height:12.8px;width:12.8px;"></span></span>
+                        }
+                        else if (Model.TicketType?.Name == nameof(TicketTypeEnum.Change_Request))
+                        {
+                            <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-secondary">CHANGE REQUEST</span>
+                        }
+                        else if (Model.TicketType?.Name == nameof(TicketTypeEnum.Improvement))
+                        {
+                            <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-warning">IMPROVEMENT</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-phoenix fs--2 rounded-pill badge-phoenix-info">TEST</span>
+                        }
+                    </div>
+                    @* Developer Info & Ticket created date*@
+                    <div class="row gx-0 gx-sm-5 gy-8 mb-6">
+                        <div class="col-12 col-xl-4 pe-xl-0">
+                            <div class="mb-4 mb-xl-7">
+                                <div class="row gx-0 gx-sm-7">
+                                    @* Developer Info*@
+                                    <div class="col-12 col-sm-auto">
+                                        <table class="lh-sm mb-4 mb-sm-0 mb-xl-4">
+                                            <tbody>
+                                                @* Developer Name, assign dev button*@
+                                                <tr>
+                                                    <td class="align-top py-1">
+                                                        <div class="d-flex">
+                                                            <span class="fa-solid fa-user me-2 text-700 fs--1"></span>
+                                                            <h5 class="text-900 mb-0 text-nowrap">Developer :</h5>
+                                                        </div>
+                                                    </td>
+                                                    @{
+                                                        var devFullName = @Model.DeveloperUser?.FullName ?? "UNASSIGNED";
+                                                    }
+                                                    <div class="d-flex align-items-center">
+                                                        <td class="ps-1 py-1">
+                                                            <span class="fw-semi-bold d-block lh-sm" href="#!">@devFullName</span>
+                                                                @if ( (User.IsInRole(nameof(RolesEnum.Admin)) || isUserProjectPM) && @Model.DeveloperUser == null)
+                                                                {
+                                                                    <a class="fw-bold fs--1" asp-controller="Tickets" asp-action="AssignDeveloper" asp-route-ticketId="@Model.Id">Assign Dev<span class="fa-solid fa-chevron-right mx-1 fs--2"></span></a>
+                                                                }
+                                                        </td>
+                                                    </div>
+                                                </tr>
+                                                @* PM Email*@
+                                                <tr>
+                                                    <td class="align-top py-1">
+                                                        <div class="d-flex">
+                                                            <span class="fa-regular fa-envelope me-2 text-700 fs--1"></span>
+                                                            <h5 class="text-900 mb-0 text-nowrap">Email : </h5>
+                                                        </div>
+                                                    </td>
+                                                    <td class="fw-semi-bold ps-1 py-1">@Model.DeveloperUser?.Email</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    @* Ticket Entered Date, Updated *@
+                                    <div class="col-12 col-sm-auto">
+                                        <table class="lh-sm mb-4 mb-sm-0 mb-xl-4">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="align-top py-1 text-900 text-nowrap fw-bold">Date Entered : </td>
+                                                    <td class="text-600 fw-semi-bold ps-3">@Model.Created.ToString("dd MMM, yyyy")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="align-top py-1 text-900 text-nowrap fw-bold">Updated : </td>
+                                                    <td class="text-600 fw-semi-bold ps-3">@Model.Updated?.ToString("dd MMM, yyyy")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="align-top py-1 text-900 text-nowrap fw-bold">Project Deadline :</td>
+                                                    <td class="text-600 fw-semi-bold ps-3">@Model.Project.EndDate.ToString("dd MMM, yyyy")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="align-top py-1 text-900 text-nowrap fw-bold">Project Progress Progress :</td>
+                                                        @if (percent > 99.99)
+                                                        {
+                                                            <td class="text-success fw-semi-bold ps-3">@percent%</td>
+                                                        }
+                                                        else
+                                                        {
+                                                    <td class="text-warning fw-semi-bold ps-3">@percent%</td>
+                                                        }
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    @* Ticket Priority, Status*@
+                                    <div class="col-12 col-sm-auto">
+                                        <table class="lh-sm mb-4 mb-sm-0 mb-xl-4">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="align-top py-1 text-900 text-nowrap fw-bold">Ticket Priority :</td>
+                                                    <td class="text-600 fw-semi-bold ps-3">
+                                                        @if (Model.TicketPriority?.Name == nameof(TicketPriorityEnum.Urgent))
+                                                        {
+                                                            <span class="badge badge-phoenix fs--2 badge-phoenix-danger">URGENT<span class="ms-1" data-feather="alert-octagon" style="height:12.8px;width:12.8px;"></span></span>
+                                                        }
+                                                        else if (Model.TicketPriority?.Name == nameof(TicketPriorityEnum.High))
+                                                        {
+                                                            <span class="badge badge-phoenix fs--2 badge-phoenix-warning">HIGH</span>
+                                                        }
+                                                        else if (Model.TicketPriority?.Name == nameof(TicketPriorityEnum.Medium))
+                                                        {
+                                                            <span class="badge badge-phoenix fs--2 badge-phoenix-primary">MEDIUM</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge badge-phoenix fs--2 badge-phoenix-secondary">LOW</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="align-top py-1 text-900 text-nowrap fw-bold">Ticket Status :</td>
+                                                    <td class="text-600 fw-semi-bold ps-3">
+                                                        @if (Model.TicketStatus?.Name == nameof(TicketStatusEnum.Fixed))
+                                                        {
+                                                            <span class="badge bg-success fs--2">FIXED<span class="ms-1" data-feather="check" style="height:12.8px;width:12.8px;"></span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-warning fs--2">@Model.TicketStatus.Name.ToUpper()</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                        @* Ticket Description *@
+                    <div class="col-12 col-xl-8">
+                        <div class="row mb-3 g-3">
+                            <div class="col-auto mb-4">
+                                <h4 class="text-black">
+                                    Ticket Description
+                                </h4>
+                                <p class="text-700 mb-0">@Model.Description</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- #endregion -->
 
-                <!-- #region Attachments -->
-                <div class="col">
-                    <div class="bg-secondary">
-                        <div class="card m-1 p-2">
-                            <div class="card-header">
-                                <h2>Attachments</h2>
-                            </div>
-                            <div class="card-body" style="overflow-y:auto;height:300px;">
+                @* Ticket Description*@
+                <h3 class="text-1100 mb-4">Ticket Description</h3>
+                <p class="text-800 mb-9">@Model.Description</p>
 
-                                <div class="row clearfix">
-                                    <div>
-                                        <form asp-controller="Tickets" asp-action="AddTicketAttachment" enctype="multipart/form-data" method="post">
-                                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                            <input type="hidden" asp-for="@Model.Id" name="TicketId">
-                                            <div class="media-body ml-3">
-                                                <label>
-                                                    Description
-                                                    <input asp-for="@Model.Attachments.FirstOrDefault().FileDescription" type="text" class="form-control" />
-                                                </label><br />
-                                                <label class="btn btn-outline-primary btn-sm">
-                                                    <input asp-for="@Model.Attachments.FirstOrDefault().FormFile" type="file" class="form-control-file" />
-                                                </label>
-                                                <button type="submit" class="btn btn-outline-secondary btn-sm md-btn-flat">Submit</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                @* Comments *@
+                <h3 class="text-1100 mb-4">Comments</h3>
+                <form asp-controller="Tickets" asp-action="AddTicketComment" method="post">
+                    <input type="hidden" asp-for="Id" name="TicketId" />
+                    <textarea required asp-for="@(new TicketComment().Comment)" class="form-control" placeholder="Place comment here ..."></textarea>
+                    <button type="submit" class="btn btn-primary px-5 px-sm-15 mt-2">Add Comment</button>
+                </form>
+               
 
-                                <hr />
-                                <h6>Attachments</h6>
-                                <div class="container">
-                                    <div class="row">
-                                        @foreach (TicketAttachment item in Model.Attachments)
-                                        {
-                                            <div class="col col-sm-2">
-                                                <a asp-controller="Tickets" asp-action="ShowFile" asp-route-Id="@item.Id">
-                                                    <img src="@FilesService.GetFileIcon(item.FileName)" style="height:50px;width:50px;" 
-                                                         data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="@item.FileName" />
-                                                </a>
-                                                <div style="font-size:x-small">
-                                                    <div class="file-name">
-                                                        <strong>@item.FileDescription</strong>
-                                                    </div>
-                                                    <small>Size: @FilesService.FormatFileSize(item.ByteArrayData.Length) </small>
+                
+            </div>
+        </div>
+        @* Right Panel: Project Activity*@
+        <div class="col-12 col-xxl-4 px-0 border-start-xxl border-300 border-top-sm">
+            <div class="h-100">
+                <div class="bg-light dark__bg-1100 h-100">
+                    <div class="p-4 p-lg-6">
+                        <h3 class="text-1000 mb-4 fw-bold">Recent activity</h3>
+                        <div class="timeline-vertical timeline-with-details">
+                                @{
+                                    var historyCount = Model.History.Count;
+                                    var historyItem = 0;
+                                }
+                                @foreach (TicketHistory history in Model.History)
+                                {
+
+                                    historyItem += 1;
+
+                                    <div class="timeline-item position-relative">
+                                        <div class="row g-md-3">
+                                            <div class="col-12 col-md-auto d-flex">
+                                                <div class="timeline-item-date order-1 order-md-0 me-md-4">
+                                                    <p class="fs--2 fw-semi-bold text-600 text-end">@history.Created.ToString("dd MMM yyyy")<br class="d-none d-md-block" /> @history.Created.ToString("h:mm tt")</p>
+                                                </div>
+                                                <div class="timeline-item-bar position-md-relative me-3 me-md-0 border-400">
+                                                        @{
+                                                            var faIcon = history.Property.Equals(String.Empty) ? "fa-square-plus" :
+                                                            history.Property.Equals("Title") ? "fa-file-lines" :
+                                                            history.Property.Equals("Description") ? "fa-file-lines" :
+                                                            history.Property.Equals("TicketPriority") ? "fa-star" :
+                                                            history.Property.Equals("TicketStatus") ? "fa-list-check" :
+                                                            (history.Property.Equals("TicketType") && history.NewValue.Equals(nameof(TicketTypeEnum.Bug))) ? "fa-bugs" :
+                                                            (history.Property.Equals("TicketType") && history.NewValue.Equals(nameof(TicketTypeEnum.Improvement))) ? "fa-sparkles" :
+                                                            history.Property.Equals("TicketType") ? "fa-filter" :
+                                                            history.Property.Equals("DeveloperUser") ? "fa-user" :
+                                                            history.Property.Equals("TicketComment") ? "fa-comments" :
+                                                            history.Property.Equals("TicketAttachment") ? "fa-file-circle-plus" : "fa-circle-sort";
+
+                                                        }
+                                                    <div class="icon-item icon-item-sm rounded-7 shadow-none bg-primary-100"><span class="fa-solid @faIcon text-primary-600 fs--2 dark__text-primary-300"></span></div>
+                                                        @if (historyItem != historyCount)
+                                                        {
+                                                        <span class="timeline-bar border-end border-dashed border-400"></span>
+                                                        }
                                                 </div>
                                             </div>
-                                        }
+                                            <div class="col">
+                                                <div class="timeline-item-content ps-6 ps-md-3">
+                                                    <h5 class="fs--1 lh-sm">@history.Description</h5>
+                                                    <p class="fs--1">by <span class="fw-semi-bold text-primary">@history.User.FullName</span></p>
+                                                        @{
+                                                            var ticketTitle = (await TicketService.GetTicketByIdAsync(history.TicketId)).Title;
+                                                        }
+                                                    <p class="fs--1 text-800 lh-sm"><b>Ticket: </b>@ticketTitle</p>
+                                                        @if (!history.Property.Equals("TicketAttachment") || !history.Property.Equals("TicketComment"))
+                                                        {
+                                                        <p class="fs--1 text-800 lh-sm"><b>Old: </b>@history.OldValue</p>
+                                                        <p class="fs--1 text-800 lh-sm mb-5"><b>New: </b>@history.NewValue</p>
+                                                        }
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>                                
-                        </div>                     
-                    </div>
-                </div>
-                <!-- #endregion -->
-
-            </div>
-            <!-- #endregion -->
-            <!--#region Ticket History-->
-            <div class="col-md-4 col mt-5 ">
-                <div class="bg-dark">
-                    <div class="card m-1 p-2">
-                        <div class="card-header">
-                            <h2>History</h2>
-                            <hr />
-                        </div>
-                        <div class="card-body" style="overflow-y:auto;height:1000px;background-color:antiquewhite">
-                            @foreach (TicketHistory history in Model.History)
-                            {
-                                <div class="">
-                                    <span class="date" style="font-weight:bold">@history.Created.ToString("dd MMM yyyy")</span>
-                                    <h6>@history.Description</h6>
-                                    <span>By: <a href="" title="@history.User.FullName">@history.User.FullName</a></span>
-                                    <div class="">
-                                        @if (history.Property.Equals("TicketComment") || history.Property.Equals("TicketAttachment"))
-                                        {
-                                            <p>A <b>@history.Property</b> was added. </p>
-
-                                        } else if (! history.Description.Contains("New ticket created"))
-                                        {
-                                            <p>The ticket <b>@history.Property</b> was edited</p>
-                                            <p class="text-secondary">@($"Previous {history.Property}: ") <span class="text-muted">@history.OldValue</span></p>
-                                            <p>@($"Current {history.Property}: {history.NewValue}")</p>
-                                        }
-
-                                    </div>
-                                </div>
-                                <hr />
-                            }
-
+                                }
                         </div>
                     </div>
+                    @* Attachments *@
+                    <div class="px-4 px-lg-6">
+                        <h4 class="mb-3">Files</h4>
+                    </div>
+                    <div class="border-top border-300 px-4 px-lg-6 py-4">
+                        <div class="me-n3">
+                            <div class="d-flex flex-between-center">
+                                <div class="d-flex mb-1">
+                                    <span class="fa-solid fa-image me-2 text-700 fs--1"></span>
+                                    <p class="text-1000 mb-0 lh-1">Silly_sight_1.png</p>
+                                </div>
+                                <div class="font-sans-serif btn-reveal-trigger">
+                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a><a class="dropdown-item" href="#!">Report abuse</a></div>
+                                </div>
+                            </div>
+                            <div class="d-flex fs--1 text-700 mb-2 flex-wrap"><span>768 kb</span><span class="text-400 mx-1">| </span><a href="#!">Shantinan Mekalan </a><span class="text-400 mx-1">| </span><span class="text-nowrap">21st Dec, 12:56 PM</span></div><img class="rounded-2" src="../../assets/img/generic/40.png" alt="" style="max-width:270px" />
+                        </div>
+                    </div>
+                    <div class="border-top border-300 px-4 px-lg-6 py-4">
+                        <div class="me-n3">
+                            <div class="d-flex flex-between-center">
+                                <div>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span class="fa-solid fa-image me-2 fs--1 text-700"></span>
+                                        <p class="text-1000 mb-0 lh-1">All_images.zip</p>
+                                    </div>
+                                    <div class="d-flex fs--1 text-700 mb-0 flex-wrap"><span>12.8 mb</span><span class="text-400 mx-1">| </span><a href="#!">Yves Tanguy </a><span class="text-400 mx-1">| </span><span class="text-nowrap">19th Dec, 08:56 PM</span></div>
+                                </div>
+                                <div class="font-sans-serif btn-reveal-trigger">
+                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a><a class="dropdown-item" href="#!">Report abuse</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-top border-bottom border-300 px-4 px-lg-6 py-4">
+                        <div class="me-n3">
+                            <div class="d-flex flex-between-center">
+                                <div>
+                                    <div class="d-flex align-items-center mb-1 flex-wrap">
+                                        <span class="fa-solid fa-file-lines me-2 fs--1 text-700"></span>
+                                        <p class="text-1000 mb-0 lh-1">Project.txt</p>
+                                    </div>
+                                    <div class="d-flex fs--1 text-700 mb-0 flex-wrap"><span>123 kb</span><span class="text-400 mx-1">| </span><a href="#!">Shantinan Mekalan </a><span class="text-400 mx-1">| </span><span class="text-nowrap">12th Dec, 12:56 PM</span></div>
+                                </div>
+                                <div class="font-sans-serif btn-reveal-trigger">
+                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
+                                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a><a class="dropdown-item" href="#!">Report abuse</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-5 px-md-6 mt-3 mb-9"><a class="fw-bold fs--1 text-decoration-none" href="#!"><span class="fas fa-plus me-1"></span>Add file(s)</a></div>
+
                 </div>
             </div>
-            <!--#endregion-->
         </div>
+        </div>            
     </div>
-</div>
+
+    @section Scripts {
+        @*<script src="https://cdn.tiny.cloud/1/0dfpljpe67ax1ltwqxs9twxvl90kv6zca1orgw2r1soif7hs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+        <script>
+             tinymce.init({
+                selector: 'textarea',
+                plugins: 'anchor autolink autosave charmap code codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+                height: '250'
+             });
+        </script>*@
+    } 
+</body>
+
+</html>
+
