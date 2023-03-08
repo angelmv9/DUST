@@ -417,15 +417,14 @@
                                                 <div class="timeline-item-content ps-6 ps-md-3">
                                                     <h5 class="fs--1 lh-sm">@history.Description</h5>
                                                     <p class="fs--1">by <span class="fw-semi-bold text-primary">@history.User.FullName</span></p>
-                                                        @{
-                                                            var ticketTitle = (await TicketService.GetTicketByIdAsync(history.TicketId)).Title;
-                                                        }
-                                                    <p class="fs--1 text-800 lh-sm"><b>Ticket: </b>@ticketTitle</p>
-                                                        @if (!history.Property.Equals("TicketAttachment") || !history.Property.Equals("TicketComment"))
-                                                        {
+                                                    @{
+                                                        var ticketTitle = (await TicketService.GetTicketByIdAsync(history.TicketId)).Title;
+                                                    }
+                                                    @if (!history.Property.Equals("TicketAttachment") && !history.Property.Equals("TicketComment"))
+                                                    {
                                                         <p class="fs--1 text-800 lh-sm"><b>Old: </b>@history.OldValue</p>
                                                         <p class="fs--1 text-800 lh-sm mb-5"><b>New: </b>@history.NewValue</p>
-                                                        }
+                                                    }
                                                 </div>
                                             </div>
                                         </div>

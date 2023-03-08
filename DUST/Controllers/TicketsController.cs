@@ -27,15 +27,17 @@ namespace DUST.Controllers
         private readonly ITicketService _ticketService;
         private readonly IFilesService _filesService;
         private readonly ITicketHistoryService _historyService;
+        private readonly ICompanyInfoService _companyService;
         #endregion
 
         #region Constructor
         public TicketsController(UserManager<DUSTUser> userManager,
             IProjectService projectService,
             ILookupService lookupService,
-            ITicketService ticketService, 
+            ITicketService ticketService,
             IFilesService filesService,
-            ITicketHistoryService historyService)
+            ITicketHistoryService historyService,
+            ICompanyInfoService companyService)
         {
             _userManager = userManager;
             _projectService = projectService;
@@ -43,6 +45,7 @@ namespace DUST.Controllers
             _ticketService = ticketService;
             _filesService = filesService;
             _historyService = historyService;
+            _companyService = companyService;
         }
         #endregion
 
@@ -214,9 +217,13 @@ namespace DUST.Controllers
                 return NotFound();
             }
 
+            int companyId = User.Identity.GetCompanyId().Value;
+            List<Project> projects = (await _companyService.GetAllProjectsAsync(companyId)).Where(p => p.Archived == false).ToList() ;
+
             List<TicketPriority> priorities = await _lookupService.GetTicketPrioritiesAsync();
             List<TicketStatus> statuses = await _lookupService.GetTicketStatusesAsync();
             List<TicketType> types = await _lookupService.GetTicketTypesAsync();
+            ViewData["ProjectId"] = new SelectList(projects, "Id", "Name", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(priorities, "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketStatusId"] = new SelectList(statuses, "Id", "Name", ticket.TicketStatusId);
             ViewData["TicketTypeId"] = new SelectList(types, "Id", "Name", ticket.TicketTypeId);
