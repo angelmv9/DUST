@@ -347,6 +347,7 @@ namespace DUST.Services
                                               .Include(t => t.Comments)
                                                 .ThenInclude(c => c.User)
                                               .Include(t => t.Attachments)
+                                                .ThenInclude(a => a.User)
                                               .Include(t => t.History)
                                               .FirstOrDefaultAsync(t => t.Id == ticketId);
                 return ticket;

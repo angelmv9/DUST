@@ -60,7 +60,7 @@ namespace DUST
 
             services.AddSingleton<DataProtectionPurposeStrings>();
 
-            services.AddRazorPages();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddControllersWithViews();
         }
 

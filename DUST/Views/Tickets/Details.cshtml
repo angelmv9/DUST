@@ -275,18 +275,29 @@
 
                         </div>
                         }
-
                 </div>
-
 
                 @* Attachments *@
                 <h3 class="text-1100 mb-4">Attachments</h3>
                 <form asp-controller="Tickets" asp-action="AddTicketAttachment" enctype="multipart/form-data" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <input type="hidden" asp-for="Id" name="TicketId">
-                    <input asp-for="Attachments.FirstOrDefault().FileDescription" type="text" class="form-control" placeholder="Write a file name or description (optional)" />
+                    <div class="row">
+                        <div class="col-12 col-sm-4">
+                            <input asp-for="Attachments.FirstOrDefault().FileDescription" type="text" class="form-control" placeholder="Write a file name or description (optional)" />
+                        </div>
+                        <div class="col-12 mt-1 mt-sm-0 col-sm-8">
+                            <input asp-for="@Model.Attachments.FirstOrDefault().FormFile" type="file" class="form-control" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary px-5 mt-2">Submit</button>
+                </form>
+                    @* Dropzone not working, see Notion for Bug ticket*@
+                    @*<form class="dropzone dropzone-multiple p-0 mt-2" asp-controller="Tickets" asp-action="AddTicketAttachment" enctype="multipart/form-data" method="post" id="my-awesome-dropzone" data-dropzone="data-dropzone">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" name="TicketId">
+                        <input asp-for="Attachments.FirstOrDefault().FileDescription" type="text" class="form-control" placeholder="Write a file name or description (optional)" />
 
-                    <div class="dropzone dropzone-multiple p-0 mt-2" id="my-awesome-dropzone" data-dropzone="data-dropzone">
                         <div class="fallback">
                             <input asp-for="Attachments.FirstOrDefault().FormFile" type="file" accept=".png,.jpg,.jpeg,.gif" />
                         </div>
@@ -302,27 +313,56 @@
                             <br />
                             <img class="mt-3 me-2" src="~/img/image-icon.png" width="40" alt="" />
                         </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary px-5 mt-2">Submit</button>
-                </form>
-
+                        <button type="submit" class="btn btn-primary px-5 mt-2">Submit</button>
+                    </form>*@
+               
                 @* Files *@
                 <h4 class="text-1100 mb-4 mt-6">Files</h4>
                 @foreach (TicketAttachment item in Model.Attachments)
-                {
+                    {
+                        var fileExtension = System.IO.Path.GetExtension(item.FileName);
+
                     <div class="border-top border-300 px-4 px-lg-6 py-4">
                         <div class="me-n3">
                             <div class="d-flex flex-between-center">
                                 <div class="d-flex mb-1">
-                                    <span class="fa-solid fa-image me-2 text-700 fs--1"></span>
-                                    <p class="text-1000 mb-0 lh-1">@item.FileDescription</p>
+                                    @{
+                                        var fileIcon = "fa-image";
+                                        if (fileExtension == ".doc" || fileExtension == ".docx")
+                                        {
+                                            fileIcon = "fa-file-word";
+                                        }
+                                        else if (fileExtension == ".xls" || fileExtension == ".xlsx")
+                                        {
+                                            fileIcon = "fa-file-excel";
+                                        }
+                                        else if (fileExtension == ".pdf")
+                                        {
+                                            fileIcon = "fa-file-pdf";
+                                        }
+                                    }
+                                    <span class="fa-solid @fileIcon me-2 text-700 fs--1"></span>
+                                    @{var fileName = item.FileDescription ?? item.FileName;}
+                                    <p class="text-1000 mb-0 lh-1">@fileName</p>
                                 </div>
                             </div>
                             <div class="d-flex fs--1 text-700 mb-2 flex-wrap">
                                 <span>@FilesService.FormatFileSize(item.ByteArrayData.Length)</span><span class="text-400 mx-1">| </span><a href="#!">@item.User.FullName </a><span class="text-400 mx-1">| </span><span class="text-nowrap">@item.Created.ToString("MM.dd.yyyy h:ss tt")</span>
-                                </div>
-@*                            <img class="rounded-2" src="../../assets/img/generic/40.png" alt="" style="max-width:270px" />
-*@                        </div>
+                            </div>
+                            @if (item.ByteArrayData != null)
+                            {
+                                if (fileExtension == ".jpg" || fileExtension == ".png")
+                                {
+                                    <img class="rounded-2" src="data:image/*;base64,@(Convert.ToBase64String(item.ByteArrayData))" style="max-width:270px" />
+                                }
+                                else
+                                {
+                                    <img class="rounded-2" src="@FilesService.GetFileIcon(item.FileName)" style="height: 50px; width: 50px" />
+                                }
+                            }
+                            @* <img class="rounded-2" src="../../assets/img/generic/40.png" alt="" style="max-width:270px" />
+                            *@
+                        </div>
                     </div>
                 }
 
@@ -393,61 +433,6 @@
                                 }
                         </div>
                     </div>
-                    @* Attachments *@
-                    <div class="px-4 px-lg-6">
-                        <h4 class="mb-3">Files</h4>
-                    </div>
-                    <div class="border-top border-300 px-4 px-lg-6 py-4">
-                        <div class="me-n3">
-                            <div class="d-flex flex-between-center">
-                                <div class="d-flex mb-1">
-                                    <span class="fa-solid fa-image me-2 text-700 fs--1"></span>
-                                    <p class="text-1000 mb-0 lh-1">Silly_sight_1.png</p>
-                                </div>
-                                <div class="font-sans-serif btn-reveal-trigger">
-                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
-                                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a><a class="dropdown-item" href="#!">Report abuse</a></div>
-                                </div>
-                            </div>
-                            <div class="d-flex fs--1 text-700 mb-2 flex-wrap"><span>768 kb</span><span class="text-400 mx-1">| </span><a href="#!">Shantinan Mekalan </a><span class="text-400 mx-1">| </span><span class="text-nowrap">21st Dec, 12:56 PM</span></div><img class="rounded-2" src="../../assets/img/generic/40.png" alt="" style="max-width:270px" />
-                        </div>
-                    </div>
-                    <div class="border-top border-300 px-4 px-lg-6 py-4">
-                        <div class="me-n3">
-                            <div class="d-flex flex-between-center">
-                                <div>
-                                    <div class="d-flex align-items-center mb-1">
-                                        <span class="fa-solid fa-image me-2 fs--1 text-700"></span>
-                                        <p class="text-1000 mb-0 lh-1">All_images.zip</p>
-                                    </div>
-                                    <div class="d-flex fs--1 text-700 mb-0 flex-wrap"><span>12.8 mb</span><span class="text-400 mx-1">| </span><a href="#!">Yves Tanguy </a><span class="text-400 mx-1">| </span><span class="text-nowrap">19th Dec, 08:56 PM</span></div>
-                                </div>
-                                <div class="font-sans-serif btn-reveal-trigger">
-                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
-                                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a><a class="dropdown-item" href="#!">Report abuse</a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border-top border-bottom border-300 px-4 px-lg-6 py-4">
-                        <div class="me-n3">
-                            <div class="d-flex flex-between-center">
-                                <div>
-                                    <div class="d-flex align-items-center mb-1 flex-wrap">
-                                        <span class="fa-solid fa-file-lines me-2 fs--1 text-700"></span>
-                                        <p class="text-1000 mb-0 lh-1">Project.txt</p>
-                                    </div>
-                                    <div class="d-flex fs--1 text-700 mb-0 flex-wrap"><span>123 kb</span><span class="text-400 mx-1">| </span><a href="#!">Shantinan Mekalan </a><span class="text-400 mx-1">| </span><span class="text-nowrap">12th Dec, 12:56 PM</span></div>
-                                </div>
-                                <div class="font-sans-serif btn-reveal-trigger">
-                                    <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h"></span></button>
-                                    <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">Edit</a><a class="dropdown-item text-danger" href="#!">Delete</a><a class="dropdown-item" href="#!">Download</a><a class="dropdown-item" href="#!">Report abuse</a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="px-5 px-md-6 mt-3 mb-9"><a class="fw-bold fs--1 text-decoration-none" href="#!"><span class="fas fa-plus me-1"></span>Add file(s)</a></div>
-
                 </div>
             </div>
         </div>
