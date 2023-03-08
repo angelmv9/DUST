@@ -74,7 +74,13 @@
                     </div>
                     <div class="col-12 mb-4">
                         <h4 class="mb-3">Project Image</h4>
-                        <div class="dropzone dropzone-multiple p-0" id="my-awesome-dropzone" data-dropzone="data-dropzone">
+
+                        <input asp-for="Project.ImageFormFile" type="file" accept=".png,.jpg,.jpeg,.gif"
+                               onchange="document.getElementById('imageFileData').src = window.URL.createObjectURL(this.files[0])"
+                               class="form-control" />
+                        <span asp-validation-for="Project.ImageFormFile" class="text-danger"></span>
+
+                        @*<div class="dropzone dropzone-multiple p-0" id="my-awesome-dropzone" data-dropzone="data-dropzone">
                             <div class="fallback">
                                 <input asp-for="Project.ImageFormFile" type="file" accept=".png,.jpg,.jpeg,.gif" />
                             </div>
@@ -90,7 +96,9 @@
                                 <br />
                                 <img class="mt-3 me-2" src="~/img/image-icon.png" width="40" alt="" />
                             </div>
-                        </div>
+                        </div>*@
+
+
                     </div>
 
                     @if (User.IsInRole(RolesEnum.Admin.ToString()))
