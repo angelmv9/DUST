@@ -1,34 +1,32 @@
 ﻿@model DUST.Models.ViewModels.ProjectMembersViewModel
+@{
+    ViewData["Title"] = "Assign Members";
+}
 
-<div class="container">
-    <h2>Assign Members for</h2>
+<div class="content">
     <div class="row">
         <div class="col-md-6">
-            <h3>@Model.Project.Name</h3>
-            <div class="card">
-                <div class="card-header">
-                    <label asp-for="@Model.Users" class="control-label">Assign Team Members for Projects</label>
-                </div>
+            <h2 class="mb-4">Assign Team Members</h2>
+            <div class="card" style="max-width:25rem;">
+                @if (Model.Project.ImageFileData != null)
+                    {
+                    <img class="card-img-top" src="data:image/*;base64,@(Convert.ToBase64String(Model.Project.ImageFileData))" />
+                    }
+                    else
+                    {
+                    <img class="card-img-top" src="~/img/defaultProjectImage.jpg">
+                    }
                 <div class="card-body">
-                    <form method="post" asp-action="AssignMembers">
+                    <h5 class="card-title">@Model.Project.Name</h5>
+                    <p class="card-text"><b>Note: </b>Select all members you want to add, including those that are part of the project already</p>
+                    <form asp-action="AssignMembers" method="post">
                         <input type="hidden" asp-for="Project.Id" />
-                        <div class="col-12 mb-3">
-                            <div class="form-group">
-                                <select required asp-for="@Model.SelectedUsersIds" asp-items="@Model.Users" class="form-control" multiple="multiple"></select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-lg-10">
-                                <input type="submit" class="btn btn-primary" value="Assign Users" />
-                            </div>
-                        </div>
+                        <select required class="card-text form-select mb-2" size="5" asp-for="SelectedUsersIds" asp-items="Model.Users" multiple="multiple" aria-label="Select Team Members">
+                        </select>
+                        <input type="submit" value="Assign Members" class="btn btn-primary" />
                     </form>
                 </div>
-
             </div>
         </div>
-    </div>
-    <div>
-        <a asp-action="Details" asp-route-id="@Model.Project.Id">Back to Details</a>
     </div>
 </div>

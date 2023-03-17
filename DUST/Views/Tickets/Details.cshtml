@@ -10,7 +10,7 @@
 @inject IFilesService FilesService
 
 @{ 
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Ticket Details";
 
     DUSTUser currentUser = await UserManager.GetUserAsync(User);
     DUSTUser projectManager = await ProjectService.GetProjectManagerAsync(Model.ProjectId);
@@ -103,7 +103,7 @@
                     </div>
                     @* Developer Info & Ticket created date*@
                     <div class="row gx-0 gx-sm-5 gy-6 mb-4">
-                        <div class="col-12 col-xl-4 pe-xl-0">
+                        <div class="col-12 col-md-6 col-xl-5 pe-xl-0">
                             <div class="mb-4 mb-xl-7">
                                 <div class="row gx-0 gx-sm-7">
                                     @* Developer Info*@
@@ -124,7 +124,7 @@
                                                     <div class="d-flex align-items-center">
                                                         <td class="ps-1 py-1">
                                                             <span class="fw-semi-bold d-block lh-sm" href="#!">@devFullName</span>
-                                                                @if ( (User.IsInRole(nameof(RolesEnum.Admin)) || isUserProjectPM) && @Model.DeveloperUser == null)
+                                                                @if ((User.IsInRole(nameof(RolesEnum.Admin)) || isUserProjectPM) && @Model.DeveloperUser == null)
                                                                 {
                                                                     <a class="fw-bold fs--1" asp-controller="Tickets" asp-action="AssignDeveloper" asp-route-ticketId="@Model.Id">Assign Dev<span class="fa-solid fa-chevron-right mx-1 fs--2"></span></a>
                                                                 }
@@ -221,7 +221,7 @@
 
                     </div>
                     @* Ticket Description *@
-                    <div class="col-12 col-xl-8">
+                    <div class="col-12 col-md-6 col-xl-7">
                         <div class="row mb-3 g-3">
                             <div class="col-auto mb-4">
                                 <h4 class="text-black">

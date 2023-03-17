@@ -4,34 +4,8 @@
 }
 
 <div class="content">
-    <div class="row">
-        @*<div class="col-md-6">
-                <h3>@Model.Project.Name</h3>
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <label class="control-label">Assign PM</label>
-                    </div>
-                    <div class="card-body">
-                        <form method="post" asp-action="AssignPM">
-                            <input type="hidden" asp-for="Project.Id" />
-                            <p>Description: @Model.Project.Description</p>
-                            <div class="form-group">
-                                <label class="col-form-label">Select a Project Manager</label>
-
-                                <select required asp-for="PMId" asp-items="@Model.ProjectManagers" class="form-control">
-                                    <option></option>
-                                </select>
-
-                            </div>
-                            <div class="form-group mt-3">
-                                <input type="submit" value="Assign" class="btn btn-primary" />
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>*@
+    <div class="row">       
         <div class="col-md-6">
-
             <h2 class="mb-4">Assign a Project Manager</h2>
             <div class="card" style="max-width:25rem;">
                 @if (Model.Project.ImageFileData != null)
@@ -42,7 +16,6 @@
                 {
                     <img class="card-img-top" src="~/img/defaultProjectImage.jpg">
                 }
-
                 <div class="card-body">
                     <h5 class="card-title">@Model.Project.Name</h5>
                     <p class="card-text line-clamp-4">@Model.Project.Description </p>
@@ -57,5 +30,4 @@
             </div>
         </div>
     </div>
-
 </div>

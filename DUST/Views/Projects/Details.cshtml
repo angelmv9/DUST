@@ -9,7 +9,7 @@
 @inject ITicketService TicketService
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Project Details";
     DUSTUser currentUser = await UserManager.GetUserAsync(User);
     DUSTUser projectManager = await ProjectService.GetProjectManagerAsync(Model.Id);
     bool isUserProjectPM = projectManager?.Id == currentUser.Id;
@@ -80,7 +80,7 @@
                     </div>
                     @* PM Info, Project progress*@
                     <div class="row gx-0 gx-sm-5 gy-8 mb-8">
-                        <div class="col-12 col-xl-3 col-xxl-4 pe-xl-0">
+                        <div class="col-12 col-md-6 col-xl-5 pe-xl-0">
                             <div class="mb-4 mb-xl-7">
                                 <div class="row gx-0 gx-sm-7">
                                     @* PM Info*@
@@ -151,7 +151,7 @@
                         </div>
                     </div>
                     @* Echarts tickets over time*@
-                    <div class="col-12 col-xl-9 col-xxl-8">
+                    <div class="col-12 col-md-6 col-xl-7">
                         <div class="row flex-between-center mb-3 g-3">
                             <div class="col-auto">
                                 <h4 class="text-black">
@@ -481,7 +481,7 @@
                                                         var ticketTitle = (await TicketService.GetTicketByIdAsync(history.TicketId)).Title;
                                                     }
                                                 <p class="fs--1 text-800 lh-sm"><b>Ticket: </b>@ticketTitle</p>
-                                                    @if (!history.Property.Equals("TicketAttachment") || !history.Property.Equals("TicketComment"))
+                                                    @if ((!history.Property.Equals("TicketAttachment") || !history.Property.Equals("TicketComment")) && !history.Description.Equals("New ticket created"))
                                                     {
                                                     <p class="fs--1 text-800 lh-sm"><b>Old: </b>@history.OldValue</p>
                                                     <p class="fs--1 text-800 lh-sm mb-5"><b>New: </b>@history.NewValue</p>
