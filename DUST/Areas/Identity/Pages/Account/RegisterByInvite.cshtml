@@ -91,8 +91,8 @@
                                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label" asp-for="Input.CompanyName"></label>
-                                    <input class="form-control" asp-for="Input.CompanyName" type="text" placeholder="Company Name" readonly/>
+                                    <label class="form-label">Company<span class="text-secondary"> (cannot be edited)</span></label>
+                                    <input class="form-control" asp-for="Input.CompanyName" type="text" placeholder="Company Name" readonly  title="You can't change the company you've been invited to"/>
                                     <span asp-validation-for="Input.CompanyName" class="text-danger"></span>
                                 </div>
                                 <div class="row g-3 mb-3">

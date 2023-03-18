@@ -19,7 +19,6 @@ using System.Text.Encodings.Web;
 
 namespace DUST.Controllers
 {
-    [Authorize]
     public class InvitesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -137,7 +136,6 @@ namespace DUST.Controllers
             return RedirectToAction("Create", new {message = "Something went wrong. Please try again"});
         }
 
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ProcessInvite(string protectedToken, string protectedEmail, string protectedCompanyId)
         {
             // Decode token, email and companyId in order to validate invite & get invitor information
