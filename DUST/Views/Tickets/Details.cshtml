@@ -32,7 +32,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-
 <body>
 
     <!-- ===============================================-->
@@ -251,9 +250,9 @@
 
                                 <div class="col-auto">
                                     <div class="avatar avatar-s rounded-circle">
-                                            @if (currentUser?.AvatarByteData != null)
+                                            @if (comment.User.AvatarByteData != null)
                                             {
-                                            <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(currentUser.AvatarByteData))" />
+                                            <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(comment.User.AvatarByteData))" />
                                             }
                                             else
                                             {
@@ -416,7 +415,7 @@
                                             <div class="col">
                                                 <div class="timeline-item-content ps-6 ps-md-3">
                                                     <h5 class="fs--1 lh-sm">@history.Description</h5>
-                                                    <p class="fs--1">by <span class="fw-semi-bold text-primary">@history.User.FullName</span></p>
+                                                    <p class="fs--1">by <span class="fw-semi-bold text-primary">@history.User?.FullName</span></p>
                                                     @{
                                                         var ticketTitle = (await TicketService.GetTicketByIdAsync(history.TicketId)).Title;
                                                     }
@@ -435,20 +434,8 @@
                 </div>
             </div>
         </div>
-        </div>            
     </div>
-
-    @section Scripts {
-        @*<script src="https://cdn.tiny.cloud/1/0dfpljpe67ax1ltwqxs9twxvl90kv6zca1orgw2r1soif7hs/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-        <script>
-             tinymce.init({
-                selector: 'textarea',
-                plugins: 'anchor autolink autosave charmap code codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
-                height: '250'
-             });
-        </script>*@
-    } 
+   
 </body>
 
 </html>
