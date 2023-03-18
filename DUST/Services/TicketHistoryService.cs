@@ -128,10 +128,10 @@ namespace DUST.Services
                         TicketId = newTicket.Id,
                         UserId = userId,
                         Property = "DeveloperUser",
-                        OldValue = oldTicket.DeveloperUser?.FullName ?? "Not Assigned",
+                        OldValue = oldTicket.DeveloperUser?.FullName ?? "None",
                         NewValue = newTicket.DeveloperUser?.FullName,
                         Created = DateTimeOffset.Now,
-                        Description = $"New ticket developer(s)"
+                        Description = $"New developer!"
                     };
                     await _context.TicketHistories.AddAsync(history);
                 }
