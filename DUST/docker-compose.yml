@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  dust:
+    image: ${DOCKER_REGISTRY-}dust
+    build:
+      context: .
+      dockerfile: DUST/Dockerfile
