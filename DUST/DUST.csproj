@@ -35,6 +35,10 @@
     <None Remove="Views\TicketPriorities\**" />
     <None Remove="Views\TicketStatus\**" />
     <None Remove="Views\TicketTypes\**" />
+    <Content Remove="Views\Companies\Index.cshtml" />
+    <Content Remove="Views\Companies\Details.cshtml" />
+    <None Remove="Views\Companies\" />
+    <Content Remove="Views\Companies\MemberProfile.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -75,4 +79,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Companies\" />
+  </ItemGroup>
 </Project>

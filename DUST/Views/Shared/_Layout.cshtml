@@ -64,16 +64,7 @@
                                         </a>
                                     </div>
                                 </li>
-                                <!-- Company -->
-                                <li class="nav-item">
-                                    <div class="nav-item-wrapper">
-                                        <a class="nav-link label-1" asp-controller="Companies" asp-action="Index" role="button" aria-controls="company">
-                                            <div class="d-flex align-items-center">
-                                                <span class="nav-link-icon"><span data-feather="briefcase"></span></span><span class="nav-link-text">Company</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </li>
+
                                 <!-- Projects -->
                                 <li class="nav-item">
                                     <!-- parent pages-->
@@ -93,7 +84,8 @@
                                                 {
                                                     <li class="nav-item">
                                                         <a class="nav-link" asp-controller="Projects" asp-action="Create" data-bs-toggle="" aria-expanded="false">
-                                                            <div class="d-flex align-items-center"><span class="nav-link-text">Create new</span>
+                                                            <div class="d-flex align-items-center">
+                                                                <span class="nav-link-text">Create new</span>
                                                             </div>
                                                         </a>
                                                     </li>
@@ -199,6 +191,20 @@
                                         </div>
                                     </div>
                                 </li>
+                                <!-- Company Invite -->
+                                @if (User.IsInRole(nameof(RolesEnum.Admin)))
+                                {
+                                    <li class="nav-item">
+                                        <div class="nav-item-wrapper">
+                                            <a class="nav-link label-1" asp-controller="Invites" asp-action="Create" role="button" aria-controls="company invite">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="nav-link-icon"><span data-feather="send"></span></span><span class="nav-link-text">Company Invite</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </li>
+                                }
+                                
                             </ul>                                                       
                         </div>
                     </div>
