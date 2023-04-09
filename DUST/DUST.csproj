@@ -4,10 +4,10 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-DUST-583DA234-F524-4324-85CD-5FFA267B65C8</UserSecretsId>
     <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
-    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
+    
     <InvariantGlobalization>true</InvariantGlobalization>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>.</DockerfileContext>
+   
   </PropertyGroup>
 
   <ItemGroup>
