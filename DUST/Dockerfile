@@ -7,10 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["DUST/DUST.csproj", "."]
-RUN dotnet restore "./DUST.csproj"
+COPY ["DUST/DUST.csproj", "DUST/"]
+RUN dotnet restore "DUST/DUST.csproj"
 COPY . .
-WORKDIR "/src/."
+WORKDIR "/src/DUST"
 RUN dotnet build "DUST.csproj" -c Release -o /app/build
 
 FROM build AS publish
