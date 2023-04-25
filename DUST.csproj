@@ -1,0 +1,91 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>aspnet-DUST-583DA234-F524-4324-85CD-5FFA267B65C8</UserSecretsId>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+    
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+   
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Views\ProjectPriorities\**" />
+    <Compile Remove="Views\TicketAttachments\**" />
+    <Compile Remove="Views\TicketComments\**" />
+    <Compile Remove="Views\TicketHistories\**" />
+    <Compile Remove="Views\TicketPriorities\**" />
+    <Compile Remove="Views\TicketStatus\**" />
+    <Compile Remove="Views\TicketTypes\**" />
+    <Content Remove="Views\ProjectPriorities\**" />
+    <Content Remove="Views\TicketAttachments\**" />
+    <Content Remove="Views\TicketComments\**" />
+    <Content Remove="Views\TicketHistories\**" />
+    <Content Remove="Views\TicketPriorities\**" />
+    <Content Remove="Views\TicketStatus\**" />
+    <Content Remove="Views\TicketTypes\**" />
+    <EmbeddedResource Remove="Views\ProjectPriorities\**" />
+    <EmbeddedResource Remove="Views\TicketAttachments\**" />
+    <EmbeddedResource Remove="Views\TicketComments\**" />
+    <EmbeddedResource Remove="Views\TicketHistories\**" />
+    <EmbeddedResource Remove="Views\TicketPriorities\**" />
+    <EmbeddedResource Remove="Views\TicketStatus\**" />
+    <EmbeddedResource Remove="Views\TicketTypes\**" />
+    <None Remove="Views\ProjectPriorities\**" />
+    <None Remove="Views\TicketAttachments\**" />
+    <None Remove="Views\TicketComments\**" />
+    <None Remove="Views\TicketHistories\**" />
+    <None Remove="Views\TicketPriorities\**" />
+    <None Remove="Views\TicketStatus\**" />
+    <None Remove="Views\TicketTypes\**" />
+    <Content Remove="Views\Companies\Index.cshtml" />
+    <Content Remove="Views\Companies\Details.cshtml" />
+    <None Remove="Views\Companies\" />
+    <Content Remove="Views\Companies\MemberProfile.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Areas\Identity\Pages\Account\ExternalLogin.cshtml.cs" />
+    <Compile Remove="Controllers\ProjectPrioritiesController.cs" />
+    <Compile Remove="Controllers\TicketAttachmentsController.cs" />
+    <Compile Remove="Controllers\TicketCommentsController.cs" />
+    <Compile Remove="Controllers\TicketHistoriesController.cs" />
+    <Compile Remove="Controllers\TicketPrioritiesController.cs" />
+    <Compile Remove="Controllers\TicketStatusController.cs" />
+    <Compile Remove="Controllers\TicketTypesController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\Identity\Pages\Account\ExternalLogin.cshtml" />
+    <Content Remove="Views\Companies\Create.cshtml" />
+    <Content Remove="Views\Companies\Delete.cshtml" />
+    <Content Remove="Views\Companies\Edit.cshtml" />
+    <Content Remove="Views\Invites\Delete.cshtml" />
+    <Content Remove="Views\Invites\Details.cshtml" />
+    <Content Remove="Views\Invites\Edit.cshtml" />
+    <Content Remove="Views\Invites\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="3.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.17">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="MimeKit" Version="3.6.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Companies\" />
+  </ItemGroup>
+</Project>

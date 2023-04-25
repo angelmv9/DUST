@@ -1,0 +1,185 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>@ViewData["Title"]</title>
+
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="~/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/favicons/favicon-16x16.png">
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicons/favicon.ico">
+    <link rel="manifest" href="~/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="~/favicons/mstile-150x150.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link href="~/css/simplebar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link href="~/css/theme-rtl.min.css" type="text/css" rel="stylesheet" id="style-rtl">
+    <link href="~/css/theme.min.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="~/css/user-rtl.min.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="~/css/user.min.css" type="text/css" rel="stylesheet" id="user-style-default">
+   
+</head>
+
+<body>
+
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+
+            <div class="row vh-100 flex-cente g-0">
+                <div class="col-lg-6 position-relative d-none d-lg-block">
+                    <div class="bg-holder" style="background-image:url(/img/pexels-fauxels-3183150.jpg);">
+                    </div>
+                    <!--/.bg-holder-->
+                </div>
+                <div class="col-lg-6">
+                    <div class="row flex-center h-100 g-0 px-4 px-sm-0">
+                        <div class="col col-sm-6 col-lg-7 col-xl-6">
+                            <a class="d-flex flex-center text-decoration-none mb-4" asp-controller="Home" asp-action="Index">
+                                <div class="d-flex align-items-center fw-bolder fs-5 d-inline-block">
+                                    <img src="~/img/logo.png" alt="phoenix" width="58" />
+                                </div>
+                            </a>
+                            <div class="text-center mb-7">
+                                <h3 class="text-1000">Sign Up</h3>
+                                <p class="text-700">Create your account today</p>
+                            </div>
+                            <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label" asp-for="Input.FirstName"></label>
+                                        <input class="form-control" asp-for="Input.FirstName" type="text" placeholder="First Name" />
+                                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" asp-for="Input.LastName"></label>
+                                        <input class="form-control" asp-for="Input.LastName" type="text" placeholder="Last Name" />
+                                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-3 text-start">
+                                    <label class="form-label" asp-for="Input.Email"></label>
+                                    <input class="form-control" asp-for="Input.Email" type="email" placeholder="name@company.com" />
+                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Input.CompanyName"></label>
+                                    <input class="form-control" asp-for="Input.CompanyName" type="text" placeholder="Company Name"/>
+                                    <span asp-validation-for="Input.CompanyName" class="text-danger"></span>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" asp-for="Input.CompanyDescription"></label>
+                                    <textarea class="form-control" asp-for="Input.CompanyDescription" placeholder="optional"></textarea>
+                                    <span asp-validation-for="Input.CompanyDescription" class="text-danger"></span>
+                                </div>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label" asp-for="Input.Password"></label>
+                                        <input class="form-control" asp-for="Input.Password" type="password" placeholder="Password" />
+                                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label" asp-for="Input.ConfirmPassword"></label>
+                                        <input class="form-control" asp-for="Input.ConfirmPassword" type="password" placeholder="Confirm Password" />
+                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary w-100 mb-3" type="submit">Sign up</button>
+                                <div class="text-center"><a class="fs--1 fw-bold" asp-area="Identity" asp-page="/Account/Login">Sign in to an existing account</a></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    @section Scripts {
+        <script src="~/js/imagesloaded.pkgd.min.js"></script>
+        <script src="~/js/simplebar.min.js"></script>
+        <script src="~/js/config.js"></script>
+
+        <script>
+            var phoenixIsRTL = JSON.parse(localStorage.getItem('phoenixIsRTL'));
+            if (phoenixIsRTL) {
+                var linkDefault = document.getElementById('style-default');
+                var userLinkDefault = document.getElementById('user-style-default');
+                linkDefault.setAttribute('disabled', true);
+                userLinkDefault.setAttribute('disabled', true);
+                document.querySelector('html').setAttribute('dir', 'rtl');
+            } else {
+                var linkRTL = document.getElementById('style-rtl');
+                var userLinkRTL = document.getElementById('user-style-rtl');
+                linkRTL.setAttribute('disabled', true);
+                userLinkRTL.setAttribute('disabled', true);
+            }
+        </script>
+
+        <script>
+            var navbarTopStyle = localStorage.getItem('phoenixNavbarTopStyle');
+            var navbarTop = document.querySelector('.navbar-top');
+            if (navbarTopStyle === 'darker') {
+                navbarTop.classList.add('navbar-darker');
+            }
+
+            var navbarVerticalStyle = localStorage.getItem('phoenixNavbarVerticalStyle');
+            var navbarVertical = document.querySelector('.navbar-vertical');
+            if (navbarVerticalStyle === 'darker') {
+                navbarVertical.classList.add('navbar-darker');
+            }
+        </script>
+
+        <script src="~/js/popper.min.js"></script>
+        <script src="~/js/bootstrap.min.js"></script>
+        <script src="~/js/anchor.min.js"></script>
+        <script src="~/js/is.min.js"></script>
+        <script src="~/js/all.min.js"></script>
+        <script src="~/js/lodash.min.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+        <script src="~/js/list.min.js"></script>
+        <script src="~/js/feather.min.js"></script>
+        <script src="~/js/dayjs.min.js"></script>
+        <script src="~/js/phoenix.js"></script>
+
+
+
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+</body>
+
+</html>
+
+

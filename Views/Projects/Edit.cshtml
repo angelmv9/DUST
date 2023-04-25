@@ -1,0 +1,143 @@
+﻿@model DUST.Models.ViewModels.AddProjectWithPMViewModel
+@using DUST.Models.Enums
+
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    @{
+        ViewData["Title"] = "Edit";
+    }
+</head>
+
+<body>
+
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+
+    <div class="content">
+        <h2 class="mb-6">Edit a project</h2>
+        <div class="row">
+            <div class="col-xl-9">
+                <form class="row g-3 mb-6" asp-action="Edit" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Project.Id" />
+                    <input type="hidden" asp-for="Project.CompanyId" />
+                    <input type="hidden" asp-for="Project.ImageFileData" />
+                    <input type="hidden" asp-for="Project.ImageFileName" />
+                    <input type="hidden" asp-for="Project.FileExtention" />
+                    <div class="col-12 mb-4">
+                        <h4 class="mb-3">Project Title</h4>
+                        <input class="form-control" asp-for="Project.Name" placeholder="Write title here..." />
+                        <span asp-validation-for="Project.Name" class="text-danger"></span>
+                    </div>
+
+                    @* TinyMCE not working *@
+
+                    @*                    <div class="col-12 mb-5">
+                    <h4 class="mb-3">Project Description</h4>
+                    <textarea class="tinymce" style="display: none;" asp-for="Project.Description" data-tinymce='{"height":"15rem","placeholder":"Write a description here..."}'></textarea>
+                    </div>*@
+
+                    <div class="col-12 mb-4">
+                        <h4 class="mb-3">Project Description</h4>
+                        <textarea class="form-control" asp-for="Project.Description" placeholder="Optional description here..." style="height: 100px"></textarea>
+                    </div>
+                    <div class="col-sm-6 mb-4">
+                        <div class="flatpickr-input-container">
+                            <h4 class="mb-3">Start Date</h4>
+                            <div class="form-floating">
+                                <input class="form-control datetimepicker" asp-for="Project.StartDate" data-options='{"disableMobile":true}' />
+                                <label class="ps-6" asp-for="Project.StartDate"></label><span class="uil uil-calendar-alt flatpickr-icon text-700"></span>
+                                <span asp-validation-for="Project.StartDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb-4">
+                        <div class="flatpickr-input-container">
+                            <h4 class="mb-3">End Date</h4>
+                            <div class="form-floating">
+                                <input class="form-control datetimepicker" asp-for="Project.EndDate" data-options='{"disableMobile":true}' />
+                                <label class="ps-6" asp-for="Project.EndDate">Deadline</label><span class="uil uil-calendar-alt flatpickr-icon text-700"></span>
+                                <span asp-validation-for="Project.EndDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-4">
+                        <h4 class="mb-3">Project Image</h4>
+
+                        <input asp-for="Project.ImageFormFile" type="file" accept=".png,.jpg,.jpeg,.gif"
+                               onchange="document.getElementById('imageFileData').src = window.URL.createObjectURL(this.files[0])"
+                               class="form-control" />
+                        <span asp-validation-for="Project.ImageFormFile" class="text-danger"></span>
+
+                        @*<div class="dropzone dropzone-multiple p-0" id="my-awesome-dropzone" data-dropzone="data-dropzone">
+                            <div class="fallback">
+                                <input asp-for="Project.ImageFormFile" type="file" accept=".png,.jpg,.jpeg,.gif" />
+                            </div>
+                            <div class="dz-preview d-flex flex-wrap">
+                                <div class="border bg-white rounded-3 d-flex flex-center position-relative me-2 mb-2" style="height:80px;width:80px;">
+                                    <img class="dz-image" src="~/img/image-icon.png" alt="..." data-dz-thumbnail="data-dz-thumbnail" />
+                                    <a class="dz-remove text-400" href="#!" data-dz-remove="data-dz-remove"><span data-feather="x"></span></a>
+                                </div>
+                            </div>
+                            <div class="dz-message text-600" data-dz-message="data-dz-message">
+                                Drag your photo here <span class="text-800">or </span>
+                                <button class="btn btn-link p-0" type="button">Browse from device </button>
+                                <br />
+                                <img class="mt-3 me-2" src="~/img/image-icon.png" width="40" alt="" />
+                            </div>
+                        </div>*@
+
+
+                    </div>
+
+                    @if (User.IsInRole(RolesEnum.Admin.ToString()))
+                    {
+                        <div class="col-12 mb-4">
+                            <h4 class="mb-3">Select a Project Manager</h4>
+                            <select class="form-select" asp-items="@Model.PMList" asp-for="PMId">
+                                <option></option>
+                            </select>
+                        </div>
+                    }
+
+                    <div class="col-12 mb-4">
+                        <h4 class="mb-3">Select a Project Priority</h4>
+                        <select class="form-select" asp-items="@Model.PriorityList" asp-for="Project.ProjectPriorityId">
+                            <option></option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 gy-6">
+                        <div class="row g-3 justify-content-end">
+                            <div class="col-auto">
+                                <button class="btn btn-primary px-5 px-sm-15" type="submit" value="Save">Update Project</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</body>
+
+</html>

@@ -1,0 +1,1049 @@
+﻿@model DUST.Models.ViewModels.DashboardViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using DUST.Models.Enums
+@using DUST.Services.Interfaces
+
+@inject UserManager<DUSTUser> UserManager
+@inject IRolesService RolesService
+@inject IProjectService ProjectService 
+
+@{
+    ViewData["Title"] = "Dashboard";
+    DUSTUser currentUser = await UserManager.GetUserAsync(User);
+}
+
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+
+<body>
+
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <div class="content">
+        <div class="row gy-3 mb-6 justify-content-between">
+            <div class="col-md-9 col-auto">
+                <h2 class="mb-2 text-1100">@Model.Company.Name</h2>
+                <h5 class="text-700 fw-semi-bold">@Model.Company.Description</h5>
+            </div>
+        </div>
+        <div class="row mb-3 gy-6">
+            <div class="col-12 col-xxl-2">
+                <div class="row align-items-center g-3 g-xxl-0 h-100 align-content-between">
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-6 col-xl-3 col-xxl-12">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 lh-1 uil uil-books text-primary-500"></span>
+                            <div class="ms-2">
+                                <div class="d-flex align-items-end">
+                                    <h2 class="mb-0 me-2">@Model.Projects.Count()</h2><span class="fs-1 fw-semi-bold text-900">Projects</span>
+                                </div>
+                                <p class="text-800 fs--1 mb-0">Including archived</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-6 col-xl-3 col-xxl-12">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 lh-1 uil uil-users-alt text-success-500"></span>
+                            <div class="ms-2">
+                                <div class="d-flex align-items-end">
+                                    <h2 class="mb-0 me-2">@Model.Members.Count()</h2><span class="fs-1 fw-semi-bold text-900">Members</span>
+                                </div>
+                                <p class="text-800 fs--1 mb-0">Company Employees</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-6 col-xl-3 col-xxl-12">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 lh-1 uil uil-invoice text-warning-500"></span>
+                            <div class="ms-2">
+                                <div class="d-flex align-items-end">
+                                    <h2 class="mb-0 me-2">@Model.Tickets.Count()</h2><span class="fs-1 fw-semi-bold text-900">Tickets</span>
+                                </div>
+                                <p class="text-800 fs--1 mb-0">All active tickets</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-6 col-xl-3 col-xxl-12">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-4 lh-1 uil-ticket text-danger-500"></span>
+                            <div class="ms-2">
+                                <div class="d-flex align-items-end">
+                                    <h2 class="mb-0 me-2">@Model.Tickets.Where(t => string.IsNullOrEmpty(t.DeveloperUserId)).Count()</h2><span class="fs-1 fw-semi-bold text-900">Unassigned Tickets</span>
+                                </div>
+                                <p class="text-800 fs--1 mb-0">Assign developers to these</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* Company members by role*@
+            <div class="col-12 col-xxl-10">               
+                    <div class="row g-4">
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+                            <div class="card border border-primary">
+                                <div class="card-body">
+                                    <h4 class="card-title">Administrator </h4>
+                                    <p class="card-text">
+                                        <div class="table-responsive scrollbar">
+                                            <table class="table fs--0 mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="sort white-space-nowrap align-middle ps-0" scope="col" style="width:30%;">
+                                                        </th>
+                                                        <th class="sort white-space-nowrap align-middle ps-0" scope="col" style="width:30%;">
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="list">
+                                                    @foreach (var member in Model.Members)
+                                                    {
+                                                        <tr class="position-static">
+
+                                                            @if (await UserManager.IsInRoleAsync(member, RolesEnum.Admin.ToString()))
+                                                            {
+                                                                @* Avatar *@
+                                                                <td class="align-middle white-space-nowrap time ps-0 py-4">
+
+                                                                    <div class="avatar avatar-m">
+                                                                        @if (member?.AvatarByteData != null)
+                                                                        {
+                                                                            <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <img class="rounded-circle" src="~/img/defaultUserImage.png" />
+                                                                        }
+                                                                    </div>
+
+                                                                </td>
+
+                                                                @* Full Name *@
+                                                                <td class="align-middle white-space-nowrap ps-3 py-4">
+                                                                    @Html.DisplayFor(modelItem => member.FullName)
+                                                                </td>
+                                                            }
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                        
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+                            <div class="card border border-secondary">
+                                <div class="card-body">
+                                    <h4 class="card-title">Project Managers </h4>
+                                    <p class="card-text">
+                                        <div class="table-responsive scrollbar">
+                                            <table class="table fs--0 mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="sort white-space-nowrap align-middle ps-0" scope="col" style="width:50%;">
+                                                        </th>
+                                                        <th class="sort white-space-nowrap align-middle ps-0" scope="col" style="width:50%;">
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="list">
+                                                    @foreach (var member in Model.Members)
+                                                    {
+                                                        <tr class="position-static">
+
+                                                            @if (await UserManager.IsInRoleAsync(member, RolesEnum.ProjectManager.ToString()))
+                                                            {
+                                                                @* Avatar *@
+                                                                <td class="align-middle white-space-nowrap time ps-0 py-4">
+
+                                                                    <div class="avatar avatar-m">
+                                                                        @if (member?.AvatarByteData != null)
+                                                                        {
+                                                                            <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <img class="rounded-circle" src="~/img/defaultUserImage.png" />
+                                                                        }
+                                                                    </div>
+
+                                                                </td>
+
+                                                                @* Full Name *@
+                                                                <td class="align-middle white-space-nowrap ps-3 py-4">
+                                                                    @Html.DisplayFor(modelItem => member.FullName)
+                                                                </td>
+                                                            }
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+                            <div class="card border border-success">
+                                <div class="card-body">
+                                    <h4 class="card-title">Developers </h4>
+                                    <p class="card-text">
+                                        <div class="table-responsive scrollbar">
+                                            <table class="table fs--0 mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="sort white-space-nowrap align-middle ps-0" scope="col" style="width:50%;">
+                                                        </th>
+                                                        <th class="sort white-space-nowrap align-middle ps-0" scope="col" style="width:50%;">
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="list">
+                                                    @foreach (var member in Model.Members)
+                                                    {
+                                                        <tr class="position-static">
+
+                                                            @if (await UserManager.IsInRoleAsync(member, RolesEnum.Developer.ToString()))
+                                                            {
+                                                                @* Avatar *@
+                                                                <td class="align-middle white-space-nowrap time ps-0 py-4">
+
+                                                                    <div class="avatar avatar-m">
+                                                                        @if (member?.AvatarByteData != null)
+                                                                        {
+                                                                            <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <img class="rounded-circle" src="~/img/defaultUserImage.png" />
+                                                                        }
+                                                                    </div>
+
+                                                                </td>
+
+                                                                @* Full Name *@
+                                                                <td class="align-middle white-space-nowrap ps-3 py-4">
+                                                                    @Html.DisplayFor(modelItem => member.FullName)
+                                                                </td>
+                                                            }
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+                            <div class="card border border-danger">
+                                <div class="card-body">
+                                    <h4 class="card-title">Submitters </h4>
+                                    <p class="card-text">
+                                        <div class="table-responsive scrollbar">
+                                            <table class="table fs--0 mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="sort white-space-nowrap align-middle ps-0" scope="col" style="width:50%;">
+                                                        </th>
+                                                        <th class="sort white-space-nowrap align-middle ps-0" scope="col" style="width:50%;">
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="list">
+                                                    @foreach (var member in Model.Members)
+                                                    {
+                                                        <tr class="position-static">
+
+                                                            @if (await UserManager.IsInRoleAsync(member, RolesEnum.Submitter.ToString()))
+                                                            {
+                                                                @* Avatar *@
+                                                                <td class="align-middle white-space-nowrap time ps-0 py-4">
+
+                                                                    <div class="avatar avatar-m">
+                                                                        @if (member?.AvatarByteData != null)
+                                                                        {
+                                                                            <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarByteData))" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <img class="rounded-circle" src="~/img/defaultUserImage.png" />
+                                                                        }
+                                                                    </div>
+
+                                                                </td>
+
+                                                                @* Full Name *@
+                                                                <td class="align-middle white-space-nowrap ps-3 py-4">
+                                                                    @Html.DisplayFor(modelItem => member.FullName)
+                                                                </td>
+                                                            }
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>             
+        </div>
+        @* Tickets by Status Echart*@
+        <div class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-white pt-7 pb-3 border-y border-300">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row g-3 mb-3">
+                        <div class="col-12 col-md-6">
+                            <h3 class="text-1100 text-nowrap">Tickets by Status</h3>
+                            <p class="text-700 mb-md-7">A snapshot of all tickets</p>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <p class="mb-0 fw-bold">Status </p>
+                                <p class="mb-0 fs--1">Total count <span class="fw-bold">@Model.Tickets.Count()</span></p>
+                            </div>
+                            <hr class="bg-200 mb-2 mt-2" />
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="d-inline-block bg-info-300 bullet-item me-2"></span>
+                                <p class="mb-0 fw-semi-bold text-900 lh-sm flex-1">Open</p>
+                                <h5 class="mb-0 text-900">@Model.Tickets.Where(t => t.TicketStatus.Name == nameof(TicketStatusEnum.Open)).Count()</h5>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="d-inline-block bg-warning-300 bullet-item me-2"></span>
+                                <p class="mb-0 fw-semi-bold text-900 lh-sm flex-1">Testing</p>
+                                <h5 class="mb-0 text-900">@Model.Tickets.Where(t => t.TicketStatus.Name == nameof(TicketStatusEnum.Testing)).Count()</h5>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="d-inline-block bg-danger-300 bullet-item me-2"></span>
+                                <p class="mb-0 fw-semi-bold text-900 lh-sm flex-1">Cancelled</p>
+                                <h5 class="mb-0 text-900">@Model.Tickets.Where(t => t.TicketStatus.Name == nameof(TicketStatusEnum.Cancelled)).Count()</h5>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="d-inline-block bg-success-300 bullet-item me-2"></span>
+                                <p class="mb-0 fw-semi-bold text-900 lh-sm flex-1">In Progress</p>
+                                <h5 class="mb-0 text-900">@Model.Tickets.Where(t => t.TicketStatus.Name == nameof(TicketStatusEnum.In_Progress)).Count()</h5>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="d-inline-block bg-success bullet-item me-2"></span>
+                                <p class="mb-0 fw-semi-bold text-900 lh-sm flex-1">Fixed</p>
+                                <h5 class="mb-0 text-900">@Model.Tickets.Where(t => t.TicketStatus.Name == nameof(TicketStatusEnum.Fixed)).Count()</h5>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="d-inline-block bg-primary bullet-item me-2"></span>
+                                <p class="mb-0 fw-semi-bold text-900 lh-sm flex-1">Closed</p>
+                                <h5 class="mb-0 text-900">@Model.Tickets.Where(t => t.TicketStatus.Name == nameof(TicketStatusEnum.Closed)).Count()</h5>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="d-inline-block bg-warning-500 bullet-item me-2"></span>
+                                <p class="mb-0 fw-semi-bold text-900 lh-sm flex-1">Retest</p>
+                                <h5 class="mb-0 text-900">@Model.Tickets.Where(t => t.TicketStatus.Name == nameof(TicketStatusEnum.Retest)).Count()</h5>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="position-relative mb-sm-4 mb-xl-0">
+                                <div class="echart-ticket-status" style="min-height:390px;width:100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @* Projects and Tickets overview *@
+        <div class="mx-lg-n4 mt-3">
+            <div class="row g-3">
+                @* Projects *@
+                <div class="col-12 col-xl-6 col-xxl-6">
+                    <div class="card todo-list h-100">
+                        <div class="card-header border-bottom-0 pb-0">
+                            <div class="row justify-content-between align-items-center mb-4">
+                                <div class="col-auto">
+                                    <h3 class="text-1100">Projects</h3>
+                                    <p class="mb-0 text-700">An Overview</p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-body py-0 scrollbar to-do-list-body">
+                            <div class="table-responsive scrollbar">
+                                <table class="table fs--1 mb-0 border-top border-200">
+                                    <thead>
+                                        <tr>
+                                            <th class="sort white-space-nowrap align-middle ps-0" scope="col" data-sort="projectName" style="width:30%;">
+                                                NAME
+                                            </th>
+                                            <th class="sort align-middle ps-3" scope="col" data-sort="projectmanager" style="width:10%;">
+                                                PROJECT MANAGER
+                                            </th>
+                                            <th class="sort align-middle text-end" scope="col" data-sort="priority" style="width:10%;">
+                                                PRIORITY
+                                            </th>
+                                            <th class="sort align-middle text-end" scope="col" style="width:5%;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="list" id="project-list-table-body">
+                                        @foreach (var project in Model.Projects)
+                                        {
+                                            <tr class="position-static">
+                                                @* Project Name *@
+                                                <td class="align-middle white-space-nowrap time projectName ps-0 py-4">
+                                                    <a class="text-decoration-none fw-bold fs-0" asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id">@Html.DisplayFor(modelItem => project.Name)</a>
+                                                </td>
+
+                                                @* Project Manager *@
+                                                <td class="align-middle white-space-nowrap projectmanager ps-3 py-4">
+                                                    <a class="d-flex align-items-center" href="#!">
+                                                        <div class="avatar avatar-s">
+                                                            @{
+                                                                DUSTUser PM = (await ProjectService.GetProjectManagerAsync(project.Id));
+                                                                string fullName = PM?.FullName;
+                                                            }
+                                                            <div class="avatar avatar-s  rounded-circle">
+                                                                @if (PM != null)
+                                                                {
+                                                                    @if (PM.AvatarByteData != null)
+                                                                    {
+                                                                        <img class="rounded-circle" src="data:image/*;base64,@(Convert.ToBase64String(PM.AvatarByteData))" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <img class="rounded-circle" src="~/img/defaultUserImage.png" />
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <p class="mb-0 ms-1 fs--1 text-900">@fullName</p>
+                                                    </a>
+                                                </td>
+
+                                                @* Priority *@
+                                                <td class="align-middle white-space-nowrap text-end priority">
+                                                    @if (project.ProjectPriority?.Name == nameof(ProjectPriorityEnum.Urgent))
+                                                    {
+                                                        <span class="badge badge-phoenix fs--2 badge-phoenix-danger">URGENT<span class="ms-1" data-feather="alert-octagon" style="height:12.8px;width:12.8px;"></span></span>
+                                                    }
+                                                    else if (project.ProjectPriority?.Name == nameof(ProjectPriorityEnum.High))
+                                                    {
+                                                        <span class="badge badge-phoenix fs--2 badge-phoenix-warning">HIGH</span>
+                                                    }
+                                                    else if (project.ProjectPriority?.Name == nameof(ProjectPriorityEnum.Medium))
+                                                    {
+                                                        <span class="badge badge-phoenix fs--2 badge-phoenix-primary">MEDIUM</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge badge-phoenix fs--2 badge-phoenix-secondary">LOW</span>
+                                                    }
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                @* Tickets *@
+                <div class="col-12 col-xl-6 col-xxl-6">
+                    <div class="card todo-list h-100">
+                        <div class="card-header border-bottom-0 pb-0">
+                            <div class="row justify-content-between align-items-center mb-4">
+                                <div class="col-auto">
+                                    <h3 class="text-1100">Tickets</h3>
+                                    <p class="mb-0 text-700">An Overview</p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-body py-0 scrollbar to-do-list-body">
+                            <table class="table fs--1 mb-0 border-top border-200">
+                                <thead>
+                                    <tr>
+                                        <th class="sort white-space-nowrap align-middle ps-0" scope="col" data-sort="title" style="width:25%;">
+                                            TITLE
+                                        </th>
+                                        <th class="sort align-middle" scope="col" data-sort="type" style="width:5%;">
+                                            TYPE
+                                        </th>                                       
+                                        <th class="sort align-middle text-end" scope="col" data-sort="priority" style="width:5%;">
+                                            PRIORITY
+                                        </th>
+                                        <th class="sort align-middle text-end" scope="col" style="width:5%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list" id="ticket-list-table-body">
+                                    @foreach (var ticket in Model.Tickets)
+                                    {
+                                        <tr class="position-static">
+                                            @* Title *@
+                                            <td class="align-middle white-space-nowrap time title ps-0 py-4">
+                                                <a class="text-decoration-none fw-bold fs-0" asp-controller="Tickets" asp-action="Details" asp-route-ticketId="@ticket.Id">@Html.DisplayFor(modelItem => ticket.Title)</a>
+                                            </td>
+                                            @* Type *@
+                                            <td class="align-middle white-space-nowrap type">
+                                                @if (ticket.TicketType?.Name == nameof(TicketTypeEnum.New_Feature))
+                                                {
+                                                    <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-success">NEW FEATURE</span>
+                                                }
+                                                else if (ticket.TicketType?.Name == nameof(TicketTypeEnum.Task))
+                                                {
+                                                    <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-secondary">TASK</span>
+                                                }
+                                                else if (ticket.TicketType?.Name == nameof(TicketTypeEnum.Bug))
+                                                {
+                                                    <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-danger">BUG<span class="ms-1 fas fa-bug" style="height:12.8px;width:12.8px;"></span></span>
+                                                }
+                                                else if (ticket.TicketType?.Name == nameof(TicketTypeEnum.Change_Request))
+                                                {
+                                                    <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-secondary">CHANGE REQUEST</span>
+                                                }
+                                                else if (ticket.TicketType?.Name == nameof(TicketTypeEnum.Improvement))
+                                                {
+                                                    <span class="badge badge-phoenix rounded-pill fs--2 badge-phoenix-warning">IMPROVEMENT</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-phoenix fs--2 rounded-pill badge-phoenix-info">TEST</span>
+                                                }
+                                            </td>
+                                            @* Priority *@
+                                            <td class="align-middle white-space-nowrap text-end priority">
+                                                @if (ticket.TicketPriority?.Name == nameof(TicketPriorityEnum.Urgent))
+                                                {
+                                                    <span class="badge badge-phoenix fs--2 badge-phoenix-danger">URGENT<span class="ms-1" data-feather="alert-octagon" style="height:12.8px;width:12.8px;"></span></span>
+                                                }
+                                                else if (ticket.TicketPriority?.Name == nameof(TicketPriorityEnum.High))
+                                                {
+                                                    <span class="badge badge-phoenix fs--2 badge-phoenix-warning">HIGH</span>
+                                                }
+                                                else if (ticket.TicketPriority?.Name == nameof(TicketPriorityEnum.Medium))
+                                                {
+                                                    <span class="badge badge-phoenix fs--2 badge-phoenix-primary">MEDIUM</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-phoenix fs--2 badge-phoenix-secondary">LOW</span>
+                                                }
+                                            </td>
+                                           
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        @* Invites status *@
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="mx-n4 px-4 mx-lg-n6 px-lg-6 bg-white pt-6 border-top border-300">
+                    <div id="projectSummary" data-list='{"valueNames":["project","assigness","start","deadline","calculation","projectprogress","status","action"],"page":6,"pagination":true}'>
+                        <div class="row align-items-end justify-content-between pb-4 g-3">
+                            <div class="col-auto">
+                                <h3>Invites</h3>
+                                <p class="text-700 lh-sm mb-0">Status of company invites</p>
+                            </div>
+                        </div>
+                        <div class="table-responsive ms-n1 ps-1 scrollbar">
+                            <table class="table fs--1 mb-0 border-top border-200">
+                                <thead>
+                                    <tr>
+                                        <th class="sort white-space-nowrap align-middle ps-0" scope="col" data-sort="project" style="width:30%;">INVITEE NAME</th>
+                                        <th class="sort align-middle ps-3" scope="col" data-sort="assigness" style="width:10%;">EMAIL</th>
+                                        <th class="sort align-middle ps-3" scope="col" data-sort="start" style="width:10%;">PROJECT</th>
+                                        <th class="sort align-middle ps-3" scope="col" data-sort="deadline" style="width:15%;">INVITE DATE</th>
+                                        <th class="sort align-middle ps-3" scope="col" data-sort="calculation" style="width:12%;">EXPIRES ON</th>
+                                        <th class="sort align-middle ps-3" scope="col" data-sort="projectprogress" style="width:5%;">INVITED BY</th>
+                                        <th class="sort align-middle text-end" scope="col" style="width:10%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list">
+                                    @foreach (var invite in Model.Company.Invites)
+                                    {
+                                        string inviteeFullName = invite.InviteeFirstName + ' ' + invite.InviteeLastName;
+                                        DateTime expiration = invite.InviteDate.DateTime.AddDays(7);
+                                        <tr class="position-static">
+                                            @* Invitee Name *@
+                                            <td class="align-middle white-space-nowrap time ps-0 py-4">
+                                                @Html.DisplayFor(modelItem => inviteeFullName)
+                                            </td>
+
+                                            @* Email *@
+                                            <td class="align-middle white-space-nowrap time ps-0 py-4">
+                                                @Html.DisplayFor(modelItem => invite.InviteeEmail)
+                                            </td>
+
+                                            @* Project Name *@
+                                            <td class="align-middle white-space-nowrap time ps-0 py-4">
+                                                @Html.DisplayFor(modelItem => invite.Project.Name)
+                                            </td>
+
+                                            @* Invite Date *@
+                                            <td class="align-middle white-space-nowrap time ps-0 py-4">
+                                                @Html.DisplayFor(modelItem => invite.InviteDate)
+                                            </td>
+
+                                            @* Expiration *@
+                                            <td class="align-middle white-space-nowrap time ps-0 py-4">
+                                                @Html.DisplayFor(modelItem => expiration)
+                                            </td>
+
+                                            @* Invited By *@
+                                            <td class="align-middle white-space-nowrap time ps-0 py-4">
+                                                @Html.DisplayFor(modelItem => invite.Invitor.FullName)
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row align-items-center justify-content-between py-2 pe-0 fs--1">
+                            <div class="col-auto d-flex">
+                                <p class="mb-0 d-none d-sm-block me-3 fw-semi-bold text-900" data-list-info="data-list-info"></p><a class="fw-semi-bold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">View Less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
+                            </div>
+                            <div class="col-auto d-flex">
+                                <button class="page-link" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
+                                <ul class="mb-0 pagination"></ul>
+                                <button class="page-link pe-0" data-list-pagination="next"><span class="fas fa-chevron-right"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+    @section scripts {
+        <script>
+            (function (factory) {
+                typeof define === 'function' && define.amd ? define(factory) :
+                    factory();
+            })((function () {
+                'use strict';
+
+                // import * as echarts from 'echarts';
+                const { merge } = window._;
+
+                // form config.js
+                const echartSetOption = (chart, userOptions, getDefaultOptions) => {
+                    const themeController = document.body;
+                    // Merge user options with lodash
+                    chart.setOption(merge(getDefaultOptions(), userOptions));
+
+                    themeController.addEventListener(
+                        'clickControl',
+                        ({ detail: { control } }) => {
+                            if (control === 'phoenixTheme') {
+                                chart.setOption(window._.merge(getDefaultOptions(), userOptions));
+                            }
+                        }
+                    );
+                };
+                // -------------------end config.js--------------------
+
+                const resizeEcharts = () => {
+                    const $echarts = document.querySelectorAll('[data-echart-responsive]');
+
+                    if ($echarts.length > 0) {
+                        $echarts.forEach(item => {
+                            const echartInstance = echarts.getInstanceByDom(item);
+                            echartInstance?.resize();
+                        });
+                    }
+                };
+
+                const navbarVerticalToggle = document.querySelector('.navbar-vertical-toggle');
+                navbarVerticalToggle &&
+                    navbarVerticalToggle.addEventListener('navbar.vertical.toggle', e => {
+                        return resizeEcharts();
+                    });
+
+                const tooltipFormatter = (params, dateFormatter = 'MMM DD') => {
+                    let tooltipItem = ``;
+                    params.forEach(el => {
+                        tooltipItem += `<div class='ms-1'>
+        <h6 class="text-700"><span class="fas fa-circle me-1 fs--2" style="color:${el.borderColor ? el.borderColor : el.color
+                            }"></span>
+          ${el.seriesName} : ${typeof el.value === 'object' ? el.value[1] : el.value
+                            }
+        </h6>
+      </div>`;
+                    });
+                    return `<div>
+            <p class='mb-2 text-600'>
+              ${window.dayjs(params[0].axisValue).isValid()
+                            ? window.dayjs(params[0].axisValue).format(dateFormatter)
+                            : params[0].axisValue
+                        }
+            </p>
+            ${tooltipItem}
+          </div>`;
+                };
+
+                // dayjs.extend(advancedFormat);
+
+                /* -------------------------------------------------------------------------- */
+                /*                             Echarts Total Sales                            */
+                /* -------------------------------------------------------------------------- */
+
+                const issuesDiscoveredChartInit = () => {
+                    const { getColor, getData, resize } = window.phoenix.utils;
+                    const issuesDiscoveredChartEl = document.querySelector('.echart-ticket-status');
+
+                    if (issuesDiscoveredChartEl) {
+                        const userOptions = getData(issuesDiscoveredChartEl, 'echarts');
+                        const chart = window.echarts.init(issuesDiscoveredChartEl);
+
+                        const getDefaultOptions = () => ({
+                            color: [
+                                getColor('info-300'),
+                                getColor('warning-300'),
+                                getColor('danger-300'),
+                                getColor('success-300'),
+                                getColor('success'),
+                                getColor('primary'),
+                                getColor('warning-500')
+                            ],
+                            tooltip: {
+                                trigger: 'item'
+                            },
+                            responsive: true,
+                            maintainAspectRatio: false,
+
+                            series: [
+                                {
+                                    name: 'Status',
+                                    type: 'pie',
+                                    radius: ['48%', '90%'],
+                                    startAngle: 30,
+                                    avoidLabelOverlap: false,
+                                    // label: {
+                                    //   show: false,
+                                    //   position: 'center'
+                                    // },
+
+                                    label: {
+                                        show: false,
+                                        position: 'center',
+                                        formatter: '{x|{d}%} \n {y|{b}}',
+                                        rich: {
+                                            x: {
+                                                fontSize: 31.25,
+                                                fontWeight: 800,
+                                                color: getColor('gray-700'),
+                                                padding: [0, 0, 5, 15]
+                                            },
+                                            y: {
+                                                fontSize: 12.8,
+                                                color: getColor('gray-700'),
+                                                fontWeight: 600
+                                            }
+                                        }
+                                    },
+                                    emphasis: {
+                                        label: {
+                                            show: true
+                                        }
+                                    },
+                                    labelLine: {
+                                        show: false
+                                    },
+                                    data: [
+                                        { value: @Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.Open)).Count(), name: '@nameof(TicketStatusEnum.Open)' },
+                                        { value: @Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.Testing)).Count(), name: '@nameof(TicketStatusEnum.Testing)' },
+                                        { value: @Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.Cancelled)).Count(), name: '@nameof(TicketStatusEnum.Cancelled)' },
+                                        { value: @Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.In_Progress)).Count(), name: '@nameof(TicketStatusEnum.In_Progress)' },
+                                        { value: @Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.Fixed)).Count(), name: '@nameof(TicketStatusEnum.Fixed)' },
+                                        { value: @Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.Closed)).Count(), name: '@nameof(TicketStatusEnum.Closed)' },
+                                        { value: @Model.Tickets.Where(t=> t.TicketStatus.Name == nameof(TicketStatusEnum.Retest)).Count(), name: '@nameof(TicketStatusEnum.Retest)' }
+                                    ]
+                                }
+                            ],
+                            grid: {
+                                bottom: 0,
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                containLabel: false
+                            }
+                        });
+
+                        echartSetOption(chart, userOptions, getDefaultOptions);
+
+                        resize(() => {
+                            chart.resize();
+                        });
+                    }
+                };
+
+                /* -------------------------------------------------------------------------- */
+                /*                             Echarts Total Sales                            */
+                /* -------------------------------------------------------------------------- */
+
+                const zeroBurnOutChartInit = () => {
+                    const { getColor, getData, resize, getPastDates } = window.phoenix.utils;
+                    const $zeroBurnOutChartEl = document.querySelector(
+                        '.echart-zero-burnout-chart'
+                    );
+
+                    if ($zeroBurnOutChartEl) {
+                        const userOptions = getData($zeroBurnOutChartEl, 'echarts');
+                        const chart = window.echarts.init($zeroBurnOutChartEl);
+
+                        const getDefaultOptions = () => ({
+                            color: [
+                                getColor('gray-400'),
+                                getColor('success'),
+                                getColor('info'),
+                                getColor('warning')
+                            ],
+                            tooltip: {
+                                trigger: 'axis',
+                                backgroundColor: getColor('gray-soft'),
+                                borderColor: getColor('gray-200'),
+                                formatter: params => tooltipFormatter(params, 'MMM DD, YYYY'),
+                                axisPointer: {
+                                    shadowStyle: {
+                                        color: 'red'
+                                    }
+                                }
+                            },
+                            legend: {
+                                bottom: '10',
+                                data: [
+                                    {
+                                        name: 'Open',
+                                        icon: 'roundRect'
+                                    },
+                                    {
+                                        name: 'Issues found',
+                                        icon: 'roundRect'
+                                    },
+                                    {
+                                        name: 'In Progress',
+                                        icon: 'roundRect'
+                                    }
+                                ],
+                                itemWidth: 16,
+                                itemHeight: 8,
+                                itemGap: 10,
+                                inactiveColor: getColor('gray-500'),
+                                inactiveBorderWidth: 0,
+                                textStyle: {
+                                    color: getColor('gray-900'),
+                                    fontWeight: 600,
+                                    fontSize: 16,
+                                    fontFamily: 'Nunito Sans'
+                                }
+                            },
+
+                            // grid: {
+                            //   left: '0%',
+                            //   right: '4%',
+                            //   bottom: '15%',
+                            //   top: '10%',
+                            //   containLabel: true,
+                            //   show: true
+                            // },
+
+                            xAxis: [
+                                {
+                                    show: true,
+                                    interval: 2,
+                                    axisLine: {
+                                        lineStyle: {
+                                            type: 'solid',
+                                            color: getColor('gray-300')
+                                        }
+                                    },
+                                    axisLabel: {
+                                        color: getColor('gray-900'),
+                                        formatter: data => window.dayjs(data).format('D MMM'),
+                                        interval: 5,
+                                        align: 'left',
+                                        margin: 20,
+                                        fontSize: 12.8
+                                    },
+                                    axisTick: {
+                                        show: true,
+                                        length: 15
+                                        // alignWithLabel: true
+                                    },
+                                    splitLine: {
+                                        interval: 0,
+                                        show: true,
+                                        lineStyle: {
+                                            color: getColor('gray-300'),
+                                            type: 'dashed'
+                                        }
+                                    },
+                                    type: 'category',
+                                    boundaryGap: false,
+                                    data: getPastDates(15)
+                                },
+                                {
+                                    show: true,
+                                    interval: 2,
+                                    axisLine: {
+                                        show: false
+                                    },
+                                    axisLabel: {
+                                        show: false
+                                    },
+                                    axisTick: {
+                                        show: false
+                                    },
+                                    splitLine: {
+                                        interval: 1,
+                                        show: true,
+                                        lineStyle: {
+                                            color: getColor('gray-300'),
+                                            type: 'solid'
+                                        }
+                                    },
+                                    boundaryGap: false,
+                                    data: getPastDates(15)
+                                }
+                            ],
+                            yAxis: {
+                                show: true,
+                                type: 'value',
+                                axisLine: {
+                                    lineStyle: {
+                                        type: 'solid',
+                                        color: getColor('gray-300')
+                                    }
+                                },
+                                axisLabel: {
+                                    color: getColor('gray-900'),
+                                    margin: 20,
+                                    fontSize: 12.8,
+                                    interval: 0
+                                },
+                                splitLine: {
+                                    show: true,
+                                    lineStyle: {
+                                        color: getColor('gray-300'),
+                                        type: 'solid'
+                                    }
+                                },
+                                axisTick: {
+                                    show: true,
+                                    length: 15,
+                                    alignWithLabel: true,
+                                    lineStyle: {
+                                        color: getColor('gray-300')
+                                    }
+                                }
+                                // data: ['0', '10', '20']
+                            },
+                            series: [
+                                {
+                                    name: 'Estimated',
+                                    type: 'line',
+                                    symbol: 'none',
+                                    data: [20, 17.5, 15, 15, 15, 12.5, 10, 7.5, 5, 2.5, 2.5, 2.5, 0],
+                                    lineStyle: {
+                                        width: 0
+                                    },
+                                    areaStyle: {
+                                        color: getColor('primary-300'),
+                                        opacity: 0.075
+                                    },
+                                    tooltip: {
+                                        show: false
+                                    }
+                                },
+                                {
+                                    name: 'Issues found',
+                                    type: 'line',
+                                    symbolSize: 6,
+                                    data: [3, 1, 2, 4, 3, 1]
+                                },
+                                {
+                                    name: 'Open',
+                                    type: 'line',
+                                    symbolSize: 6,
+                                    data: [6, 5, 4, 6, 5, 5]
+                                },
+                                {
+                                    name: 'In Progress',
+                                    type: 'line',
+                                    symbolSize: 6,
+                                    data: [11, 12, 11, 9, 11, 6]
+                                },
+                                {
+                                    name: 'Actual',
+                                    type: 'line',
+                                    symbolSize: 6,
+                                    data: [20, 19, 15, 14, 12, 8],
+                                    lineStyle: {
+                                        type: 'dashed'
+                                    }
+                                }
+                            ],
+                            grid: {
+                                right: 5,
+                                left: 0,
+                                bottom: '15%',
+                                top: 20,
+                                containLabel: true
+                            }
+                        });
+
+                        echartSetOption(chart, userOptions, getDefaultOptions);
+
+                        resize(() => {
+                            chart.resize();
+                        });
+                    }
+                };
+
+                const { docReady } = window.phoenix.utils;
+
+                docReady(zeroBurnOutChartInit);
+                docReady(issuesDiscoveredChartInit);
+
+            }));
+//# sourceMappingURL=projectmanagement-dashboard.js.map
+
+        </script>
+    }
+    </body>
+
+</html>

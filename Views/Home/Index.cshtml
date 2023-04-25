@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    @{
+        ViewData["Title"] = "Welcome";
+    }
+</head>
+
+<body>
+
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main style="--phoenix-scroll-margin-top: 1.2rem;">
+        <section class="bg-white pb-8" id="home" style=" width:100vw; height: 100vh; display: flex; justify-content: center; align-items: center">
+            <div class="container-small hero-header-container">
+                <div class="row align-items-center">
+                    <div class="col-12 col-lg-auto order-0 order-md-1 text-end order-1">
+                        <div class="position-relative p-5 p-md-7 d-lg-none">
+                            <div class="bg-holder" style="background-image: url('/img/bg-23.png');background-size:contain;">
+                            </div>
+                            <!--/.bg-holder-->
+
+                            <div class="position-relative"><img class="w-100 shadow-lg d-dark-none rounded-2" src="~/img/hero-dashboard-light.png" alt="hero-header" /><img class="w-100 shadow-lg d-light-none rounded-2" src="~/img/bg-30.png" alt="hero-header" /></div>
+                        </div>
+                        <div class="hero-image-container position-absolute top-0 bottom-0 end-0 d-none d-lg-block">
+                            <div class="position-relative h-100 w-100">
+                                <div class="position-absolute h-100 top-0 d-flex align-items-center end-0 hero-image-container-bg"><img class="pt-7 pt-md-0 w-100" src="~/img/bg-1-2.png" alt="hero-header" /></div>
+                                <div class="position-absolute h-100 top-0 d-flex align-items-center end-0"><img class="pt-7 pt-md-0 w-100 shadow-lg d-dark-none rounded-2" src="~/img/hero-dashboard-light.png" alt="hero-header" /><img class="pt-7 pt-md-0 w-100 shadow-lg d-light-none rounded-2" src="~/img/bg-29.png" alt="hero-header" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 text-lg-start text-center pt-8 pb-6 order-0 position-relative">
+                        <h1 class="fs-5 fs-lg-6 fs-md-7 fs-lg-6 fs-xl-7 fs fw-black mb-4"><span class="text-primary me-3">DUST</span><br />A Modern Bug Tracker</h1>
+                        <p class="mb-5">Defects & User Stories Tracker (DUST) is a multi-tenant, code-first ASP.NET Core 5 MVC web app that implements role-based authorization.</p><a class="btn btn-lg btn-primary rounded-pill me-3" asp-area="Identity" asp-page="/Account/Register" role="button">Sign up</a><a class="btn btn-link me-2 fs-0 p-0 text-decoration-none" asp-area="Identity" asp-page="/Account/Login" role="button">Check Demo<span class="fa-solid fa-angle-right ms-2 fs--1"></span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+
+</html>
