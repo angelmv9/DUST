@@ -59,9 +59,17 @@ namespace DUST.Data
 
             using var serviceScope = host.Services.CreateScope();
             var serviceProvider = serviceScope.ServiceProvider;
+            ApplicationDbContext dbContextService = null;
 
             //Because the app is in the process of starting up, services must be injected this way
-            var dbContextService = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            try
+            {
+                dbContextService = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception trying to get dbContextService: " + e.Message);
+            }
             var roleManagerService = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManagerService = serviceProvider.GetRequiredService<UserManager<DUSTUser>>();
             IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
@@ -248,7 +256,7 @@ namespace DUST.Data
 
         public static async Task SeedDefaultUsersAsync(UserManager<DUSTUser> userManager, IConfiguration configuration, ApplicationDbContext context)
         {
-            if (context.Users.Any())
+            if ((bool)(context.Users?.Any()))
             {
                 return;
             }
@@ -916,7 +924,7 @@ namespace DUST.Data
 
         public static async Task SeedDefaultTicketTypeAsync(ApplicationDbContext context)
         {
-            if (context.TicketTypes.Any())
+            if ((bool)(context.TicketTypes?.Any()))
             {
                 return;
             }
@@ -947,7 +955,7 @@ namespace DUST.Data
 
         public static async Task SeedDefaultTicketStatusAsync(ApplicationDbContext context)
         {
-            if (context.TicketStatuses.Any())
+            if ((bool)(context.TicketStatuses?.Any()))
             {
                 return;
             }
@@ -980,7 +988,7 @@ namespace DUST.Data
 
         public static async Task SeedDefaultTicketPriorityAsync(ApplicationDbContext context)
         {
-            if (context.TicketPriorities.Any())
+            if ((bool)(context.TicketPriorities?.Any()))
             {
                 return;
             }
@@ -1010,7 +1018,7 @@ namespace DUST.Data
 
         public static async Task SeedDefaultTicketsAsync(ApplicationDbContext context)
         {
-            if (context.Tickets.Any())
+            if ((bool)(context.Tickets?.Any()))
             {
                 return;
             }
