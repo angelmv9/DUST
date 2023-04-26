@@ -85,7 +85,7 @@ namespace DUST.Data
         public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
             // If there are already roles, do nothing
-            if (context.Roles.Any())
+            if ((bool)(context.Roles?.Any()))
             {
                 return;
             }
@@ -97,7 +97,7 @@ namespace DUST.Data
 
         public static async Task SeedDefaultCompaniesAsync(ApplicationDbContext context)
         {
-            if (context.Companies.Any())
+            if ((bool)(context.Companies?.Any()))
             {
                 return;
             }
@@ -128,7 +128,7 @@ namespace DUST.Data
 
         public static async Task SeedDefaultProjectPriorityAsync(ApplicationDbContext context)
         {
-            if (context.ProjectPriorities.Any())
+            if ((bool)(context.ProjectPriorities?.Any()))
             {
                 return;
             }
@@ -154,7 +154,7 @@ namespace DUST.Data
 
         public static async Task SeedDefautProjectsAsync(ApplicationDbContext context)
         {
-            if (context.Projects.Any())
+            if ((bool)(context.Projects?.Any()))
             {
                 return;
             }
