@@ -127,9 +127,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding companies ***");
-                Debug.WriteLine(ex.Message);                
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding companies ***");
+                Console.WriteLine(ex.Message);                
                 throw;
             }
         }
@@ -153,9 +153,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding project priorities ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding project priorities ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }
@@ -247,9 +247,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding projects ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding projects ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }
@@ -302,9 +302,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default admin user ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default admin user ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
             #endregion
@@ -337,9 +337,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default project manager ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default project manager ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -369,9 +369,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default project manager ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default project manager ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -401,9 +401,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default project manager ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default project manager ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
             #endregion
@@ -436,9 +436,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default developer ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default developer ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -467,9 +467,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default developer ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default developer ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -498,9 +498,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default developer ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default developer ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -529,9 +529,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default developer ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default developer ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -560,9 +560,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default developer ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default developer ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -595,9 +595,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default submitter ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default submitter ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -634,9 +634,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default admin user ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default admin user ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
             #endregion
@@ -670,9 +670,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default project manager ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default project manager ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -702,9 +702,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default project manager ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default project manager ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -737,9 +737,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default developer ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default developer ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -768,9 +768,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default developer ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default developer ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -799,9 +799,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default developer ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default developer ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -834,9 +834,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default submitter ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default submitter ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -874,9 +874,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default admin user ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default admin user ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
             #endregion
@@ -909,9 +909,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("*** ERROR ***");
-                Debug.WriteLine("*** Error seeding default submitter ***");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("*** ERROR ***");
+                Console.WriteLine("*** Error seeding default submitter ***");
+                Console.WriteLine(ex.Message);
                 throw;
             }
 
@@ -946,9 +946,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("**** ERROR ****");
-                Debug.WriteLine("Error seeding ticket types");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("**** ERROR ****");
+                Console.WriteLine("Error seeding ticket types");
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }
@@ -979,9 +979,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("**** ERROR ****");
-                Debug.WriteLine("Error seeding ticket statutes");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("**** ERROR ****");
+                Console.WriteLine("Error seeding ticket statutes");
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }
@@ -1009,9 +1009,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("**** ERROR ****");
-                Debug.WriteLine("Error seeding ticket priorities");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("**** ERROR ****");
+                Console.WriteLine("Error seeding ticket priorities");
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }
@@ -1122,9 +1122,9 @@ namespace DUST.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("**** ERROR ****");
-                Debug.WriteLine("Error seeding tickets");
-                Debug.WriteLine(ex.Message);
+                Console.WriteLine("**** ERROR ****");
+                Console.WriteLine("Error seeding tickets");
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }
